@@ -19,6 +19,6 @@ end findByName
 
 on run argv
 	tell application "System Events"
-		click my findByName(process "Appium", "Launch")
+		return my findByName(process "Appium", "Launch")
 	end tell
 end run
