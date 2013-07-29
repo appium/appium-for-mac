@@ -1,0 +1,173 @@
+//
+//  AppiumMacHTTPConnection.m
+//  AppiumAppleScriptProxy
+//
+//  Created by Dan Cuellar on 7/28/13.
+//  Copyright (c) 2013 Appium. All rights reserved.
+//
+
+#import "AppiumMacHTTPConnection.h"
+#import "AppiumAppleScriptProxyAppDelegate.h"
+#import "HTTPDataResponse.h"
+#import "HTTPLogging.h"
+
+
+// Log levels: off, error, warn, info, verbose
+// Other flags: trace
+static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
+
+@implementation AppiumMacHTTPConnection
+
+- (BOOL)supportsMethod:(NSString *)method atPath:(NSString *)path
+{
+	HTTPLogTrace();
+    
+	// Add support for POST
+	if ([method isEqualToString:@"POST"])
+	{
+		return YES;
+	}
+    if ([method isEqualToString:@"DELETE"])
+	{
+		return YES;
+	}
+    
+	return [super supportsMethod:method atPath:path];
+}
+
+- (BOOL)expectsRequestBodyFromMethod:(NSString *)method atPath:(NSString *)path
+{
+	HTTPLogTrace();
+    
+	// Inform HTTP server that we expect a body to accompany a POST request
+	if([method isEqualToString:@"POST"])
+		return YES;
+    
+	return [super expectsRequestBodyFromMethod:method atPath:path];
+}
+
+- (NSObject<HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path
+{
+    path = [path stringByReplacingOccurrencesOfString:@"/wd/hub/" withString:@"/"];
+    NSArray *pathComponents = [[path substringFromIndex:1] componentsSeparatedByString:@"/"];
+    
+    // GET /status
+	if ([path isEqualToString:@"/status"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getStatus:path];
+	}
+    
+    // POST /session
+    if ([path isEqualToString:@"/session"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postSession:path];
+	}
+    
+    // GET /sessions
+    if ([path isEqualToString:@"/sessions"] && [method isEqualToString:@"GET"])
+    {
+        return [SERVER.handler getSessions:path];
+    }
+    
+    // GET /session/:sessionId
+    if ([[pathComponents objectAtIndex:0] isEqualToString:@"session"] && pathComponents.count == 2 && [method isEqualToString:@"GET"])
+    {
+        return [SERVER.handler getSession:path];
+    }
+    
+    // DELETE /session/:sessionId
+    if ([[pathComponents objectAtIndex:0] isEqualToString:@"session"] && pathComponents.count == 2 && [method isEqualToString:@"DELETE"])
+    {
+        return [SERVER.handler deleteSession:path];
+    }
+    
+    // /session/:sessionId/timeouts
+    // /session/:sessionId/timeouts/async_script
+    // /session/:sessionId/timeouts/implicit_wait
+    // /session/:sessionId/window_handle
+    // /session/:sessionId/window_handles
+    // /session/:sessionId/url
+    // /session/:sessionId/forward
+    // /session/:sessionId/back
+    // /session/:sessionId/refresh
+    // /session/:sessionId/execute
+    // /session/:sessionId/execute_async
+    
+    // GET /session/:sessionId/screenshot
+    // POST /session
+    if ([path isEqualToString:@"/screenshot"] && [method isEqualToString:@"GET"])
+	{
+        
+        return [SERVER.handler getScreenshot:path];
+	}
+
+    // /session/:sessionId/ime/available_engines
+    // /session/:sessionId/ime/active_engine
+    // /session/:sessionId/ime/activated
+    // /session/:sessionId/ime/deactivate
+    // /session/:sessionId/ime/activate
+    // /session/:sessionId/frame
+    // /session/:sessionId/window
+    // /session/:sessionId/window/:windowHandle/size
+    // /session/:sessionId/window/:windowHandle/position
+    // /session/:sessionId/window/:windowHandle/maximize
+    // /session/:sessionId/cookie
+    // /session/:sessionId/cookie/:name
+    // /session/:sessionId/source
+    // /session/:sessionId/title
+    // /session/:sessionId/element
+    // /session/:sessionId/elements
+    // /session/:sessionId/element/active
+    // /session/:sessionId/element/:id
+    // /session/:sessionId/element/:id/element
+    // /session/:sessionId/element/:id/elements
+    // /session/:sessionId/element/:id/click
+    // /session/:sessionId/element/:id/submit
+    // /session/:sessionId/element/:id/text
+    // /session/:sessionId/element/:id/value
+    // /session/:sessionId/keys
+    // /session/:sessionId/element/:id/name
+    // /session/:sessionId/element/:id/clear
+    // /session/:sessionId/element/:id/selected
+    // /session/:sessionId/element/:id/enabled
+    // /session/:sessionId/element/:id/attribute/:name
+    // /session/:sessionId/element/:id/equals/:other
+    // /session/:sessionId/element/:id/displayed
+    // /session/:sessionId/element/:id/location
+    // /session/:sessionId/element/:id/location_in_view
+    // /session/:sessionId/element/:id/size
+    // /session/:sessionId/element/:id/css/:propertyName
+    // /session/:sessionId/orientation
+    // /session/:sessionId/alert_text
+    // /session/:sessionId/accept_alert
+    // /session/:sessionId/dismiss_alert
+    // /session/:sessionId/moveto
+    // /session/:sessionId/click
+    // /session/:sessionId/buttondown
+    // /session/:sessionId/buttonup
+    // /session/:sessionId/doubleclick
+    // /session/:sessionId/touch/click
+    // /session/:sessionId/touch/down
+    // /session/:sessionId/touch/up
+    // /session/:sessionId/touch/move
+    // /session/:sessionId/touch/scroll
+    // /session/:sessionId/touch/scroll
+    // /session/:sessionId/touch/doubleclick
+    // /session/:sessionId/touch/longclick
+    // /session/:sessionId/touch/flick
+    // /session/:sessionId/touch/flick
+    // /session/:sessionId/location
+    // /session/:sessionId/local_storage
+    // /session/:sessionId/local_storage/key/:key
+    // /session/:sessionId/local_storage/size
+    // /session/:sessionId/session_storage
+    // /session/:sessionId/session_storage/key/:key
+    // /session/:sessionId/session_storage/size
+    // /session/:sessionId/log
+    // /session/:sessionId/log/types
+    // /session/:sessionId/application_cache/status
+    
+	return [super httpResponseForMethod:method URI:path];
+}
+
+@end

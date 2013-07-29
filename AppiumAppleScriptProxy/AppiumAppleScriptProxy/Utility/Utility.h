@@ -7,14 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GCDWebServerRequest.h"
 
 @interface Utility : NSObject
 
 +(NSString*) arch;
 +(NSString*) bundleRevision;
 +(NSString*) bundleVersion;
-+(NSString*) getSessionFromRequest:(GCDWebServerRequest*)request;
++(NSString*) getSessionFromPath:(NSString*)path;
 +(NSString*) randomStringOfLength:(int)length;
 +(int) unixTimestamp;
 +(NSString*) version;

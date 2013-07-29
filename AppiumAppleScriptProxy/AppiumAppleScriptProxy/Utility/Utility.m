@@ -39,9 +39,9 @@
     return [info objectForKey:@"CFBundleShortVersionString"];
 }
 
-+(NSString*) getSessionFromRequest:(GCDWebServerRequest*)request
++(NSString*) getSessionFromPath:(NSString*)path
 {
-    NSArray *components = [request.path componentsSeparatedByString:@"/session/"];
+    NSArray *components = [path componentsSeparatedByString:@"/session/"];
     if (components.count < 2)
     {
         return nil;
