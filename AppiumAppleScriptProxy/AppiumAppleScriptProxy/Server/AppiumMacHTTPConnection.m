@@ -94,6 +94,10 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
 	}
     
     // POST /session/:sessionId/url
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"url"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postUrl:path];
+	}
     
     // /session/:sessionId/forward
     // /session/:sessionId/back
@@ -102,7 +106,6 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/execute_async
     
     // GET /session/:sessionId/screenshot
-    // POST /session
     if ([path isEqualToString:@"/screenshot"] && [method isEqualToString:@"GET"])
 	{
         
@@ -115,13 +118,31 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/ime/deactivate
     // /session/:sessionId/ime/activate
     // /session/:sessionId/frame
-    // /session/:sessionId/window
+    
+    // POST /session/:sessionId/window
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postWindow:path];
+	}
+    
+    // DELETE /session/:sessionId/window
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [method isEqualToString:@"DELETE"])
+	{
+        return [SERVER.handler deleteWindow:path];
+	}
+    
     // /session/:sessionId/window/:windowHandle/size
     // /session/:sessionId/window/:windowHandle/position
     // /session/:sessionId/window/:windowHandle/maximize
     // /session/:sessionId/cookie
     // /session/:sessionId/cookie/:name
-    // /session/:sessionId/source
+    
+    // GET /session/:sessionId/source
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"source"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getSource:path];
+	}
+    
     // /session/:sessionId/title
     // /session/:sessionId/element
     // /session/:sessionId/elements

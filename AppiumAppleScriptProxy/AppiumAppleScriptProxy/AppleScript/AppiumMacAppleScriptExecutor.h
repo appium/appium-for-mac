@@ -17,5 +17,6 @@
 @property SystemEventsApplication *systemEvents;
 
 -(NSString*) frontmostApplication;
+-(NSDictionary*) pageSource;
 
 @end

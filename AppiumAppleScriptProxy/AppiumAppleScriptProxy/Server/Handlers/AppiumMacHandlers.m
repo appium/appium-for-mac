@@ -128,6 +128,12 @@
 }
 
 // POST /session/:sessionId/url
+-(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    // TODO: set fronmost application
+    return [self respondWithJson:[self.applescript frontmostApplication] status:0 session: sessionId];
+}
 
 // /session/:sessionId/forward
 // /session/:sessionId/back
@@ -163,13 +169,37 @@
 // /session/:sessionId/ime/deactivate
 // /session/:sessionId/ime/activate
 // /session/:sessionId/frame
-// /session/:sessionId/window
+
+// GET /session/:sessionId/window
+-(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    // TODO: use post param
+    [self.applescript setCurrentProcess:@"Finder"];
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
+// DELETE /session/:sessionId/window
+-(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    // TODO: quit app from post params
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
 // /session/:sessionId/window/:windowHandle/size
 // /session/:sessionId/window/:windowHandle/position
 // /session/:sessionId/window/:windowHandle/maximize
 // /session/:sessionId/cookie
 // /session/:sessionId/cookie/:name
-// /session/:sessionId/source
+
+// GET /session/:sessionId/source
+-(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    return [self respondWithJson:[self.applescript pageSource] status:0 session: sessionId];
+}
+
 // /session/:sessionId/title
 // /session/:sessionId/element
 // /session/:sessionId/elements

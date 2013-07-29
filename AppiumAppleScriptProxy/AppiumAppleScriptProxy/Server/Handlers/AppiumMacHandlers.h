@@ -41,6 +41,7 @@
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path;
 
 // POST /session/:sessionId/url
+-(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path;
 
 // /session/:sessionId/forward
 // /session/:sessionId/back
@@ -57,13 +58,22 @@
 // /session/:sessionId/ime/deactivate
 // /session/:sessionId/ime/activate
 // /session/:sessionId/frame
-// /session/:sessionId/window
+
+// GET /session/:sessionId/window
+-(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path;
+
+// DELETE /session/:sessionId/window
+-(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString *)path;
+
 // /session/:sessionId/window/:windowHandle/size
 // /session/:sessionId/window/:windowHandle/position
 // /session/:sessionId/window/:windowHandle/maximize
 // /session/:sessionId/cookie
 // /session/:sessionId/cookie/:name
-// /session/:sessionId/source
+
+// GET /session/:sessionId/source
+-(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path;
+
 // /session/:sessionId/title
 // /session/:sessionId/element
 // /session/:sessionId/elements
