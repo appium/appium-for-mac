@@ -23,6 +23,7 @@
 		3614DE1B17A59B3000853962 /* AppiumMacHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3614DE1A17A59B3000853962 /* AppiumMacHandlers.m */; };
 		3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */; };
 		36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */; };
+		36AA9D9817A6103000AEC70A /* AppiumMacAppleScriptExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */; };
 		36B4E52A17A5BC2B00185B1B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B4E52917A5BC2B00185B1B /* NSData+Base64.m */; };
 		36D203C117A5D6B300011A3A /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038717A5D6B200011A3A /* DDData.m */; };
 		36D203C217A5D6B300011A3A /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038917A5D6B200011A3A /* DDNumber.m */; };
@@ -97,6 +98,9 @@
 		3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacHTTPJSONResponse.m; sourceTree = "<group>"; };
 		36AA9D9217A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacHTTP303JSONResponse.h; sourceTree = "<group>"; };
 		36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacHTTP303JSONResponse.m; sourceTree = "<group>"; };
+		36AA9D9617A6103000AEC70A /* AppiumMacAppleScriptExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacAppleScriptExecutor.h; sourceTree = "<group>"; };
+		36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacAppleScriptExecutor.m; sourceTree = "<group>"; };
+		36AA9D9917A6127500AEC70A /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
 		36B4E52817A5BC2B00185B1B /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		36B4E52917A5BC2B00185B1B /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		36D2038617A5D6B200011A3A /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
@@ -224,7 +228,7 @@
 		3610348E17A4990E00DB79AA /* AppiumAppleScriptProxy */ = {
 			isa = PBXGroup;
 			children = (
-				361034BE17A4993600DB79AA /* AppleScriptHeaders */,
+				361034BE17A4993600DB79AA /* AppleScript */,
 				36D2038317A5D66100011A3A /* CocoaHTTPServer */,
 				3614DE0D17A5879600853962 /* Server */,
 				3610349A17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.h */,
@@ -267,12 +271,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		361034BE17A4993600DB79AA /* AppleScriptHeaders */ = {
+		361034BE17A4993600DB79AA /* AppleScript */ = {
 			isa = PBXGroup;
 			children = (
+				36AA9D9617A6103000AEC70A /* AppiumMacAppleScriptExecutor.h */,
+				36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */,
+				36AA9D9917A6127500AEC70A /* Finder.h */,
 				361034BF17A4994100DB79AA /* SystemEvents.h */,
 			);
-			path = AppleScriptHeaders;
+			path = AppleScript;
 			sourceTree = "<group>";
 		};
 		3614DE0D17A5879600853962 /* Server */ = {
@@ -588,6 +595,7 @@
 				36D203DF17A5D8B900011A3A /* AppiumMacHTTPConnection.m in Sources */,
 				3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */,
 				36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */,
+				36AA9D9817A6103000AEC70A /* AppiumMacAppleScriptExecutor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

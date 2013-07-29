@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "AppiumMacHTTPJSONResponse.h"
+#import "AppiumMacAppleScriptExecutor.h"
 #import "SystemEvents.h"
 
 @interface AppiumMacHandlers : NSObject
 
-@property SystemEventsApplication *SystemEvents;
+@property AppiumMacAppleScriptExecutor *applescript;
 @property NSMutableDictionary *sessions;
 
 // GET /status
@@ -35,7 +36,12 @@
 // /session/:sessionId/timeouts/implicit_wait
 // /session/:sessionId/window_handle
 // /session/:sessionId/window_handles
-// /session/:sessionId/url
+
+// GET /session/:sessionId/url
+-(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path;
+
+// POST /session/:sessionId/url
+
 // /session/:sessionId/forward
 // /session/:sessionId/back
 // /session/:sessionId/refresh

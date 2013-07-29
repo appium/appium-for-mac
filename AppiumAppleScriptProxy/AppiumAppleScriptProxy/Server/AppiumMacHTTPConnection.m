@@ -70,13 +70,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     }
     
     // GET /session/:sessionId
-    if ([[pathComponents objectAtIndex:0] isEqualToString:@"session"] && pathComponents.count == 2 && [method isEqualToString:@"GET"])
+    if (pathComponents.count == 2 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [method isEqualToString:@"GET"])
     {
         return [SERVER.handler getSession:path];
     }
     
     // DELETE /session/:sessionId
-    if ([[pathComponents objectAtIndex:0] isEqualToString:@"session"] && pathComponents.count == 2 && [method isEqualToString:@"DELETE"])
+    if (pathComponents.count == 2 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [method isEqualToString:@"DELETE"])
     {
         return [SERVER.handler deleteSession:path];
     }
@@ -86,7 +86,15 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/timeouts/implicit_wait
     // /session/:sessionId/window_handle
     // /session/:sessionId/window_handles
-    // /session/:sessionId/url
+    
+    // GET /session/:sessionId/url
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"url"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getUrl:path];
+	}
+    
+    // POST /session/:sessionId/url
+    
     // /session/:sessionId/forward
     // /session/:sessionId/back
     // /session/:sessionId/refresh

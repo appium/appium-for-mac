@@ -17,7 +17,7 @@
     self = [super init];
     if (self) {
         [self setSessions:[NSMutableDictionary new]];
-        [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
+        [self setApplescript:[AppiumMacAppleScriptExecutor new]];
     }
     return self;
 }
@@ -119,7 +119,16 @@
 // /session/:sessionId/timeouts/implicit_wait
 // /session/:sessionId/window_handle
 // /session/:sessionId/window_handles
-// /session/:sessionId/url
+
+// GET /session/:sessionId/url
+-(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    return [self respondWithJson:[self.applescript frontmostApplication] status:0 session: sessionId];
+}
+
+// POST /session/:sessionId/url
+
 // /session/:sessionId/forward
 // /session/:sessionId/back
 // /session/:sessionId/refresh
