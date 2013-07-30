@@ -124,7 +124,10 @@
 -(AppiumMacHTTPJSONResponse*) deleteSession:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
-    [self.sessions removeObjectForKey:sessionId];
+    if ([self.sessions objectForKey:sessionId] != nil)
+    {
+        [self.sessions removeObjectForKey:sessionId];
+    }
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -164,6 +167,7 @@
     // activate supplied application
 
     [self.applescript activateApplication:(NSString*)[postParams objectForKey:@"url"]];
+    [self.applescript setCurrentProcess:[self.applescript processForApplication:[postParams objectForKey:@"url"]]];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -211,6 +215,7 @@
 
     // activate application for supplied process
     [self.applescript activateApplication:[self.applescript applicationForProcessName:(NSString*)[postParams objectForKey:@"name"]]];
+    [self.applescript setCurrentProcess:[postParams objectForKey:@"name"]];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
