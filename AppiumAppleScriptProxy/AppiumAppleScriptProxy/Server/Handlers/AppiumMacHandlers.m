@@ -18,6 +18,8 @@
     if (self) {
         [self setSessions:[NSMutableDictionary new]];
         [self setApplescript:[AppiumMacAppleScriptExecutor new]];
+        [self setElementIndex:0];
+        [self setElements:[NSMutableDictionary new]];
     }
     return self;
 }
@@ -254,7 +256,32 @@
 }
 
 // /session/:sessionId/title
-// /session/:sessionId/element
+
+// POST /session/:sessionId/element
+-(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    
+    NSString *using = (NSString*)[postParams objectForKey:@"using"];
+    NSString *value = (NSString*)[postParams objectForKey:@"value"];
+    
+    if ([using isEqualToString:@"name"])
+    {
+        SystemEventsUIElement *element = [self.applescript elementByName:value baseElement:nil];
+        if (element != nil)
+        {
+            NSString *myKey = [NSString stringWithFormat:@"%d", self.elementIndex];
+            [self.elements setValue:element forKey:myKey];
+            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
+        }
+        // TODO: add error handling
+        // TODO: elements are session based
+    }
+    
+    return [self respondWithJson:nil status:-1 session: sessionId];
+}
+
 // /session/:sessionId/elements
 // /session/:sessionId/element/active
 // /session/:sessionId/element/:id

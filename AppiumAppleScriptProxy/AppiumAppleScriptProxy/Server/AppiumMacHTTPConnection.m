@@ -154,7 +154,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
 	}
     
     // /session/:sessionId/title
-    // /session/:sessionId/element
+    
+    // POST /session/:sessionId/element
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElement:path data:[request body]];
+	}
+    
     // /session/:sessionId/elements
     // /session/:sessionId/element/active
     // /session/:sessionId/element/:id

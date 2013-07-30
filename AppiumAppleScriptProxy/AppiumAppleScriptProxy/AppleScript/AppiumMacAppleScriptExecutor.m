@@ -50,6 +50,54 @@
     return statusString;
 }
 
+-(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement
+{
+    // check if this the element
+    if (baseElement != nil && [baseElement.title isEqualToString:name])
+    {
+        // return the element if it matches
+        return baseElement;
+    }
+    
+    // search the children
+    NSArray *elementsToSearch;
+    if (baseElement != nil)
+    {
+        // search the children if this is an element
+        elementsToSearch = baseElement.UIElements;
+    }
+    else
+    {
+        // get all ui elements of the current process if no base element is supplied
+        for(SystemEventsProcess *process in self.systemEvents.processes)
+        {
+            if ([process.name isEqualToString:self.currentProcess])
+            {
+                elementsToSearch = process.UIElements;
+                break;
+            }
+        }
+    }
+    
+    if (elementsToSearch != nil)
+    {
+        for(SystemEventsUIElement* childElement in elementsToSearch)
+        {
+            // check the child
+            SystemEventsUIElement *childResult = [self elementByName:name baseElement:childElement];
+        
+            //return the child if it matches
+            if (childResult != nil)
+            {
+                return childResult;
+            }
+        }
+    }
+    
+    // return nil because there was no match
+    return nil;
+}
+
 -(NSString*) frontmostApplication
 {
     NSDictionary *errorDict;

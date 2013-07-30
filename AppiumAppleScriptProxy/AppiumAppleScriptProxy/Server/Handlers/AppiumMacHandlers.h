@@ -15,6 +15,9 @@
 
 @property AppiumMacAppleScriptExecutor *applescript;
 @property NSMutableDictionary *sessions;
+@property NSMutableDictionary *elements;
+@property int elementIndex;
+
 
 // GET /status
 -(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path;
@@ -79,7 +82,10 @@
 -(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path;
 
 // /session/:sessionId/title
-// /session/:sessionId/element
+
+// POST /session/:sessionId/element
+-(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData;
+
 // /session/:sessionId/elements
 // /session/:sessionId/element/active
 // /session/:sessionId/element/:id
