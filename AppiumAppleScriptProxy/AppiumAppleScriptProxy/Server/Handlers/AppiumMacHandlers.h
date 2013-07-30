@@ -20,7 +20,7 @@
 -(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path;
 
 // POST /session
--(AppiumMacHTTPJSONResponse*) postSession:(NSString*)path;
+-(AppiumMacHTTPJSONResponse*) postSession:(NSString*)path data:(NSData*)postData;
 
 // GET /sessions
 -(HTTPDataResponse*) getSessions:(NSString*)path;
@@ -45,7 +45,7 @@
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path;
 
 // POST /session/:sessionId/url
--(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path;
+-(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path data:(NSData*)postData;
 
 // /session/:sessionId/forward
 // /session/:sessionId/back
@@ -64,7 +64,7 @@
 // /session/:sessionId/frame
 
 // GET /session/:sessionId/window
--(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path;
+-(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path data:(NSData*)postData;
 
 // DELETE /session/:sessionId/window
 -(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString *)path;

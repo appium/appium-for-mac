@@ -22,6 +22,20 @@
     return self;
 }
 
+-(NSDictionary*) dictionaryFromPostData:(NSData*)postData
+{
+    if (!postData)
+    {
+        return [NSDictionary new];
+    }
+    
+    NSError *error = nil;
+    NSDictionary *postDict = [NSJSONSerialization JSONObjectWithData:postData options:NSJSONReadingMutableContainers error:&error];
+    
+    // TODO: error handling
+    return postDict;
+}
+
 -(AppiumMacHTTPJSONResponse*) respondWithJson:(id)json status:(int)status session:(NSString*)session
 {
     return [self respondWithJson:json status:status session:session statusCode:200];
@@ -68,7 +82,7 @@
 }
 
 // POST /session
--(AppiumMacHTTPJSONResponse*) postSession:(NSString*)path
+-(AppiumMacHTTPJSONResponse*) postSession:(NSString*)path data:(NSData*)postData
 {
     // generate new session key
     NSString *newSession = [Utility randomStringOfLength:8];
@@ -142,13 +156,15 @@
 }
 
 // POST /session/:sessionId/url
--(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path
+-(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
     
     // activate supplied application
-    // TODO: use post param
-    [self.applescript activateApplication:@"TextEdit"];
+
+    [self.applescript activateApplication:(NSString*)[postParams objectForKey:@"url"]];
+    // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -188,14 +204,14 @@
 // /session/:sessionId/frame
 
 // POST /session/:sessionId/window
--(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path
+-(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
-    // TODO: use post param
     // activate application for supplied process
-    [self.applescript activateApplication:[self.applescript applicationForProcessName:@"TextEdit"]];
-    
+    [self.applescript activateApplication:[self.applescript applicationForProcessName:(NSString*)[postParams objectForKey:@"name"]]];
+    // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -204,11 +220,11 @@
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
     
-    // TODO: use post param
     // kill supplied process
-    int pid = [self.applescript pidForProcess:@"TextEdit"];
+    int pid = [self.applescript pidForProcess:[self.applescript frontmostProcess]];
     system([[NSString stringWithFormat:@"killall -9 %d", pid] UTF8String]);
     
+    // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 

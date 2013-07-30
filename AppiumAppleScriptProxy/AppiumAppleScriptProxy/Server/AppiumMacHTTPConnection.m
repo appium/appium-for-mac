@@ -10,6 +10,7 @@
 #import "AppiumAppleScriptProxyAppDelegate.h"
 #import "HTTPDataResponse.h"
 #import "HTTPLogging.h"
+#import "HTTPMessage.h"
 
 
 // Log levels: off, error, warn, info, verbose
@@ -60,7 +61,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // POST /session
     if ([path isEqualToString:@"/session"] && [method isEqualToString:@"POST"])
 	{
-        return [SERVER.handler postSession:path];
+        return [SERVER.handler postSession:path data:[request body]];
 	}
     
     // GET /sessions
@@ -106,7 +107,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // POST /session/:sessionId/url
     if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"url"] && [method isEqualToString:@"POST"])
 	{
-        return [SERVER.handler postUrl:path];
+        return [SERVER.handler postUrl:path data:[request body]];
 	}
     
     // /session/:sessionId/forward
@@ -118,7 +119,6 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // GET /session/:sessionId/screenshot
     if ([path isEqualToString:@"/screenshot"] && [method isEqualToString:@"GET"])
 	{
-        
         return [SERVER.handler getScreenshot:path];
 	}
 
@@ -132,7 +132,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // POST /session/:sessionId/window
     if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [method isEqualToString:@"POST"])
 	{
-        return [SERVER.handler postWindow:path];
+        return [SERVER.handler postWindow:path data:[request body]];
 	}
     
     // DELETE /session/:sessionId/window
@@ -207,6 +207,30 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/application_cache/status
     
 	return [super httpResponseForMethod:method URI:path];
+}
+
+- (void)prepareForBodyWithSize:(UInt64)contentLength
+{
+	HTTPLogTrace();
+    
+	// If we supported large uploads,
+	// we might use this method to create/open files, allocate memory, etc.
+}
+
+- (void)processBodyData:(NSData *)postDataChunk
+{
+	HTTPLogTrace();
+    
+	// Remember: In order to support LARGE POST uploads, the data is read in chunks.
+	// This prevents a 50 MB upload from being stored in RAM.
+	// The size of the chunks are limited by the POST_CHUNKSIZE definition.
+	// Therefore, this method may be called multiple times for the same POST request.
+    
+	BOOL result = [request appendData:postDataChunk];
+	if (!result)
+	{
+		HTTPLogError(@"%@[%p]: %@ - Couldn't append bytes!", THIS_FILE, self, THIS_METHOD);
+	}
 }
 
 @end
