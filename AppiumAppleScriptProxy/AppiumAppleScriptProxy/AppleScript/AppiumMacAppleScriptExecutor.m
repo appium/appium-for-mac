@@ -14,7 +14,8 @@
 {
     self = [super init];
     if (self) {
-        [self setCurrentProcess: @"Finder"];
+        [self setCurrentApplication:nil];
+        [self setCurrentProcess:nil];
         [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
         [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
     }

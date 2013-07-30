@@ -155,7 +155,7 @@
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
-    return [self respondWithJson:[self.applescript frontmostApplication] status:0 session: sessionId];
+    return [self respondWithJson:[self.applescript currentApplication] status:0 session: sessionId];
 }
 
 // POST /session/:sessionId/url
@@ -166,8 +166,10 @@
     
     // activate supplied application
 
-    [self.applescript activateApplication:(NSString*)[postParams objectForKey:@"url"]];
-    [self.applescript setCurrentProcess:[self.applescript processForApplication:[postParams objectForKey:@"url"]]];
+    NSString *url = (NSString*)[postParams objectForKey:@"url"];
+    [self.applescript activateApplication:url];
+    [self.applescript setCurrentApplication:url];
+    [self.applescript setCurrentProcess:[self.applescript processForApplication:url]];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -214,8 +216,11 @@
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     // activate application for supplied process
-    [self.applescript activateApplication:[self.applescript applicationForProcessName:(NSString*)[postParams objectForKey:@"name"]]];
-    [self.applescript setCurrentProcess:[postParams objectForKey:@"name"]];
+    NSString *name = (NSString*)[postParams objectForKey:@"name"];
+    NSString *applicationName = [self.applescript applicationForProcessName:name];
+    [self.applescript activateApplication:applicationName];
+    [self.applescript setCurrentApplication:applicationName];
+    [self.applescript setCurrentProcess:name];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -228,6 +233,8 @@
     // kill supplied process
     int pid = [self.applescript pidForProcess:[self.applescript frontmostProcess]];
     system([[NSString stringWithFormat:@"killall -9 %d", pid] UTF8String]);
+    [self.applescript setCurrentApplication:nil];
+    [self.applescript setCurrentProcess:nil];
     
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];

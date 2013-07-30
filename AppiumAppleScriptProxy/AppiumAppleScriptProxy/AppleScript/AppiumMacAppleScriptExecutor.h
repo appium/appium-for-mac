@@ -12,6 +12,7 @@
 
 @interface AppiumMacAppleScriptExecutor : AppiumMacHTTPJSONResponse
 
+@property NSString *currentApplication;
 @property NSString *currentProcess;
 @property FinderApplication *finder;
 @property SystemEventsApplication *systemEvents;
