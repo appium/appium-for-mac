@@ -34,8 +34,12 @@
 // /session/:sessionId/timeouts
 // /session/:sessionId/timeouts/async_script
 // /session/:sessionId/timeouts/implicit_wait
-// /session/:sessionId/window_handle
-// /session/:sessionId/window_handles
+
+// GET /session/:sessionId/window_handle
+-(AppiumMacHTTPJSONResponse*) getWindowHandle:(NSString*)path;
+
+// GET /session/:sessionId/window_handles
+-(AppiumMacHTTPJSONResponse*) getWindowHandles:(NSString*)path;
 
 // GET /session/:sessionId/url
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path;

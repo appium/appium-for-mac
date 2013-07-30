@@ -117,8 +117,22 @@
 // /session/:sessionId/timeouts
 // /session/:sessionId/timeouts/async_script
 // /session/:sessionId/timeouts/implicit_wait
-// /session/:sessionId/window_handle
-// /session/:sessionId/window_handles
+
+// GET /session/:sessionId/window_handle
+-(AppiumMacHTTPJSONResponse*) getWindowHandle:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    // TODO: add error handling
+    return [self respondWithJson:[self.applescript processForApplication:[self.applescript frontmostApplication]] status:0 session: sessionId];
+}
+
+// GET /session/:sessionId/window_handles
+-(AppiumMacHTTPJSONResponse*) getWindowHandles:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionFromPath:path];
+    // TODO: add error handling
+    return [self respondWithJson:[self.applescript allProcesses] status:0 session: sessionId];
+}
 
 // GET /session/:sessionId/url
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
@@ -131,8 +145,11 @@
 -(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
-    // TODO: set fronmost application
-    return [self respondWithJson:[self.applescript frontmostApplication] status:0 session: sessionId];
+    
+    // activate supplied application
+    // TODO: use post param
+    [self.applescript activateApplication:@"TextEdit"];
+    return [self respondWithJson:nil status:0 session: sessionId];
 }
 
 // /session/:sessionId/forward
@@ -170,12 +187,15 @@
 // /session/:sessionId/ime/activate
 // /session/:sessionId/frame
 
-// GET /session/:sessionId/window
+// POST /session/:sessionId/window
 -(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
+
     // TODO: use post param
-    [self.applescript setCurrentProcess:@"Finder"];
+    // activate application for supplied process
+    [self.applescript activateApplication:[self.applescript applicationForProcessName:@"TextEdit"]];
+    
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -183,7 +203,12 @@
 -(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionFromPath:path];
-    // TODO: quit app from post params
+    
+    // TODO: use post param
+    // kill supplied process
+    int pid = [self.applescript pidForProcess:@"TextEdit"];
+    system([[NSString stringWithFormat:@"killall -9 %d", pid] UTF8String]);
+    
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 

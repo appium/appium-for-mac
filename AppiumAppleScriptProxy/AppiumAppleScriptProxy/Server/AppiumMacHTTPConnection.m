@@ -84,8 +84,18 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/timeouts
     // /session/:sessionId/timeouts/async_script
     // /session/:sessionId/timeouts/implicit_wait
-    // /session/:sessionId/window_handle
-    // /session/:sessionId/window_handles
+    
+    // GET /session/:sessionId/window_handle
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window_handle"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getWindowHandle:path];
+	}
+    
+    // GET /session/:sessionId/window_handles
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window_handles"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getWindowHandles:path];
+	}
     
     // GET /session/:sessionId/url
     if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"url"] && [method isEqualToString:@"GET"])

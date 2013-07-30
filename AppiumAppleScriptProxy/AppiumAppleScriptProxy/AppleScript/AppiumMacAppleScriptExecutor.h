@@ -16,7 +16,13 @@
 @property FinderApplication *finder;
 @property SystemEventsApplication *systemEvents;
 
+-(void) activateApplication:(NSString*)applicationName;
+-(NSArray*) allProcesses;
+-(NSString*) applicationForProcessName:(NSString*)processName;
 -(NSString*) frontmostApplication;
+-(NSString*) frontmostProcess;
 -(NSDictionary*) pageSource;
+-(int) pidForProcess:(NSString*)processName;
+-(NSString*) processForApplication:(NSString*) applicationName;
 
 @end
