@@ -14,8 +14,8 @@
 {
     self = [super init];
     if (self) {
-        [self setCurrentApplication:nil];
-        [self setCurrentProcess:nil];
+        [self setCurrentApplicationName:nil];
+        [self setCurrentProcessName:nil];
         [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
         [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
     }
@@ -79,7 +79,7 @@
         // get all ui elements of the current process if no base element is supplied
         for(SystemEventsProcess *process in self.systemEvents.processes)
         {
-            if ([process.name isEqualToString:self.currentProcess])
+            if ([process.name isEqualToString:self.currentProcessName])
             {
                 elementsToSearch = process.UIElements;
                 break;
@@ -106,7 +106,7 @@
     return nil;
 }
 
--(NSString*) frontmostApplication
+-(NSString*) frontmostApplicationName
 {
     NSDictionary *errorDict;
     NSAppleScript *frontMostApplicationScript = [[NSAppleScript alloc] initWithSource:
@@ -116,9 +116,9 @@
     return statusString;
 }
 
--(NSString*) frontmostProcess
+-(NSString*) frontmostProcessName
 {
-    return [self processForApplication:[self frontmostApplication]];
+    return [self processForApplication:[self frontmostApplicationName]];
 }
 
 -(NSDictionary*) pageSource
@@ -127,7 +127,7 @@
     NSDictionary *source = [NSDictionary dictionaryWithObject:children forKey:@"source"];
     for (SystemEventsProcess *process in [self.systemEvents processes])
     {
-        if ([process.name isEqualToString:self.currentProcess])
+        if ([process.name isEqualToString:self.currentProcessName])
         {
             for(SystemEventsUIElement *element in process.entireContents)
             {
@@ -158,9 +158,24 @@
     return statusString;
 }
 
+-(void) selectElement:(SystemEventsUIElement*)element
+{
+    [element select];
+}
+
 -(void) sendKeys:(NSString*)keys
 {
-    [self.systemEvents keystroke:keys using:nil];
+    [self sendKeys:keys toElement:nil];
+}
+
+-(void) sendKeys:(NSString*)keys toElement:(SystemEventsUIElement*)element
+{
+    [self activateApplication:self.currentApplicationName];
+    if (element != nil)
+    {
+        [self selectElement:element];
+    }
+    [self.systemEvents keystroke:keys using:0];
 }
 
 @end

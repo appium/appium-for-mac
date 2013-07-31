@@ -142,7 +142,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: add error handling
-    return [self respondWithJson:[self.applescript processForApplication:[self.applescript frontmostApplication]] status:0 session: sessionId];
+    return [self respondWithJson:[self.applescript processForApplication:[self.applescript frontmostApplicationName]] status:0 session: sessionId];
 }
 
 // GET /session/:sessionId/window_handles
@@ -157,7 +157,7 @@
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    return [self respondWithJson:[self.applescript currentApplication] status:0 session: sessionId];
+    return [self respondWithJson:[self.applescript currentApplicationName] status:0 session: sessionId];
 }
 
 // POST /session/:sessionId/url
@@ -170,8 +170,8 @@
 
     NSString *url = (NSString*)[postParams objectForKey:@"url"];
     [self.applescript activateApplication:url];
-    [self.applescript setCurrentApplication:url];
-    [self.applescript setCurrentProcess:[self.applescript processForApplication:url]];
+    [self.applescript setCurrentApplicationName:url];
+    [self.applescript setCurrentProcessName:[self.applescript processForApplication:url]];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -221,8 +221,8 @@
     NSString *name = (NSString*)[postParams objectForKey:@"name"];
     NSString *applicationName = [self.applescript applicationForProcessName:name];
     [self.applescript activateApplication:applicationName];
-    [self.applescript setCurrentApplication:applicationName];
-    [self.applescript setCurrentProcess:name];
+    [self.applescript setCurrentApplicationName:applicationName];
+    [self.applescript setCurrentProcessName:name];
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -233,10 +233,10 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     
     // kill supplied process
-    int pid = [self.applescript pidForProcess:[self.applescript frontmostProcess]];
+    int pid = [self.applescript pidForProcess:[self.applescript frontmostProcessName]];
     system([[NSString stringWithFormat:@"killall -9 %d", pid] UTF8String]);
-    [self.applescript setCurrentApplication:nil];
-    [self.applescript setCurrentProcess:nil];
+    [self.applescript setCurrentApplicationName:nil];
+    [self.applescript setCurrentProcessName:nil];
     
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
@@ -305,7 +305,22 @@
 
 // /session/:sessionId/element/:id/submit
 // /session/:sessionId/element/:id/text
-// /session/:sessionId/element/:id/value
+
+// POST /session/:sessionId/element/:id/value
+-(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    
+    NSArray *value = [postParams objectForKey:@"value"];
+    [self.applescript sendKeys:[value componentsJoinedByString:@""] toElement:[self.elements objectForKey:elementId]];
+    
+    // TODO: add error handling
+    // TODO: elements are session based
+    
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
 
 // POST /session/:sessionId/keys
 -(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData
@@ -313,13 +328,13 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
     
-    NSString *value = (NSString*)[postParams objectForKey:@"value"];
-    [self.applescript sendKeys:value];
+    NSArray *value = [postParams objectForKey:@"value"];
+    [self.applescript sendKeys:[value componentsJoinedByString:@""] toElement:nil];
 
     // TODO: add error handling
     // TODO: elements are session based
     
-    return [self respondWithJson:nil status:-1 session: sessionId];
+    return [self respondWithJson:nil status:0 session: sessionId];
 }
 
 // /session/:sessionId/element/:id/name
