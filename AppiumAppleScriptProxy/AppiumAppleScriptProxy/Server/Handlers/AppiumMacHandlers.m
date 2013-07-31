@@ -306,7 +306,22 @@
 // /session/:sessionId/element/:id/submit
 // /session/:sessionId/element/:id/text
 // /session/:sessionId/element/:id/value
-// /session/:sessionId/keys
+
+// POST /session/:sessionId/keys
+-(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    
+    NSString *value = (NSString*)[postParams objectForKey:@"value"];
+    [self.applescript sendKeys:value];
+
+    // TODO: add error handling
+    // TODO: elements are session based
+    
+    return [self respondWithJson:nil status:-1 session: sessionId];
+}
+
 // /session/:sessionId/element/:id/name
 // /session/:sessionId/element/:id/clear
 // /session/:sessionId/element/:id/selected

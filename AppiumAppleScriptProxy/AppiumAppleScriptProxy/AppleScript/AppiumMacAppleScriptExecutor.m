@@ -158,4 +158,9 @@
     return statusString;
 }
 
+-(void) sendKeys:(NSString*)keys
+{
+    [self.systemEvents keystroke:keys using:nil];
+}
+
 @end

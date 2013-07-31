@@ -27,5 +27,6 @@
 -(NSDictionary*) pageSource;
 -(int) pidForProcess:(NSString*)processName;
 -(NSString*) processForApplication:(NSString*) applicationName;
+-(void) sendKeys:(NSString*)keys;
 
 @end
