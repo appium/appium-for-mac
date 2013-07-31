@@ -13,7 +13,8 @@
 +(NSString*) arch;
 +(NSString*) bundleRevision;
 +(NSString*) bundleVersion;
-+(NSString*) getSessionFromPath:(NSString*)path;
++(NSString*) getElementIDFromPath:(NSString*)path;
++(NSString*) getSessionIDFromPath:(NSString*)path;
 +(NSString*) randomStringOfLength:(int)length;
 +(int) unixTimestamp;
 +(NSString*) version;

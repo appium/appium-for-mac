@@ -20,6 +20,7 @@
 -(void) activateApplication:(NSString*)applicationName;
 -(NSArray*) allProcesses;
 -(NSString*) applicationForProcessName:(NSString*)processName;
+-(void) clickElement:(SystemEventsUIElement*)element;
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement;
 -(NSString*) frontmostApplication;
 -(NSString*) frontmostProcess;

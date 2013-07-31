@@ -50,6 +50,14 @@
     return statusString;
 }
 
+
+-(void) clickElement:(SystemEventsUIElement*)element
+{
+    [element clickAt:nil];
+    // TODO: error handling
+    // TODO: check if element is enabled (clickable)
+}
+
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement
 {
     // check if this the element

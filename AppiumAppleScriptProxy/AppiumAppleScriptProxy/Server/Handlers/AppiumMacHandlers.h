@@ -91,7 +91,10 @@
 // /session/:sessionId/element/:id
 // /session/:sessionId/element/:id/element
 // /session/:sessionId/element/:id/elements
-// /session/:sessionId/element/:id/click
+
+// POST /session/:sessionId/element/:id/click
+-(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path;
+
 // /session/:sessionId/element/:id/submit
 // /session/:sessionId/element/:id/text
 // /session/:sessionId/element/:id/value

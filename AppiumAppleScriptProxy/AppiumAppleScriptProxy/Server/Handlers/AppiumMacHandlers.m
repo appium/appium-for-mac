@@ -117,7 +117,7 @@
 // GET /session/:sessionId
 -(AppiumMacHTTPJSONResponse*) getSession:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: show error if session does not exist
     return [self respondWithJson:[self.sessions objectForKey:sessionId] status:0 session:sessionId];
 }
@@ -125,7 +125,7 @@
 // DELETE /session/:sessionId
 -(AppiumMacHTTPJSONResponse*) deleteSession:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     if ([self.sessions objectForKey:sessionId] != nil)
     {
         [self.sessions removeObjectForKey:sessionId];
@@ -140,7 +140,7 @@
 // GET /session/:sessionId/window_handle
 -(AppiumMacHTTPJSONResponse*) getWindowHandle:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: add error handling
     return [self respondWithJson:[self.applescript processForApplication:[self.applescript frontmostApplication]] status:0 session: sessionId];
 }
@@ -148,7 +148,7 @@
 // GET /session/:sessionId/window_handles
 -(AppiumMacHTTPJSONResponse*) getWindowHandles:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: add error handling
     return [self respondWithJson:[self.applescript allProcesses] status:0 session: sessionId];
 }
@@ -156,14 +156,14 @@
 // GET /session/:sessionId/url
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     return [self respondWithJson:[self.applescript currentApplication] status:0 session: sessionId];
 }
 
 // POST /session/:sessionId/url
 -(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path data:(NSData*)postData
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
     
     // activate supplied application
@@ -196,11 +196,11 @@
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:classArray options:options];
         NSImage *image = [objectsToPaste objectAtIndex:0];
         NSString *base64Image = [[image TIFFRepresentation] base64EncodedString];
-        return [self respondWithJson:base64Image status:0 session:[Utility getSessionFromPath:path]];
+        return [self respondWithJson:base64Image status:0 session:[Utility getSessionIDFromPath:path]];
     }
     else
     {
-        return [self respondWithJson:nil status:0 session: [Utility getSessionFromPath:path]];
+        return [self respondWithJson:nil status:0 session: [Utility getSessionIDFromPath:path]];
     }
 }
 
@@ -214,7 +214,7 @@
 // POST /session/:sessionId/window
 -(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path data:(NSData*)postData
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     // activate application for supplied process
@@ -230,7 +230,7 @@
 // DELETE /session/:sessionId/window
 -(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     
     // kill supplied process
     int pid = [self.applescript pidForProcess:[self.applescript frontmostProcess]];
@@ -251,7 +251,7 @@
 // GET /session/:sessionId/source
 -(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     return [self respondWithJson:[self.applescript pageSource] status:0 session: sessionId];
 }
 
@@ -260,7 +260,7 @@
 // POST /session/:sessionId/element
 -(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData
 {
-    NSString *sessionId = [Utility getSessionFromPath:path];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
     
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
@@ -271,6 +271,7 @@
         SystemEventsUIElement *element = [self.applescript elementByName:value baseElement:nil];
         if (element != nil)
         {
+            self.elementIndex++;
             NSString *myKey = [NSString stringWithFormat:@"%d", self.elementIndex];
             [self.elements setValue:element forKey:myKey];
             return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
@@ -287,7 +288,21 @@
 // /session/:sessionId/element/:id
 // /session/:sessionId/element/:id/element
 // /session/:sessionId/element/:id/elements
-// /session/:sessionId/element/:id/click
+
+// POST /session/:sessionId/element/:id/click
+-(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        [self.applescript clickElement:element];
+    }
+    // TODO: error handling
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
 // /session/:sessionId/element/:id/submit
 // /session/:sessionId/element/:id/text
 // /session/:sessionId/element/:id/value

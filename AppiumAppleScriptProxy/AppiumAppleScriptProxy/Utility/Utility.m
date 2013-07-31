@@ -39,7 +39,18 @@
     return [info objectForKey:@"CFBundleShortVersionString"];
 }
 
-+(NSString*) getSessionFromPath:(NSString*)path
++(NSString*) getElementIDFromPath:(NSString*)path
+{
+    NSArray *components = [path componentsSeparatedByString:@"/element/"];
+    if (components.count < 2)
+    {
+        return nil;
+    }
+    components = [(NSString*)[components objectAtIndex:1] componentsSeparatedByString:@"/"];
+    return components.count > 1 ? (NSString*)[components objectAtIndex:0] : nil;
+}
+
++(NSString*) getSessionIDFromPath:(NSString*)path
 {
     NSArray *components = [path componentsSeparatedByString:@"/session/"];
     if (components.count < 2)
@@ -48,7 +59,6 @@
     }
     components = [(NSString*)[components objectAtIndex:1] componentsSeparatedByString:@"/"];
     return components.count > 1 ? (NSString*)[components objectAtIndex:0] : nil;
-
 }
 
 +(NSString*) randomStringOfLength:(int)length

@@ -166,7 +166,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/element/:id
     // /session/:sessionId/element/:id/element
     // /session/:sessionId/element/:id/elements
-    // /session/:sessionId/element/:id/click
+    
+    // POST /session/:sessionId/element/:id/click
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"click"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElementClick:path];
+	}
+    
     // /session/:sessionId/element/:id/submit
     // /session/:sessionId/element/:id/text
     // /session/:sessionId/element/:id/value
