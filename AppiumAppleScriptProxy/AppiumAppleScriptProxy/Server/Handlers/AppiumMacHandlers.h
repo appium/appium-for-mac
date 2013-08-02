@@ -96,7 +96,10 @@
 -(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path;
 
 // /session/:sessionId/element/:id/submit
-// /session/:sessionId/element/:id/text
+
+// GET /session/:sessionId/element/:id/text
+-(AppiumMacHTTPJSONResponse*) getElementText:(NSString*)path;
+
 // POST /session/:sessionId/element/:id/value
 -(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData;
 
@@ -104,10 +107,17 @@
 // POST /session/:sessionId/keys
 -(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/element/:id/name
-// /session/:sessionId/element/:id/clear
-// /session/:sessionId/element/:id/selected
-// /session/:sessionId/element/:id/enabled
+// GET /session/:sessionId/element/:id/name
+-(AppiumMacHTTPJSONResponse*) getElementName:(NSString*)path;
+
+// POST /session/:sessionId/element/:id/clear
+-(AppiumMacHTTPJSONResponse*) postElementClear:(NSString*)path;
+
+// GET /session/:sessionId/element/:id/selected
+-(AppiumMacHTTPJSONResponse*) getElementIsSelected:(NSString*)path;
+
+// GET /session/:sessionId/element/:id/enabled
+-(AppiumMacHTTPJSONResponse*) getElementIsEnabled:(NSString*)path;
 // /session/:sessionId/element/:id/attribute/:name
 // /session/:sessionId/element/:id/equals/:other
 // /session/:sessionId/element/:id/displayed

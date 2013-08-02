@@ -304,7 +304,19 @@
 }
 
 // /session/:sessionId/element/:id/submit
-// /session/:sessionId/element/:id/text
+
+// GET /session/:sessionId/element/:id/text
+-(AppiumMacHTTPJSONResponse*) getElementText:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:[NSString stringWithFormat:@"%@", [element value]] status:0 session: sessionId];
+    }
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
 
 // POST /session/:sessionId/element/:id/value
 -(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData
@@ -337,10 +349,60 @@
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
-// /session/:sessionId/element/:id/name
-// /session/:sessionId/element/:id/clear
-// /session/:sessionId/element/:id/selected
-// /session/:sessionId/element/:id/enabled
+// GET /session/:sessionId/element/:id/name
+-(AppiumMacHTTPJSONResponse*) getElementName:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:element.name status:0 session: sessionId];
+    }
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
+// POST /session/:sessionId/element/:id/clear
+-(AppiumMacHTTPJSONResponse*) postElementClear:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    id value = [element value];
+    if (value != nil && [value isKindOfClass:[NSString class]])
+    {
+        [element setValue:@""];
+    }
+    
+    // TODO: Add error handling
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
+// GET /session/:sessionId/element/:id/selected
+-(AppiumMacHTTPJSONResponse*) getElementIsSelected:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:[NSNumber numberWithBool:element.focused] status:0 session: sessionId];
+    }
+    return [self respondWithJson:nil status:0 session:sessionId];
+}
+
+// GET /session/:sessionId/element/:id/enabled
+-(AppiumMacHTTPJSONResponse*) getElementIsEnabled:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:[NSNumber numberWithBool:element.enabled] status:0 session: sessionId];
+    }
+    return [self respondWithJson:nil status:0 session:sessionId];
+}
 // /session/:sessionId/element/:id/attribute/:name
 // /session/:sessionId/element/:id/equals/:other
 // /session/:sessionId/element/:id/displayed

@@ -174,7 +174,12 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
 	}
     
     // /session/:sessionId/element/:id/submit
-    // /session/:sessionId/element/:id/text
+    
+    // GET /session/:sessionId/element/:id/text
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"text"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementText:path];
+	}
     
     // POST /session/:sessionId/element/:id/value
     if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"value"] && [method isEqualToString:@"POST"])
@@ -188,10 +193,30 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler postKeys:path data:[request body]];
 	}
     
-    // /session/:sessionId/element/:id/name
-    // /session/:sessionId/element/:id/clear
-    // /session/:sessionId/element/:id/selected
-    // /session/:sessionId/element/:id/enabled
+    // GET /session/:sessionId/element/:id/name
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"name"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementName:path];
+	}
+    
+    // POST /session/:sessionId/element/:id/clear
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"clear"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElementClear:path];
+	}
+    
+    // GET /session/:sessionId/element/:id/selected
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"selected"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementIsSelected:path];
+	}
+    
+    // GET /session/:sessionId/element/:id/enabled
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"enabled"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementIsSelected:path];
+	}
+    
     // /session/:sessionId/element/:id/attribute/:name
     // /session/:sessionId/element/:id/equals/:other
     // /session/:sessionId/element/:id/displayed
