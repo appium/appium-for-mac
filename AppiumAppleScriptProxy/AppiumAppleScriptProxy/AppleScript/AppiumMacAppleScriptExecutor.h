@@ -19,14 +19,17 @@
 
 -(void) activateApplication:(NSString*)applicationName;
 -(NSArray*) allProcesses;
+-(NSArray*) allWindowsForProcess:(NSString*)processName;
 -(NSString*) applicationForProcessName:(NSString*)processName;
 -(void) clickElement:(SystemEventsUIElement*)element;
+-(SystemEventsProcess*) currentProcess;
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement;
 -(NSString*) frontmostApplicationName;
 -(NSString*) frontmostProcessName;
 -(NSDictionary*) pageSource;
--(int) pidForProcess:(NSString*)processName;
--(NSString*) processForApplication:(NSString*) applicationName;
+-(int) pidForProcessName:(NSString*)processName;
+-(SystemEventsProcess*) processForName:(NSString*)processName;
+-(NSString*) processNameForApplicationName:(NSString*) applicationName;
 -(void) selectElement:(SystemEventsUIElement*)element;
 -(void) sendKeys:(NSString*)keys;
 -(void) sendKeys:(NSString*)keys toElement:(SystemEventsUIElement*)element;

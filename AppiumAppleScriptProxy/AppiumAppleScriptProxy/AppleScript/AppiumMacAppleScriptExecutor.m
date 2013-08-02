@@ -32,6 +32,11 @@
     return processes;
 }
 
+-(NSArray*) allWindowsForProcess:(NSString*)processName
+{
+    return nil;
+}
+
 -(void) activateApplication:(NSString*)applicationName
 {
     NSDictionary *errorDict;
@@ -58,6 +63,11 @@
     // TODO: check if element is enabled (clickable)
 }
 
+-(SystemEventsProcess*) currentProcess
+{
+    return [self processForName:[self currentProcessName]];
+}
+
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement
 {
     // check if this the element
@@ -76,14 +86,10 @@
     }
     else
     {
-        // get all ui elements of the current process if no base element is supplied
-        for(SystemEventsProcess *process in self.systemEvents.processes)
+        SystemEventsProcess *process = [self currentProcess];
+        if (process != nil)
         {
-            if ([process.name isEqualToString:self.currentProcessName])
-            {
-                elementsToSearch = process.UIElements;
-                break;
-            }
+            elementsToSearch = process.UIElements;
         }
     }
     
@@ -118,28 +124,26 @@
 
 -(NSString*) frontmostProcessName
 {
-    return [self processForApplication:[self frontmostApplicationName]];
+    return [self processNameForApplicationName:[self frontmostApplicationName]];
 }
 
 -(NSDictionary*) pageSource
 {
     NSMutableArray *children = [NSMutableArray new];
     NSDictionary *source = [NSDictionary dictionaryWithObject:children forKey:@"source"];
-    for (SystemEventsProcess *process in [self.systemEvents processes])
+    SystemEventsProcess *process = [self processForName:[self currentProcessName]];
+    if (process.name != nil)
     {
-        if ([process.name isEqualToString:self.currentProcessName])
+        for(SystemEventsUIElement *element in process.entireContents)
         {
-            for(SystemEventsUIElement *element in process.entireContents)
-            {
-                [children addObject:[NSString stringWithFormat:@"%@ %@",                 element.classDescription, element.name]];
-            }
+            [children addObject:[NSString stringWithFormat:@"%@ %@", element.classDescription, element.name]];
             break;
         }
     }
     return source;
 }
 
--(int) pidForProcess:(NSString*)processName
+-(int) pidForProcessName:(NSString*)processName
 {
     NSDictionary *errorDict;
     NSAppleScript *pidScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\" to return unix id of process \"%@\"", processName]];
@@ -149,7 +153,19 @@
     
 }
 
--(NSString*) processForApplication:(NSString*) applicationName
+-(SystemEventsProcess*) processForName:(NSString*)processName
+{
+    for (SystemEventsProcess *process in self.systemEvents.processes)
+    {
+        if ([process.name isEqualToString:processName])
+        {
+          return process;
+        }
+    }
+    return nil;
+}
+
+-(NSString*) processNameForApplicationName:(NSString*) applicationName
 {
     NSDictionary *errorDict;
     NSAppleScript *fronstMostProcessScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\"\nset application_id to (get the id of application \"%@\" as string)\nset process_name to name of (application processes where bundle identifier is application_id)\nend tell\nreturn item 1 of process_name as text", applicationName]];
