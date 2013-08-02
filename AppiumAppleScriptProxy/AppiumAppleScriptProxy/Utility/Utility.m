@@ -41,7 +41,12 @@
 
 +(NSString*) getElementIDFromPath:(NSString*)path
 {
-    NSArray *components = [path componentsSeparatedByString:@"/element/"];
+    return [self getItemFromPath:path withSeparator:@"/element/"];
+}
+
++(NSString*) getItemFromPath:(NSString*)path withSeparator:(NSString*)separator
+{
+    NSArray *components = [path componentsSeparatedByString:separator];
     if (components.count < 2)
     {
         return nil;
@@ -52,13 +57,7 @@
 
 +(NSString*) getSessionIDFromPath:(NSString*)path
 {
-    NSArray *components = [path componentsSeparatedByString:@"/session/"];
-    if (components.count < 2)
-    {
-        return nil;
-    }
-    components = [(NSString*)[components objectAtIndex:1] componentsSeparatedByString:@"/"];
-    return components.count > 1 ? (NSString*)[components objectAtIndex:0] : nil;
+    return [self getItemFromPath:path withSeparator:@"/session/"];
 }
 
 +(NSString*) randomStringOfLength:(int)length

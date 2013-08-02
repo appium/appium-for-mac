@@ -217,12 +217,35 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler getElementIsSelected:path];
 	}
     
-    // /session/:sessionId/element/:id/attribute/:name
-    // /session/:sessionId/element/:id/equals/:other
+    // GET /session/:sessionId/element/:id/attribute/:name
+    if (pathComponents.count == 6 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"attribute"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementAttribute:path];
+	}
+    
+    // GET /session/:sessionId/element/:id/equals/:other
+    if (pathComponents.count == 6 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"equals"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementIsEqual:path];
+	}
+    
     // /session/:sessionId/element/:id/displayed
-    // /session/:sessionId/element/:id/location
+    
+    // GET /session/:sessionId/element/:id/location
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"location"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementLocation:path];
+	}
+    
     // /session/:sessionId/element/:id/location_in_view
-    // /session/:sessionId/element/:id/size
+    
+    // GET /session/:sessionId/element/:id/size
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"location"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementSize:path];
+	}
+    
+    
     // /session/:sessionId/element/:id/css/:propertyName
     // /session/:sessionId/orientation
     // /session/:sessionId/alert_text

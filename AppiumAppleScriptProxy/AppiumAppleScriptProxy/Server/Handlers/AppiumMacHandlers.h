@@ -118,12 +118,23 @@
 
 // GET /session/:sessionId/element/:id/enabled
 -(AppiumMacHTTPJSONResponse*) getElementIsEnabled:(NSString*)path;
-// /session/:sessionId/element/:id/attribute/:name
-// /session/:sessionId/element/:id/equals/:other
+
+// GET /session/:sessionId/element/:id/attribute/:name
+-(AppiumMacHTTPJSONResponse*) getElementAttribute:(NSString*)path;
+
+// GET /session/:sessionId/element/:id/equals/:other
+-(AppiumMacHTTPJSONResponse*) getElementIsEqual:(NSString*)path;
+
 // /session/:sessionId/element/:id/displayed
-// /session/:sessionId/element/:id/location
+
+// GET /session/:sessionId/element/:id/location
+-(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path;
+
 // /session/:sessionId/element/:id/location_in_view
-// /session/:sessionId/element/:id/size
+
+// GET /session/:sessionId/element/:id/size
+-(AppiumMacHTTPJSONResponse*) getElementSize:(NSString*)path;
+
 // /session/:sessionId/element/:id/css/:propertyName
 // /session/:sessionId/orientation
 // /session/:sessionId/alert_text

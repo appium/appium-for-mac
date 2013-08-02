@@ -403,12 +403,72 @@
     }
     return [self respondWithJson:nil status:0 session:sessionId];
 }
-// /session/:sessionId/element/:id/attribute/:name
-// /session/:sessionId/element/:id/equals/:other
+
+// GET /session/:sessionId/element/:id/attribute/:name
+-(AppiumMacHTTPJSONResponse*) getElementAttribute:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    NSString *attributeName = [Utility getItemFromPath:path withSeparator:@"/attribute/"];
+    
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        for (SBObject *attribute in element.attributes)
+        {
+            if ([attribute.key isEqualToString:attributeName])
+            {
+                return [self respondWithJson:attribute.value status:0 session: sessionId];
+            }
+        }
+    }
+    return [self respondWithJson:nil status:0 session:sessionId];
+}
+
+// GET /session/:sessionId/element/:id/equals/:other
+-(AppiumMacHTTPJSONResponse*) getElementIsEqual:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    NSString *otherElementId = [Utility getItemFromPath:path withSeparator:@"/equals/"];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    SystemEventsUIElement *otherElement = [self.elements objectForKey:otherElementId];
+    return [self respondWithJson:[NSNumber numberWithBool:[element isEqualTo:otherElement]] status:0 session:sessionId];
+}
+
 // /session/:sessionId/element/:id/displayed
-// /session/:sessionId/element/:id/location
+
+// GET /session/:sessionId/element/:id/location
+-(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:element.position status:0 session: sessionId];
+    }
+    // TODO: Add error handling
+    return [self respondWithJson:nil status:0 session:sessionId];
+}
+
 // /session/:sessionId/element/:id/location_in_view
-// /session/:sessionId/element/:id/size
+
+
+// GET /session/:sessionId/element/:id/size
+-(AppiumMacHTTPJSONResponse*) getElementSize:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *element = [self.elements objectForKey:elementId];
+    if (element != nil)
+    {
+        return [self respondWithJson:element.size status:0 session: sessionId];
+    }
+    // TODO: Add error handling
+    return [self respondWithJson:nil status:0 session:sessionId];
+}
+
 // /session/:sessionId/element/:id/css/:propertyName
 // /session/:sessionId/orientation
 // /session/:sessionId/alert_text

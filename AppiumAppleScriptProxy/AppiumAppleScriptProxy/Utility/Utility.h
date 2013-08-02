@@ -14,6 +14,7 @@
 +(NSString*) bundleRevision;
 +(NSString*) bundleVersion;
 +(NSString*) getElementIDFromPath:(NSString*)path;
++(NSString*) getItemFromPath:(NSString*)path withSeparator:(NSString*)separator;
 +(NSString*) getSessionIDFromPath:(NSString*)path;
 +(NSString*) randomStringOfLength:(int)length;
 +(int) unixTimestamp;
