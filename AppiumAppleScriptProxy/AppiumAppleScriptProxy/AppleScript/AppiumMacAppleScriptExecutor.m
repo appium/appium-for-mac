@@ -32,11 +32,6 @@
     return processes;
 }
 
--(NSArray*) allWindowsForProcess:(NSString*)processName
-{
-    return nil;
-}
-
 -(void) activateApplication:(NSString*)applicationName
 {
     NSDictionary *errorDict;
@@ -65,7 +60,7 @@
 
 -(SystemEventsProcess*) currentProcess
 {
-    return [self processForName:[self currentProcessName]];
+    return [self processForName:self.currentProcessName];
 }
 
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement
@@ -86,7 +81,7 @@
     }
     else
     {
-        SystemEventsProcess *process = [self currentProcess];
+        SystemEventsProcess *process = self.currentProcess;
         if (process != nil)
         {
             elementsToSearch = process.UIElements;
@@ -124,14 +119,14 @@
 
 -(NSString*) frontmostProcessName
 {
-    return [self processNameForApplicationName:[self frontmostApplicationName]];
+    return [self processNameForApplicationName:self.frontmostApplicationName];
 }
 
 -(NSDictionary*) pageSource
 {
     NSMutableArray *children = [NSMutableArray new];
     NSDictionary *source = [NSDictionary dictionaryWithObject:children forKey:@"source"];
-    SystemEventsProcess *process = [self processForName:[self currentProcessName]];
+    SystemEventsProcess *process = [self processForName:self.currentProcessName];
     if (process.name != nil)
     {
         for(SystemEventsUIElement *element in process.entireContents)

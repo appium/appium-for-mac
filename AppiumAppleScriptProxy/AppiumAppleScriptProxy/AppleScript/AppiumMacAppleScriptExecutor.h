@@ -12,20 +12,19 @@
 
 @interface AppiumMacAppleScriptExecutor : AppiumMacHTTPJSONResponse
 
+@property (readonly) NSArray* allProcesses;
 @property NSString *currentApplicationName;
 @property NSString *currentProcessName;
+@property (readonly) SystemEventsProcess *currentProcess;
 @property FinderApplication *finder;
+@property (readonly) NSString* frontmostApplicationName;
+@property (readonly) NSString* frontmostProcessName;
 @property SystemEventsApplication *systemEvents;
 
 -(void) activateApplication:(NSString*)applicationName;
--(NSArray*) allProcesses;
--(NSArray*) allWindowsForProcess:(NSString*)processName;
 -(NSString*) applicationForProcessName:(NSString*)processName;
 -(void) clickElement:(SystemEventsUIElement*)element;
--(SystemEventsProcess*) currentProcess;
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement;
--(NSString*) frontmostApplicationName;
--(NSString*) frontmostProcessName;
 -(NSDictionary*) pageSource;
 -(int) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;
