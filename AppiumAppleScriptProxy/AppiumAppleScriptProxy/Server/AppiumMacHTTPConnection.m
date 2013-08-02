@@ -164,7 +164,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/elements
     // /session/:sessionId/element/active
     // /session/:sessionId/element/:id
-    // /session/:sessionId/element/:id/element
+    
+    // POST /session/:sessionId/element/:id/element
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"element"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElementInElement:path data:[request body]];
+	}
+
     // /session/:sessionId/element/:id/elements
     
     // POST /session/:sessionId/element/:id/click
@@ -244,7 +250,6 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
 	{
         return [SERVER.handler getElementSize:path];
 	}
-    
     
     // /session/:sessionId/element/:id/css/:propertyName
     // /session/:sessionId/orientation

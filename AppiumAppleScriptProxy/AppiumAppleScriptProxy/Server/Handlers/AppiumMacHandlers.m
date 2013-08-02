@@ -286,7 +286,34 @@
 // /session/:sessionId/elements
 // /session/:sessionId/element/active
 // /session/:sessionId/element/:id
-// /session/:sessionId/element/:id/element
+
+// POST /session/:sessionId/element/:id/element
+-(AppiumMacHTTPJSONResponse*) postElementInElement:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *rootElement = [self.elements objectForKey:elementId];
+    NSString *using = (NSString*)[postParams objectForKey:@"using"];
+    NSString *value = (NSString*)[postParams objectForKey:@"value"];
+    
+    if ([using isEqualToString:@"name"])
+    {
+        SystemEventsUIElement *element = [self.applescript elementByName:value baseElement:rootElement];
+        if (element != nil)
+        {
+            self.elementIndex++;
+            NSString *myKey = [NSString stringWithFormat:@"%d", self.elementIndex];
+            [self.elements setValue:element forKey:myKey];
+            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
+        }
+        // TODO: add error handling
+        // TODO: elements are session based
+    }
+    
+    return [self respondWithJson:nil status:-1 session: sessionId];
+}
+
 // /session/:sessionId/element/:id/elements
 
 // POST /session/:sessionId/element/:id/click
