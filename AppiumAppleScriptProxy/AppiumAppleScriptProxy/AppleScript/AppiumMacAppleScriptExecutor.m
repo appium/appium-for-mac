@@ -73,7 +73,6 @@
 -(void) activateWindow:(NSString*)windowHandle forProcessName:(NSString*)processName
 {
     // activate application for supplied process
-    
     NSDictionary *errorDict;
     NSAppleScript *activateWindowScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"SytemEvents\" to tell process \"%@\" to perform action \"AXRaise\" of window %@", processName, windowHandle]];
     [activateWindowScript executeAndReturnError:&errorDict];
@@ -216,8 +215,7 @@
     {
         for(SystemEventsUIElement *element in process.entireContents)
         {
-            [children addObject:[NSString stringWithFormat:@"%@ %@", element.classDescription, element.name]];
-            break;
+            [children addObject:[NSString stringWithFormat:@"%@ %@", element.class, element.name]];
         }
     }
     return source;
