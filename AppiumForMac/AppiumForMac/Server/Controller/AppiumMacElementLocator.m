@@ -41,7 +41,7 @@
 		case AppiumMacLocatoryStrategyName:
 			return element != nil && [self.value isEqualToString:element.title];
 		case AppiumMacLocatoryStrategyTagName:
-			return element != nil && [self.value isEqualToString:[NSString stringWithFormat:@"%@", element.class]];
+			return element != nil && [self.value isEqualToString:element.role];
 		default:
 			return NO;
 	}

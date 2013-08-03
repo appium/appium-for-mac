@@ -1,4 +1,5 @@
 from selenium import webdriver
+from random import randint
 
 print 'Starting the WebDriver session'
 driver = webdriver.Remote( command_executor='http://localhost:8080/wd/hub', desired_capabilities={'platform':'Mac'})
@@ -6,17 +7,28 @@ driver = webdriver.Remote( command_executor='http://localhost:8080/wd/hub', desi
 print 'Opening the "Calculator" app'
 driver.get("Calculator")
 
-print 'Finding Elements...'
-e2 = driver.find_element_by_name('2')
+rand1 = randint(0,100)
+rand2 = randint(0,100)
+
+print 'Finding Some Elements...'
+eclear = driver.find_element_by_name('C')
 eplus = driver.find_element_by_name('+')
 eequals = driver.find_element_by_name('=')
 
-print 'Clicking the "2" button'
-e2.click()
+print 'Clearing the calculator'
+eclear.click()
+
+print 'Entering the first number'
+for num in str(rand1):
+  driver.find_element_by_name(num).click()
+
 print 'Clicking the "+" button'
 eplus.click()
-print 'Clicking the "2" button'
-e2.click()
+
+print 'Entering the second number'
+for num in str(rand2):
+  driver.find_element_by_name(num).click()
+
 print 'Clicking the "=" button'
 eequals.click()
 
@@ -24,10 +36,15 @@ eequals.click()
 #source = driver.page_source
 #print source
 
-print 'Getting all elements of name "4"'
-els = driver.find_elements_by_name('4')
-for el in els:
-  print el.text
+print 'Reading result from screen'
+els = driver.find_elements_by_tag_name('AXGroup')
+result_text_element = els[0].find_element_by_tag_name('AXStaticText')
+answer = result_text_element.text
+
+if int(answer) == (rand1 + rand2):
+  print 'Correct Result: ' + answer
+else:
+  print 'Incorect Result: ' + answer
 
 # quit the webdriver instance
 print 'Quitting webdriver\n'

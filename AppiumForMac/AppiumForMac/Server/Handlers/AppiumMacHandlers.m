@@ -430,8 +430,18 @@
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {
-        return [self respondWithJson:[NSString stringWithFormat:@"%@", element.title] status:0 session: sessionId];
+		for (SystemEventsAttribute *attribute in element.attributes)
+        {
+            if ([attribute.name isEqualToString:@"AXValue"])
+            {
+				SBObject *attributeValue = attribute.value;
+                return [self respondWithJson:[attributeValue get] status:0 session: sessionId];
+            }
+        }
     }
+
+	// TODO: Add error handling
+
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -538,11 +548,12 @@
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {
-        for (SBObject *attribute in element.attributes)
+        for (SystemEventsAttribute *attribute in element.attributes)
         {
-            if ([attribute.key isEqualToString:attributeName])
+            if ([attribute.name isEqualToString:attributeName])
             {
-                return [self respondWithJson:attribute.value status:0 session: sessionId];
+				SBObject *attributeValue = attribute.value;
+                return [self respondWithJson:[attributeValue get] status:0 session: sessionId];
             }
         }
     }
