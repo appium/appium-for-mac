@@ -4,6 +4,7 @@
 
 //-----------------------------------------------------------------
 #pragma mark log level
+#pragma GCC diagnostic ignored "-Wconversion"
 
 #ifdef DEBUG
 static const int httpLogLevel = HTTP_LOG_LEVEL_WARN;
