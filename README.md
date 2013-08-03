@@ -1,4 +1,4 @@
-appium-for-mac-proof-of-concept
+Appium For Mac
 ===============================
 
-Proof of concept for automating a mac app with JSON wire protocol
+Appium for Mac can control Mac applications using Selenium / WebDriver. Checkout the example which will control the calculator app.
