@@ -7,6 +7,8 @@
 //
 
 #import "AppiumMacHandlers.h"
+
+#import "AppiumMacElementLocator.h"
 #import "AppiumMacHTTP303JSONResponse.h"
 #import "NSData+Base64.h"
 #import "Utility.h"
@@ -272,9 +274,11 @@
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-    if ([using isEqualToString:@"name"])
-    {
-        SystemEventsUIElement *element = [session elementByName:value baseElement:nil];
+	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	
+	if (locator != nil)
+	{
+		SystemEventsUIElement *element = [locator findUsingBaseElement:nil];
         if (element != nil)
         {
             session.elementIndex++;
@@ -282,15 +286,50 @@
             [session.elements setValue:element forKey:myKey];
             return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
         }
-        // TODO: add error handling
-        // TODO: elements are session based
-        // TODO: move element id code into session controller
-    }
+	}
+	
+	// TODO: add error handling
+	// TODO: move element id code into session controller
 
     return [self respondWithJson:nil status:-1 session: sessionId];
 }
 
-// /session/:sessionId/elements
+// POST /session/:sessionId/elements
+-(AppiumMacHTTPJSONResponse*) postElements:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+
+    NSString *using = (NSString*)[postParams objectForKey:@"using"];
+    NSString *value = (NSString*)[postParams objectForKey:@"value"];
+
+	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	
+	if (locator != nil)
+	{
+		NSMutableArray *matches = [NSMutableArray new];
+		[locator findAllUsingBaseElement:nil results:matches];
+        if (matches.count > 0)
+        {
+			NSMutableArray *elements = [NSMutableArray new];
+			for(SystemEventsUIElement *element in matches)
+			{
+				session.elementIndex++;
+				NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
+				[session.elements setValue:element forKey:myKey];
+				[elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
+			}
+			return [self respondWithJson:elements status:0 session:sessionId];
+        }
+	}
+
+	// TODO: add error handling
+	// TODO: move element id code into session controller
+
+    return [self respondWithJson:nil status:-1 session: sessionId];
+}
+
 // /session/:sessionId/element/active
 // /session/:sessionId/element/:id
 
@@ -305,9 +344,11 @@
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-    if ([using isEqualToString:@"name"])
-    {
-        SystemEventsUIElement *element = [session elementByName:value baseElement:rootElement];
+	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	
+	if (locator != nil)
+	{
+		SystemEventsUIElement *element = [locator findUsingBaseElement:rootElement];
         if (element != nil)
         {
             session.elementIndex++;
@@ -315,15 +356,51 @@
             [session.elements setValue:element forKey:myKey];
             return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
         }
-        // TODO: add error handling
-        // TODO: elements are session based
-        // TODO: move element id code into session controller
-    }
+	}
+
+	// TODO: add error handling
+	// TODO: move element id code into session controller
 
     return [self respondWithJson:nil status:-1 session: sessionId];
 }
 
-// /session/:sessionId/element/:id/elements
+// POST /session/:sessionId/element/:id/elements
+-(AppiumMacHTTPJSONResponse*) postElementsInElement:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+    SystemEventsUIElement *rootElement = [session.elements objectForKey:elementId];
+    NSString *using = (NSString*)[postParams objectForKey:@"using"];
+    NSString *value = (NSString*)[postParams objectForKey:@"value"];
+
+	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+
+	if (locator != nil)
+	{
+		NSMutableArray *matches = [NSMutableArray new];
+		[locator findAllUsingBaseElement:rootElement results:matches];
+        if (matches.count > 0)
+        {
+			NSMutableArray *elements = [NSMutableArray new];
+			for(SystemEventsUIElement *element in matches)
+			{
+				session.elementIndex++;
+				NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
+				[session.elements setValue:element forKey:myKey];
+				[elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
+			}
+			return [self respondWithJson:elements status:0 session:sessionId];
+        }
+	}
+
+	// TODO: add error handling
+	// TODO: move element id code into session controller
+
+    return [self respondWithJson:nil status:-1 session: sessionId];
+}
+
 
 // POST /session/:sessionId/element/:id/click
 -(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path
@@ -353,7 +430,7 @@
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {
-        return [self respondWithJson:[NSString stringWithFormat:@"%@", [element value]] status:0 session: sessionId];
+        return [self respondWithJson:[NSString stringWithFormat:@"%@", element.title] status:0 session: sessionId];
     }
     return [self respondWithJson:nil status:0 session: sessionId];
 }

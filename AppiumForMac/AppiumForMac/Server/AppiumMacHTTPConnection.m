@@ -161,7 +161,11 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler postElement:path data:[request body]];
 	}
 
-    // /session/:sessionId/elements
+    // POST /session/:sessionId/elements
+	if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"elements"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElements:path data:[request body]];
+	}
     // /session/:sessionId/element/active
     // /session/:sessionId/element/:id
 
@@ -171,7 +175,11 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler postElementInElement:path data:[request body]];
 	}
 
-    // /session/:sessionId/element/:id/elements
+    // POST /session/:sessionId/element/:id/elements
+	if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"elements"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postElementsInElement:path data:[request body]];
+	}
 
     // POST /session/:sessionId/element/:id/click
     if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"click"] && [method isEqualToString:@"POST"])

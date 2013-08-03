@@ -82,14 +82,17 @@
 // POST /session/:sessionId/element
 -(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/elements
+// POST /session/:sessionId/elements
+-(AppiumMacHTTPJSONResponse*) postElements:(NSString*)path data:(NSData*)postData;
+
 // /session/:sessionId/element/active
 // /session/:sessionId/element/:id
 
 // POST /session/:sessionId/element/:id/element
 -(AppiumMacHTTPJSONResponse*) postElementInElement:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/element/:id/elements
+// POST /session/:sessionId/element/:id/elements
+-(AppiumMacHTTPJSONResponse*) postElementsInElement:(NSString*)path data:(NSData*)postData;
 
 // POST /session/:sessionId/element/:id/click
 -(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path;
@@ -101,7 +104,6 @@
 
 // POST /session/:sessionId/element/:id/value
 -(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData;
-
 
 // POST /session/:sessionId/keys
 -(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData;

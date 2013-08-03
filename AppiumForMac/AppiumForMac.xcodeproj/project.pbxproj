@@ -25,6 +25,7 @@
 		36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */; };
 		36AA9D9817A6103000AEC70A /* AppiumMacSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */; };
 		36B4E52A17A5BC2B00185B1B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B4E52917A5BC2B00185B1B /* NSData+Base64.m */; };
+		36C0B51917AD9DCC002A27CA /* AppiumMacElementLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C0B51817AD9DCC002A27CA /* AppiumMacElementLocator.m */; };
 		36D203C117A5D6B300011A3A /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038717A5D6B200011A3A /* DDData.m */; };
 		36D203C217A5D6B300011A3A /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038917A5D6B200011A3A /* DDNumber.m */; };
 		36D203C317A5D6B300011A3A /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038B17A5D6B200011A3A /* DDRange.m */; };
@@ -103,6 +104,8 @@
 		36AA9D9917A6127500AEC70A /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
 		36B4E52817A5BC2B00185B1B /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		36B4E52917A5BC2B00185B1B /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		36C0B51717AD9DCC002A27CA /* AppiumMacElementLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacElementLocator.h; sourceTree = "<group>"; };
+		36C0B51817AD9DCC002A27CA /* AppiumMacElementLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacElementLocator.m; sourceTree = "<group>"; };
 		36D2038617A5D6B200011A3A /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
 		36D2038717A5D6B200011A3A /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
 		36D2038817A5D6B200011A3A /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
@@ -328,6 +331,8 @@
 		36B117F617AD609F008F4EDF /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				36C0B51717AD9DCC002A27CA /* AppiumMacElementLocator.h */,
+				36C0B51817AD9DCC002A27CA /* AppiumMacElementLocator.m */,
 				36AA9D9617A6103000AEC70A /* AppiumMacSessionController.h */,
 				36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */,
 			);
@@ -612,6 +617,7 @@
 				3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */,
 				36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */,
 				36AA9D9817A6103000AEC70A /* AppiumMacSessionController.m in Sources */,
+				36C0B51917AD9DCC002A27CA /* AppiumMacElementLocator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
