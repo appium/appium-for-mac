@@ -65,9 +65,9 @@
 
     NSDictionary *errorDict;
     NSAppleScript *activateScript = [[NSAppleScript alloc] initWithSource:
-        [NSString stringWithFormat:@"tell application \"%@\" to activate", applicationName]];
+									 [NSString stringWithFormat:@"tell application \"%@\" to activate", applicationName]];
     [activateScript executeAndReturnError:&errorDict];
-    
+
     // TODO: Add error handling
     // TODO: convert to scripting bridge
 }
@@ -128,7 +128,7 @@
         // return the element if it matches
         return baseElement;
     }
-    
+
     // search the children
     NSArray *elementsToSearch;
     if (baseElement != nil)
@@ -144,14 +144,14 @@
             elementsToSearch = process.UIElements;
         }
     }
-    
+
     if (elementsToSearch != nil)
     {
         for(SystemEventsUIElement* childElement in elementsToSearch)
         {
             // check the child
             SystemEventsUIElement *childResult = [self elementByName:name baseElement:childElement];
-        
+
             //return the child if it matches
             if (childResult != nil)
             {
@@ -159,7 +159,7 @@
             }
         }
     }
-    
+
     // return nil because there was no match
     return nil;
 }
@@ -168,7 +168,7 @@
 {
     NSDictionary *errorDict;
     NSAppleScript *frontMostApplicationScript = [[NSAppleScript alloc] initWithSource:
-    @"tell application \"Finder\"\nset appPath to the path to the frontmost application\nset appName to the name of file appPath\nset appName to text 1 thru ((offset of \".\" in appName) - 1) of appName\nend tell"];
+												 @"tell application \"Finder\"\nset appPath to the path to the frontmost application\nset appName to the name of file appPath\nset appName to text 1 thru ((offset of \".\" in appName) - 1) of appName\nend tell"];
     NSString *statusString = [[frontMostApplicationScript executeAndReturnError:&errorDict] stringValue];
     // TODO: Add error handling
     return statusString;
@@ -230,7 +230,7 @@
     int pid = [[pidScript executeAndReturnError:&errorDict] int32Value];
     // TODO: Add error handling
     return pid;
-    
+
 }
 
 -(SystemEventsProcess*) processForName:(NSString*)processName
@@ -239,7 +239,7 @@
     {
         if ([process.name isEqualToString:processName])
         {
-          return process;
+			return process;
         }
     }
     return nil;

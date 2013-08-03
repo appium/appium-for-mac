@@ -32,10 +32,10 @@
     {
         return [NSDictionary new];
     }
-    
+
     NSError *error = nil;
     NSDictionary *postDict = [NSJSONSerialization JSONObjectWithData:postData options:NSJSONReadingMutableContainers error:&error];
-    
+
     // TODO: error handling
     return postDict;
 }
@@ -94,9 +94,9 @@
     {
         newSession = [Utility randomStringOfLength:8];
     }
-    
+
     [self.sessions setValue:[AppiumMacSessionController new] forKey:newSession];
-    
+
     // respond with the session
     // TODO: Add capabilities support
     // set empty capabilities for now
@@ -113,7 +113,7 @@
     {
         [json addObject:[NSDictionary dictionaryWithObjectsAndKeys:key, @"id", [self.sessions objectForKey:key], @"capabilities", nil]];
     }
-    
+
     return [self respondWithJson:json status:0 session: nil];
 }
 
@@ -171,14 +171,14 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
-    
+
     // activate supplied application
 
     NSString *url = (NSString*)[postParams objectForKey:@"url"];
     [session activateApplication:url];
     [session setCurrentApplicationName:url];
     [session setCurrentProcessName:[session processNameForApplicationName:url]];
-    
+
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -196,7 +196,7 @@
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classArray = [NSArray arrayWithObject:[NSImage class]];
     NSDictionary *options = [NSDictionary dictionary];
-    
+
     BOOL foundImage = [pasteboard canReadObjectForClasses:classArray options:options];
     if (foundImage)
     {
@@ -238,7 +238,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
-    
+
     // TODO: close the frontmost window
     [session closeWindow:session.currentWindowHandle forProcessName:session.currentProcessName];
 
@@ -268,10 +268,10 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
-    
+
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
-    
+
     if ([using isEqualToString:@"name"])
     {
         SystemEventsUIElement *element = [session elementByName:value baseElement:nil];
@@ -286,7 +286,7 @@
         // TODO: elements are session based
         // TODO: move element id code into session controller
     }
-    
+
     return [self respondWithJson:nil status:-1 session: sessionId];
 }
 
@@ -304,7 +304,7 @@
     SystemEventsUIElement *rootElement = [session.elements objectForKey:elementId];
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
-    
+
     if ([using isEqualToString:@"name"])
     {
         SystemEventsUIElement *element = [session elementByName:value baseElement:rootElement];
@@ -319,7 +319,7 @@
         // TODO: elements are session based
         // TODO: move element id code into session controller
     }
-    
+
     return [self respondWithJson:nil status:-1 session: sessionId];
 }
 
@@ -331,7 +331,7 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
-    
+
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {
@@ -349,7 +349,7 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
-    
+
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {
@@ -365,13 +365,13 @@
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
-    
+
     NSArray *value = [postParams objectForKey:@"value"];
     [session sendKeys:[value componentsJoinedByString:@""] toElement:[session.elements objectForKey:elementId]];
-    
+
     // TODO: add error handling
     // TODO: elements are session based
-    
+
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -381,13 +381,13 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
-    
+
     NSArray *value = [postParams objectForKey:@"value"];
     [session sendKeys:[value componentsJoinedByString:@""] toElement:nil];
 
     // TODO: add error handling
     // TODO: elements are session based
-    
+
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
@@ -417,7 +417,7 @@
     {
         [element setValue:@""];
     }
-    
+
     // TODO: Add error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -457,7 +457,7 @@
     AppiumMacSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSString *attributeName = [Utility getItemFromPath:path withSeparator:@"/attribute/"];
-    
+
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
     {

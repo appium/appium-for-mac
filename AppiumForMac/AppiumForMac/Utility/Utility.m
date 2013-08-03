@@ -64,7 +64,7 @@
 {
     NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     NSMutableString *randomString = [NSMutableString stringWithCapacity: length];
-        
+
     for (int i=0; i<length; i++)
     {
         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
@@ -78,7 +78,7 @@
 }
 
 +(NSString*) version
-{    
+{
     NSDictionary *systemVersionDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/System/Library/CoreServices/SystemVersion.plist"];
     return [systemVersionDictionary objectForKey:@"ProductVersion"];
 }
