@@ -8,9 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AppiumMacHTTPServer.h"
-#define SERVER [(AppiumAppleScriptProxyAppDelegate*)[[NSApplication sharedApplication] delegate] server]
+#define SERVER [(AppiumForMacAppDelegate*)[[NSApplication sharedApplication] delegate] server]
 
-@interface AppiumAppleScriptProxyAppDelegate : NSObject <NSApplicationDelegate>
+@interface AppiumForMacAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 @property AppiumMacHTTPServer *server;

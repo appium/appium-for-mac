@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumAppleScriptProxyAppDelegate.h"
+#import "AppiumForMacAppDelegate.h"
 
 #import "AppiumMacHTTPServer.h"
 #import "AppiumMacHTTPConnection.h"
@@ -17,7 +17,7 @@
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
-@implementation AppiumAppleScriptProxyAppDelegate
+@implementation AppiumForMacAppDelegate
 
 -(void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {

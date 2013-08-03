@@ -7,7 +7,7 @@
 //
 
 #import "AppiumMacHTTPConnection.h"
-#import "AppiumAppleScriptProxyAppDelegate.h"
+#import "AppiumForMacAppDelegate.h"
 #import "HTTPDataResponse.h"
 #import "HTTPLogging.h"
 #import "HTTPMessage.h"

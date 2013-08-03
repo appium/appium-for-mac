@@ -11,7 +11,7 @@
 		3610349317A4990E00DB79AA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3610349117A4990E00DB79AA /* InfoPlist.strings */; };
 		3610349517A4990E00DB79AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3610349417A4990E00DB79AA /* main.m */; };
 		3610349917A4990E00DB79AA /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3610349717A4990E00DB79AA /* Credits.rtf */; };
-		3610349C17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3610349B17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.m */; };
+		3610349C17A4990E00DB79AA /* AppiumForMacAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3610349B17A4990E00DB79AA /* AppiumForMacAppDelegate.m */; };
 		3610349F17A4990F00DB79AA /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3610349D17A4990F00DB79AA /* MainMenu.xib */; };
 		361034A717A4990F00DB79AA /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361034A617A4990F00DB79AA /* SenTestingKit.framework */; };
 		361034A817A4990F00DB79AA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3610348817A4990E00DB79AA /* Cocoa.framework */; };
@@ -67,22 +67,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3610348517A4990E00DB79AA /* AppiumAppleScriptProxy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppiumAppleScriptProxy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3610348517A4990E00DB79AA /* AppiumForMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppiumForMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3610348817A4990E00DB79AA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3610348B17A4990E00DB79AA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		3610348C17A4990E00DB79AA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3610348D17A4990E00DB79AA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		3610349017A4990E00DB79AA /* AppiumAppleScriptProxy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppiumAppleScriptProxy-Info.plist"; sourceTree = "<group>"; };
+		3610349017A4990E00DB79AA /* AppiumForMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppiumForMac-Info.plist"; sourceTree = "<group>"; };
 		3610349217A4990E00DB79AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3610349417A4990E00DB79AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3610349617A4990E00DB79AA /* AppiumAppleScriptProxy-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppiumAppleScriptProxy-Prefix.pch"; sourceTree = "<group>"; };
+		3610349617A4990E00DB79AA /* AppiumForMac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppiumForMac-Prefix.pch"; sourceTree = "<group>"; };
 		3610349817A4990E00DB79AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		3610349A17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppiumAppleScriptProxyAppDelegate.h; sourceTree = "<group>"; };
-		3610349B17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppiumAppleScriptProxyAppDelegate.m; sourceTree = "<group>"; };
+		3610349A17A4990E00DB79AA /* AppiumForMacAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppiumForMacAppDelegate.h; sourceTree = "<group>"; };
+		3610349B17A4990E00DB79AA /* AppiumForMacAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppiumForMacAppDelegate.m; sourceTree = "<group>"; };
 		3610349E17A4990F00DB79AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		361034A517A4990F00DB79AA /* AppiumAppleScriptProxyTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppiumAppleScriptProxyTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		361034A517A4990F00DB79AA /* AppiumForMacTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppiumForMacTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		361034A617A4990F00DB79AA /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		361034AD17A4990F00DB79AA /* AppiumAppleScriptProxyTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppiumAppleScriptProxyTests-Info.plist"; sourceTree = "<group>"; };
+		361034AD17A4990F00DB79AA /* AppiumForMacTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppiumForMacTests-Info.plist"; sourceTree = "<group>"; };
 		361034AF17A4990F00DB79AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		361034B117A4990F00DB79AA /* AppiumAppleScriptProxyTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppiumAppleScriptProxyTests.h; sourceTree = "<group>"; };
 		361034B217A4990F00DB79AA /* AppiumAppleScriptProxyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppiumAppleScriptProxyTests.m; sourceTree = "<group>"; };
@@ -187,9 +187,8 @@
 		3610347C17A4990E00DB79AA = {
 			isa = PBXGroup;
 			children = (
-				36D203E117A5DE7000011A3A /* Security.framework */,
-				3610348E17A4990E00DB79AA /* AppiumAppleScriptProxy */,
-				361034AB17A4990F00DB79AA /* AppiumAppleScriptProxyTests */,
+				3610348E17A4990E00DB79AA /* AppiumForMac */,
+				361034AB17A4990F00DB79AA /* AppiumForMacTests */,
 				3610348717A4990E00DB79AA /* Frameworks */,
 				3610348617A4990E00DB79AA /* Products */,
 			);
@@ -198,8 +197,8 @@
 		3610348617A4990E00DB79AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3610348517A4990E00DB79AA /* AppiumAppleScriptProxy.app */,
-				361034A517A4990F00DB79AA /* AppiumAppleScriptProxyTests.octest */,
+				3610348517A4990E00DB79AA /* AppiumForMac.app */,
+				361034A517A4990F00DB79AA /* AppiumForMacTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -207,8 +206,9 @@
 		3610348717A4990E00DB79AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				361034BC17A4991C00DB79AA /* ScriptingBridge.framework */,
 				3610348817A4990E00DB79AA /* Cocoa.framework */,
+				361034BC17A4991C00DB79AA /* ScriptingBridge.framework */,
+				36D203E117A5DE7000011A3A /* Security.framework */,
 				361034A617A4990F00DB79AA /* SenTestingKit.framework */,
 				3610348A17A4990E00DB79AA /* Other Frameworks */,
 			);
@@ -225,59 +225,59 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		3610348E17A4990E00DB79AA /* AppiumAppleScriptProxy */ = {
+		3610348E17A4990E00DB79AA /* AppiumForMac */ = {
 			isa = PBXGroup;
 			children = (
-				361034BE17A4993600DB79AA /* AppleScript */,
-				36D2038317A5D66100011A3A /* CocoaHTTPServer */,
+				36B117F717AD69FD008F4EDF /* Library */,
+				361034BE17A4993600DB79AA /* ScriptingBridgeHeaders */,
 				3614DE0D17A5879600853962 /* Server */,
-				3610349A17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.h */,
-				3610349B17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.m */,
-				3610349D17A4990F00DB79AA /* MainMenu.xib */,
 				3610348F17A4990E00DB79AA /* Supporting Files */,
 				3614DE1517A58EF600853962 /* Utility */,
+				3610349A17A4990E00DB79AA /* AppiumForMacAppDelegate.h */,
+				3610349B17A4990E00DB79AA /* AppiumForMacAppDelegate.m */,
+				3610349D17A4990F00DB79AA /* MainMenu.xib */,
 			);
-			path = AppiumAppleScriptProxy;
+			path = AppiumForMac;
 			sourceTree = "<group>";
 		};
 		3610348F17A4990E00DB79AA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				3610349017A4990E00DB79AA /* AppiumAppleScriptProxy-Info.plist */,
+				3610349017A4990E00DB79AA /* AppiumForMac-Info.plist */,
 				3610349117A4990E00DB79AA /* InfoPlist.strings */,
 				3610349417A4990E00DB79AA /* main.m */,
-				3610349617A4990E00DB79AA /* AppiumAppleScriptProxy-Prefix.pch */,
+				3610349617A4990E00DB79AA /* AppiumForMac-Prefix.pch */,
 				3610349717A4990E00DB79AA /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		361034AB17A4990F00DB79AA /* AppiumAppleScriptProxyTests */ = {
+		361034AB17A4990F00DB79AA /* AppiumForMacTests */ = {
 			isa = PBXGroup;
 			children = (
 				361034B117A4990F00DB79AA /* AppiumAppleScriptProxyTests.h */,
 				361034B217A4990F00DB79AA /* AppiumAppleScriptProxyTests.m */,
 				361034AC17A4990F00DB79AA /* Supporting Files */,
 			);
-			path = AppiumAppleScriptProxyTests;
+			path = AppiumForMacTests;
 			sourceTree = "<group>";
 		};
 		361034AC17A4990F00DB79AA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				361034AD17A4990F00DB79AA /* AppiumAppleScriptProxyTests-Info.plist */,
+				361034AD17A4990F00DB79AA /* AppiumForMacTests-Info.plist */,
 				361034AE17A4990F00DB79AA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		361034BE17A4993600DB79AA /* AppleScript */ = {
+		361034BE17A4993600DB79AA /* ScriptingBridgeHeaders */ = {
 			isa = PBXGroup;
 			children = (
 				36AA9D9917A6127500AEC70A /* Finder.h */,
 				361034BF17A4994100DB79AA /* SystemEvents.h */,
 			);
-			path = AppleScript;
+			path = ScriptingBridgeHeaders;
 			sourceTree = "<group>";
 		};
 		3614DE0D17A5879600853962 /* Server */ = {
@@ -332,6 +332,14 @@
 				36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		36B117F717AD69FD008F4EDF /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				36D2038317A5D66100011A3A /* CocoaHTTPServer */,
+			);
+			path = Library;
 			sourceTree = "<group>";
 		};
 		36D2038317A5D66100011A3A /* CocoaHTTPServer */ = {
@@ -461,9 +469,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3610348417A4990E00DB79AA /* AppiumAppleScriptProxy */ = {
+		3610348417A4990E00DB79AA /* AppiumForMac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 361034B617A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumAppleScriptProxy" */;
+			buildConfigurationList = 361034B617A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumForMac" */;
 			buildPhases = (
 				3610348117A4990E00DB79AA /* Sources */,
 				3610348217A4990E00DB79AA /* Frameworks */,
@@ -473,14 +481,14 @@
 			);
 			dependencies = (
 			);
-			name = AppiumAppleScriptProxy;
+			name = AppiumForMac;
 			productName = AppiumAppleScriptProxy;
-			productReference = 3610348517A4990E00DB79AA /* AppiumAppleScriptProxy.app */;
+			productReference = 3610348517A4990E00DB79AA /* AppiumForMac.app */;
 			productType = "com.apple.product-type.application";
 		};
-		361034A417A4990F00DB79AA /* AppiumAppleScriptProxyTests */ = {
+		361034A417A4990F00DB79AA /* AppiumForMacTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 361034B917A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumAppleScriptProxyTests" */;
+			buildConfigurationList = 361034B917A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumForMacTests" */;
 			buildPhases = (
 				361034A017A4990F00DB79AA /* Sources */,
 				361034A117A4990F00DB79AA /* Frameworks */,
@@ -492,9 +500,9 @@
 			dependencies = (
 				361034AA17A4990F00DB79AA /* PBXTargetDependency */,
 			);
-			name = AppiumAppleScriptProxyTests;
+			name = AppiumForMacTests;
 			productName = AppiumAppleScriptProxyTests;
-			productReference = 361034A517A4990F00DB79AA /* AppiumAppleScriptProxyTests.octest */;
+			productReference = 361034A517A4990F00DB79AA /* AppiumForMacTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -507,7 +515,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Appium;
 			};
-			buildConfigurationList = 3610348017A4990E00DB79AA /* Build configuration list for PBXProject "AppiumAppleScriptProxy" */;
+			buildConfigurationList = 3610348017A4990E00DB79AA /* Build configuration list for PBXProject "AppiumForMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -519,8 +527,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3610348417A4990E00DB79AA /* AppiumAppleScriptProxy */,
-				361034A417A4990F00DB79AA /* AppiumAppleScriptProxyTests */,
+				3610348417A4990E00DB79AA /* AppiumForMac */,
+				361034A417A4990F00DB79AA /* AppiumForMacTests */,
 			);
 		};
 /* End PBXProject section */
@@ -571,7 +579,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3610349517A4990E00DB79AA /* main.m in Sources */,
-				3610349C17A4990E00DB79AA /* AppiumAppleScriptProxyAppDelegate.m in Sources */,
+				3610349C17A4990E00DB79AA /* AppiumForMacAppDelegate.m in Sources */,
 				3614DE1017A5887700853962 /* AppiumMacHTTPServer.m in Sources */,
 				3614DE1817A58F2600853962 /* Utility.m in Sources */,
 				3614DE1B17A59B3000853962 /* AppiumMacHandlers.m in Sources */,
@@ -620,7 +628,7 @@
 /* Begin PBXTargetDependency section */
 		361034AA17A4990F00DB79AA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3610348417A4990E00DB79AA /* AppiumAppleScriptProxy */;
+			target = 3610348417A4990E00DB79AA /* AppiumForMac */;
 			targetProxy = 361034A917A4990F00DB79AA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -725,10 +733,10 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Prefix.pch";
-				INFOPLIST_FILE = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Info.plist";
+				GCC_PREFIX_HEADER = "AppiumForMac/AppiumForMac-Prefix.pch";
+				INFOPLIST_FILE = "AppiumForMac/AppiumForMac-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AppiumForMac;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -738,10 +746,10 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Prefix.pch";
-				INFOPLIST_FILE = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Info.plist";
+				GCC_PREFIX_HEADER = "AppiumForMac/AppiumForMac-Prefix.pch";
+				INFOPLIST_FILE = "AppiumForMac/AppiumForMac-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AppiumForMac;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -754,8 +762,8 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Prefix.pch";
-				INFOPLIST_FILE = "AppiumAppleScriptProxyTests/AppiumAppleScriptProxyTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "AppiumAppleScriptProxyTests/AppiumForMacTests-Info.plist";
+				PRODUCT_NAME = AppiumForMacTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -769,8 +777,8 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppiumAppleScriptProxy/AppiumAppleScriptProxy-Prefix.pch";
-				INFOPLIST_FILE = "AppiumAppleScriptProxyTests/AppiumAppleScriptProxyTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "AppiumAppleScriptProxyTests/AppiumForMacTests-Info.plist";
+				PRODUCT_NAME = AppiumForMacTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -779,7 +787,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3610348017A4990E00DB79AA /* Build configuration list for PBXProject "AppiumAppleScriptProxy" */ = {
+		3610348017A4990E00DB79AA /* Build configuration list for PBXProject "AppiumForMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				361034B417A4990F00DB79AA /* Debug */,
@@ -788,7 +796,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		361034B617A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumAppleScriptProxy" */ = {
+		361034B617A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumForMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				361034B717A4990F00DB79AA /* Debug */,
@@ -797,7 +805,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		361034B917A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumAppleScriptProxyTests" */ = {
+		361034B917A4990F00DB79AA /* Build configuration list for PBXNativeTarget "AppiumForMacTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				361034BA17A4990F00DB79AA /* Debug */,

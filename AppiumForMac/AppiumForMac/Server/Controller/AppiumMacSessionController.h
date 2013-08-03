@@ -10,7 +10,7 @@
 #import "Finder.h"
 #import "SystemEvents.h"
 
-@interface AppiumMacSessionController : AppiumMacHTTPJSONResponse
+@interface AppiumMacSessionController : NSObject
 
 @property NSMutableDictionary *elements;
 @property int elementIndex;

@@ -7,7 +7,7 @@
 //
 
 #import "AppiumMacHTTPServer.h"
-#import "AppiumAppleScriptProxyAppDelegate.h"
+#import "AppiumForMacAppDelegate.h"
 
 @implementation AppiumMacHTTPServer
 
