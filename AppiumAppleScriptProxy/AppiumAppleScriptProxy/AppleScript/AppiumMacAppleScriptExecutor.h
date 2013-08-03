@@ -13,18 +13,24 @@
 @interface AppiumMacAppleScriptExecutor : AppiumMacHTTPJSONResponse
 
 @property (readonly) NSArray* allProcesses;
+@property (readonly) NSArray* allWindowHandles;
 @property NSString *currentApplicationName;
 @property NSString *currentProcessName;
+@property NSString *currentWindowHandle;
 @property (readonly) SystemEventsProcess *currentProcess;
 @property FinderApplication *finder;
 @property (readonly) NSString* frontmostApplicationName;
 @property (readonly) NSString* frontmostProcessName;
+@property (readonly) NSString* frontmostWindowHandle;
 @property SystemEventsApplication *systemEvents;
 
 -(void) activateApplication:(NSString*)applicationName;
+-(void) activateWindow:(NSString*)windowHandle forProcessName:(NSString*)processName;
 -(NSString*) applicationForProcessName:(NSString*)processName;
 -(void) clickElement:(SystemEventsUIElement*)element;
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement;
+-(void) closeWindow:(NSString*)windowHandle forProcessName:(NSString*)processName;
+-(SystemEventsWindow*) getWindowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName;
 -(NSDictionary*) pageSource;
 -(int) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;
@@ -32,5 +38,6 @@
 -(void) selectElement:(SystemEventsUIElement*)element;
 -(void) sendKeys:(NSString*)keys;
 -(void) sendKeys:(NSString*)keys toElement:(SystemEventsUIElement*)element;
+-(SystemEventsWindow*) windowWithName:(NSString*)windowName forProcess:(SystemEventsProcess*)process;
 
 @end

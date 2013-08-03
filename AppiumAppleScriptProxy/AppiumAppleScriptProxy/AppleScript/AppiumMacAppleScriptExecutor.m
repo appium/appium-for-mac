@@ -32,14 +32,56 @@
     return processes;
 }
 
+-(NSArray*) allWindowHandles
+{
+    NSMutableArray *windowHandles = [NSMutableArray new];
+    SBElementArray *allWindows = [self processForName:self.currentProcessName].windows;
+    for(int i=0; i < allWindows.count; i++)
+    {
+        SystemEventsWindow *currentWindow = [allWindows objectAtIndex:i];
+        BOOL duplicateOfName = NO;
+        for (int j = i+1; j < allWindows.count; j++)
+        {
+            if ( [[(SystemEventsWindow*)[allWindows objectAtIndex:j] name] isEqualToString:[currentWindow name]])
+            {
+                duplicateOfName = YES;
+                break;
+            }
+        }
+        NSString *currentWindowHandle = duplicateOfName ? [NSString stringWithFormat:@"%d", i+1] : [currentWindow name];
+        [windowHandles addObject:currentWindowHandle];
+    }
+    return windowHandles;
+}
+
 -(void) activateApplication:(NSString*)applicationName
 {
+    if (![self.currentApplicationName isEqualToString:applicationName])
+    {
+        [self setCurrentWindowHandle:@"1"];
+    }
+
     NSDictionary *errorDict;
     NSAppleScript *activateScript = [[NSAppleScript alloc] initWithSource:
         [NSString stringWithFormat:@"tell application \"%@\" to activate", applicationName]];
     [activateScript executeAndReturnError:&errorDict];
+    
     // TODO: Add error handling
+    // TODO: convert to scripting bridge
 }
+
+-(void) activateWindow:(NSString*)windowHandle forProcessName:(NSString*)processName
+{
+    // activate application for supplied process
+    
+    NSDictionary *errorDict;
+    NSAppleScript *activateWindowScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"SytemEvents\" to tell process \"%@\" to perform action \"AXRaise\" of window %@", processName, windowHandle]];
+    [activateWindowScript executeAndReturnError:&errorDict];
+    [self setCurrentWindowHandle:windowHandle];
+    // TODO: error handling
+    // TODO: convert to scripting bridge
+}
+
 
 -(NSString*) applicationForProcessName:(NSString*)processName
 {
@@ -56,6 +98,20 @@
     [element clickAt:nil];
     // TODO: error handling
     // TODO: check if element is enabled (clickable)
+}
+
+-(void) closeWindow:(NSString*)windowHandle forProcessName:(NSString*)processName
+{
+    for (SystemEventsWindow *window in [[self processForName:processName] windows])
+    {
+        SystemEventsWindow *window = [self getWindowForHandle:windowHandle forProcess:processName];
+        if (window != nil)
+        {
+            [window closeSaving:SystemEventsSavoNo savingIn:nil];
+            [self setCurrentWindowHandle:@"1"];
+            return;
+        }
+    }
 }
 
 -(SystemEventsProcess*) currentProcess
@@ -120,6 +176,35 @@
 -(NSString*) frontmostProcessName
 {
     return [self processNameForApplicationName:self.frontmostApplicationName];
+}
+
+-(SystemEventsWindow*) getWindowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName
+{
+    if ([windowHandle hasPrefix:@"\""])
+    {
+        // string handle
+        windowHandle = [[windowHandle substringToIndex:windowHandle.length-2] substringFromIndex:1];
+        for(SystemEventsWindow *window in [[self processForName:processName] windows])
+        {
+            if ([[window name] isEqualToString:windowHandle])
+            {
+                return window;
+            }
+        }
+    }
+    else
+    {
+        //TODO: actually parse the number from the handle
+        SBElementArray *windows = [[self processForName:processName] windows];
+        for (int i=0 ; i < windows.count; i++)
+        {
+            if ([[NSString stringWithFormat:@"%d", i+1] isEqualToString:windowHandle])
+            {
+                return [windows objectAtIndex:i];
+            }
+        }
+    }
+    return nil;
 }
 
 -(NSDictionary*) pageSource
@@ -187,6 +272,16 @@
         [self selectElement:element];
     }
     [self.systemEvents keystroke:keys using:0];
+}
+
+-(SystemEventsWindow*) windowWithName:(NSString*)windowName forProcess:(SystemEventsProcess*)process
+{
+    for (SystemEventsWindow *window in [process windows])
+    {
+        if ([window.name isEqualToString:windowName])
+            return window;
+    }
+    return nil;
 }
 
 @end

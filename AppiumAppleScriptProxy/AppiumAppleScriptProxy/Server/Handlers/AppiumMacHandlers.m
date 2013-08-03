@@ -142,7 +142,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: add error handling
-    return [self respondWithJson:[self.applescript processNameForApplicationName:[self.applescript frontmostApplicationName]] status:0 session: sessionId];
+    return [self respondWithJson:self.applescript.currentWindowHandle status:0 session: sessionId];
 }
 
 // GET /session/:sessionId/window_handles
@@ -150,7 +150,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: add error handling
-    return [self respondWithJson:[self.applescript allProcesses] status:0 session: sessionId];
+    return [self respondWithJson:self.applescript.allWindowHandles status:0 session: sessionId];
 }
 
 // GET /session/:sessionId/url
@@ -172,6 +172,7 @@
     [self.applescript activateApplication:url];
     [self.applescript setCurrentApplicationName:url];
     [self.applescript setCurrentProcessName:[self.applescript processNameForApplicationName:url]];
+    
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -218,11 +219,9 @@
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     // activate application for supplied process
-    NSString *name = (NSString*)[postParams objectForKey:@"name"];
-    NSString *applicationName = [self.applescript applicationForProcessName:name];
-    [self.applescript activateApplication:applicationName];
-    [self.applescript setCurrentApplicationName:applicationName];
-    [self.applescript setCurrentProcessName:name];
+    NSString *windowHandle = (NSString*)[postParams objectForKey:@"name"];
+    [self.applescript activateWindow:windowHandle forProcessName:self.applescript.currentProcessName];
+
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
@@ -232,12 +231,9 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     
-    // kill supplied process
-    int pid = [self.applescript pidForProcessName:[self.applescript frontmostProcessName]];
-    system([[NSString stringWithFormat:@"killall -9 %d", pid] UTF8String]);
-    [self.applescript setCurrentApplicationName:nil];
-    [self.applescript setCurrentProcessName:nil];
-    
+    // TODO: close the frontmost window
+    [self.applescript closeWindow:self.applescript.currentWindowHandle forProcessName:self.applescript.currentProcessName];
+
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
