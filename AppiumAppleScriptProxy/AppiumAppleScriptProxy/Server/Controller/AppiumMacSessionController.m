@@ -6,14 +6,16 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacAppleScriptExecutor.h"
+#import "AppiumMacSessionController.h"
 
-@implementation AppiumMacAppleScriptExecutor
+@implementation AppiumMacSessionController
 
 - (id)init
 {
     self = [super init];
     if (self) {
+        [self setElementIndex:0];
+        [self setElements:[NSMutableDictionary new]];
         [self setCurrentApplicationName:nil];
         [self setCurrentProcessName:nil];
         [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];

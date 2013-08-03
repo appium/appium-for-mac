@@ -10,7 +10,10 @@
 #import "Finder.h"
 #import "SystemEvents.h"
 
-@interface AppiumMacAppleScriptExecutor : AppiumMacHTTPJSONResponse
+@interface AppiumMacSessionController : AppiumMacHTTPJSONResponse
+
+@property NSMutableDictionary *elements;
+@property int elementIndex;
 
 @property (readonly) NSArray* allProcesses;
 @property (readonly) NSArray* allWindowHandles;

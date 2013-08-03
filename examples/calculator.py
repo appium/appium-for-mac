@@ -13,6 +13,9 @@ eplus.click()
 e2.click()
 eequals.click()
 
+source = driver.page_source
+print source
+
 # quit the webdriver instance
 print 'Quitting webdriver\n'
 driver.quit()

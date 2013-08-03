@@ -8,16 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "AppiumMacHTTPJSONResponse.h"
-#import "AppiumMacAppleScriptExecutor.h"
+#import "AppiumMacSessionController.h"
 #import "SystemEvents.h"
 
 @interface AppiumMacHandlers : NSObject
 
-@property AppiumMacAppleScriptExecutor *applescript;
 @property NSMutableDictionary *sessions;
-@property NSMutableDictionary *elements;
-@property int elementIndex;
-
 
 // GET /status
 -(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path;

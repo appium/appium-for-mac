@@ -23,7 +23,7 @@
 		3614DE1B17A59B3000853962 /* AppiumMacHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3614DE1A17A59B3000853962 /* AppiumMacHandlers.m */; };
 		3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */; };
 		36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */; };
-		36AA9D9817A6103000AEC70A /* AppiumMacAppleScriptExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */; };
+		36AA9D9817A6103000AEC70A /* AppiumMacSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */; };
 		36B4E52A17A5BC2B00185B1B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B4E52917A5BC2B00185B1B /* NSData+Base64.m */; };
 		36D203C117A5D6B300011A3A /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038717A5D6B200011A3A /* DDData.m */; };
 		36D203C217A5D6B300011A3A /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D2038917A5D6B200011A3A /* DDNumber.m */; };
@@ -41,9 +41,9 @@
 		36D203CE17A5D6B300011A3A /* HTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203A517A5D6B200011A3A /* HTTPFileResponse.m */; };
 		36D203CF17A5D6B300011A3A /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203A717A5D6B200011A3A /* HTTPRedirectResponse.m */; };
 		36D203D017A5D6B300011A3A /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203A917A5D6B200011A3A /* WebSocket.m */; };
-		36D203D117A5D6B300011A3A /* About.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36D203AC17A5D6B200011A3A /* About.txt */; };
+		36D203D117A5D6B300011A3A /* AboutCocoaAsyncSocket.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36D203AC17A5D6B200011A3A /* AboutCocoaAsyncSocket.txt */; };
 		36D203D217A5D6B300011A3A /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203AE17A5D6B200011A3A /* GCDAsyncSocket.m */; };
-		36D203D317A5D6B300011A3A /* About.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36D203B017A5D6B300011A3A /* About.txt */; };
+		36D203D317A5D6B300011A3A /* AboutCocoaLumberjack.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36D203B017A5D6B300011A3A /* AboutCocoaLumberjack.txt */; };
 		36D203D417A5D6B300011A3A /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203B217A5D6B300011A3A /* DDAbstractDatabaseLogger.m */; };
 		36D203D517A5D6B300011A3A /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203B417A5D6B300011A3A /* DDASLLogger.m */; };
 		36D203D617A5D6B300011A3A /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203B617A5D6B300011A3A /* DDFileLogger.m */; };
@@ -98,8 +98,8 @@
 		3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacHTTPJSONResponse.m; sourceTree = "<group>"; };
 		36AA9D9217A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacHTTP303JSONResponse.h; sourceTree = "<group>"; };
 		36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacHTTP303JSONResponse.m; sourceTree = "<group>"; };
-		36AA9D9617A6103000AEC70A /* AppiumMacAppleScriptExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacAppleScriptExecutor.h; sourceTree = "<group>"; };
-		36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacAppleScriptExecutor.m; sourceTree = "<group>"; };
+		36AA9D9617A6103000AEC70A /* AppiumMacSessionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacSessionController.h; sourceTree = "<group>"; };
+		36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacSessionController.m; sourceTree = "<group>"; };
 		36AA9D9917A6127500AEC70A /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
 		36B4E52817A5BC2B00185B1B /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		36B4E52917A5BC2B00185B1B /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
@@ -137,10 +137,10 @@
 		36D203A717A5D6B200011A3A /* HTTPRedirectResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRedirectResponse.m; sourceTree = "<group>"; };
 		36D203A817A5D6B200011A3A /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
 		36D203A917A5D6B200011A3A /* WebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSocket.m; sourceTree = "<group>"; };
-		36D203AC17A5D6B200011A3A /* About.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = About.txt; sourceTree = "<group>"; };
+		36D203AC17A5D6B200011A3A /* AboutCocoaAsyncSocket.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AboutCocoaAsyncSocket.txt; sourceTree = "<group>"; };
 		36D203AD17A5D6B200011A3A /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		36D203AE17A5D6B200011A3A /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
-		36D203B017A5D6B300011A3A /* About.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = About.txt; sourceTree = "<group>"; };
+		36D203B017A5D6B300011A3A /* AboutCocoaLumberjack.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AboutCocoaLumberjack.txt; sourceTree = "<group>"; };
 		36D203B117A5D6B300011A3A /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		36D203B217A5D6B300011A3A /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		36D203B317A5D6B300011A3A /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
@@ -274,8 +274,6 @@
 		361034BE17A4993600DB79AA /* AppleScript */ = {
 			isa = PBXGroup;
 			children = (
-				36AA9D9617A6103000AEC70A /* AppiumMacAppleScriptExecutor.h */,
-				36AA9D9717A6103000AEC70A /* AppiumMacAppleScriptExecutor.m */,
 				36AA9D9917A6127500AEC70A /* Finder.h */,
 				361034BF17A4994100DB79AA /* SystemEvents.h */,
 			);
@@ -285,6 +283,7 @@
 		3614DE0D17A5879600853962 /* Server */ = {
 			isa = PBXGroup;
 			children = (
+				36B117F617AD609F008F4EDF /* Controller */,
 				3614DE1117A588DB00853962 /* Handlers */,
 				36AA9D9517A60CFA00AEC70A /* Responses */,
 				36D203DD17A5D8B900011A3A /* AppiumMacHTTPConnection.h */,
@@ -324,6 +323,15 @@
 				3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */,
 			);
 			path = Responses;
+			sourceTree = "<group>";
+		};
+		36B117F617AD609F008F4EDF /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				36AA9D9617A6103000AEC70A /* AppiumMacSessionController.h */,
+				36AA9D9717A6103000AEC70A /* AppiumMacSessionController.m */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		36D2038317A5D66100011A3A /* CocoaHTTPServer */ = {
@@ -412,7 +420,7 @@
 		36D203AB17A5D6B200011A3A /* CocoaAsyncSocket */ = {
 			isa = PBXGroup;
 			children = (
-				36D203AC17A5D6B200011A3A /* About.txt */,
+				36D203AC17A5D6B200011A3A /* AboutCocoaAsyncSocket.txt */,
 				36D203AD17A5D6B200011A3A /* GCDAsyncSocket.h */,
 				36D203AE17A5D6B200011A3A /* GCDAsyncSocket.m */,
 			);
@@ -422,7 +430,7 @@
 		36D203AF17A5D6B300011A3A /* CocoaLumberjack */ = {
 			isa = PBXGroup;
 			children = (
-				36D203B017A5D6B300011A3A /* About.txt */,
+				36D203B017A5D6B300011A3A /* AboutCocoaLumberjack.txt */,
 				36D203B117A5D6B300011A3A /* DDAbstractDatabaseLogger.h */,
 				36D203B217A5D6B300011A3A /* DDAbstractDatabaseLogger.m */,
 				36D203B317A5D6B300011A3A /* DDASLLogger.h */,
@@ -525,8 +533,8 @@
 				3610349317A4990E00DB79AA /* InfoPlist.strings in Resources */,
 				3610349917A4990E00DB79AA /* Credits.rtf in Resources */,
 				3610349F17A4990F00DB79AA /* MainMenu.xib in Resources */,
-				36D203D117A5D6B300011A3A /* About.txt in Resources */,
-				36D203D317A5D6B300011A3A /* About.txt in Resources */,
+				36D203D117A5D6B300011A3A /* AboutCocoaAsyncSocket.txt in Resources */,
+				36D203D317A5D6B300011A3A /* AboutCocoaLumberjack.txt in Resources */,
 				36D203DB17A5D6B300011A3A /* README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -595,7 +603,7 @@
 				36D203DF17A5D8B900011A3A /* AppiumMacHTTPConnection.m in Sources */,
 				3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */,
 				36AA9D9417A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m in Sources */,
-				36AA9D9817A6103000AEC70A /* AppiumMacAppleScriptExecutor.m in Sources */,
+				36AA9D9817A6103000AEC70A /* AppiumMacSessionController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
