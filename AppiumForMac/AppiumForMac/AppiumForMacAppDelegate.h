@@ -7,12 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "AppiumMacHTTPServer.h"
+#import "AfMHTTPServer.h"
 #define SERVER [(AppiumForMacAppDelegate*)[[NSApplication sharedApplication] delegate] server]
 
 @interface AppiumForMacAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
-@property AppiumMacHTTPServer *server;
+@property AfMHTTPServer *server;
 
 @end

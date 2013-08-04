@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacHandlers.h"
+#import "AfMHandlers.h"
 #import "HTTPServer.h"
 
-@interface AppiumMacHTTPServer : HTTPServer
+@interface AfMHTTPServer : HTTPServer
 
-@property AppiumMacHandlers *handler;
+@property AfMHandlers *handler;
 
 @end

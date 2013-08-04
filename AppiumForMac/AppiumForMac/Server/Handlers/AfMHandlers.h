@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "AppiumMacHTTPJSONResponse.h"
-#import "AppiumMacSessionController.h"
+#import "AfMSessionController.h"
 #import "SystemEvents.h"
 
-@interface AppiumMacHandlers : NSObject
+@interface AfMHandlers : NSObject
 
 @property NSMutableDictionary *sessions;
 

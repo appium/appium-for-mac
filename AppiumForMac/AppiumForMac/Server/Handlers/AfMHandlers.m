@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacHandlers.h"
+#import "AfMHandlers.h"
 
-#import "AppiumMacElementLocator.h"
+#import "AfMElementLocator.h"
 #import "AppiumMacHTTP303JSONResponse.h"
 #import "NSData+Base64.h"
 #import "Utility.h"
 
-@implementation AppiumMacHandlers
+@implementation AfMHandlers
 - (id)init
 {
     self = [super init];
@@ -23,7 +23,7 @@
     return self;
 }
 
--(AppiumMacSessionController*) controllerForSession:(NSString*)sessionId
+-(AfMSessionController*) controllerForSession:(NSString*)sessionId
 {
     return [self.sessions objectForKey:sessionId];
 }
@@ -97,7 +97,7 @@
         newSession = [Utility randomStringOfLength:8];
     }
 
-    [self.sessions setValue:[AppiumMacSessionController new] forKey:newSession];
+    [self.sessions setValue:[AfMSessionController new] forKey:newSession];
 
     // respond with the session
     // TODO: Add capabilities support
@@ -146,7 +146,7 @@
 -(AppiumMacHTTPJSONResponse*) getWindowHandle:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     return [self respondWithJson:session.currentWindowHandle status:0 session: sessionId];
 }
 
@@ -154,7 +154,7 @@
 -(AppiumMacHTTPJSONResponse*) getWindowHandles:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     // TODO: add error handling
     return [self respondWithJson:session.allWindowHandles status:0 session: sessionId];
 }
@@ -163,7 +163,7 @@
 -(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     return [self respondWithJson:session.currentApplicationName status:0 session: sessionId];
 }
 
@@ -171,7 +171,7 @@
 -(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     // activate supplied application
@@ -224,7 +224,7 @@
 -(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     // activate application for supplied process
@@ -239,7 +239,7 @@
 -(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
 
     // TODO: close the frontmost window
     [session closeWindow:session.currentWindowHandle forProcessName:session.currentProcessName];
@@ -258,7 +258,7 @@
 -(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     return [self respondWithJson:[session pageSource] status:0 session: sessionId];
 }
 
@@ -268,13 +268,13 @@
 -(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
 	
 	if (locator != nil)
 	{
@@ -298,13 +298,13 @@
 -(AppiumMacHTTPJSONResponse*) postElements:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
 	
 	if (locator != nil)
 	{
@@ -337,14 +337,14 @@
 -(AppiumMacHTTPJSONResponse*) postElementInElement:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *rootElement = [session.elements objectForKey:elementId];
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
 	
 	if (locator != nil)
 	{
@@ -368,14 +368,14 @@
 -(AppiumMacHTTPJSONResponse*) postElementsInElement:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *rootElement = [session.elements objectForKey:elementId];
     NSString *using = (NSString*)[postParams objectForKey:@"using"];
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
-	AppiumMacElementLocator *locator = [AppiumMacElementLocator locatorWithSession:session using:using value:value];
+	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
 
 	if (locator != nil)
 	{
@@ -406,7 +406,7 @@
 -(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
 
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
@@ -424,7 +424,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementText:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
 
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
@@ -447,7 +447,7 @@
 -(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
@@ -464,7 +464,7 @@
 -(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     NSArray *value = [postParams objectForKey:@"value"];
@@ -480,7 +480,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementName:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
@@ -494,7 +494,7 @@
 -(AppiumMacHTTPJSONResponse*) postElementClear:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     id value = [element value];
@@ -511,7 +511,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementIsSelected:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
@@ -525,7 +525,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementIsEnabled:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
@@ -539,7 +539,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementAttribute:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSString *attributeName = [Utility getItemFromPath:path withSeparator:@"/attribute/"];
 
@@ -560,7 +560,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementIsEqual:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSString *otherElementId = [Utility getItemFromPath:path withSeparator:@"/equals/"];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
@@ -574,7 +574,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)
@@ -592,7 +592,7 @@
 -(AppiumMacHTTPJSONResponse*) getElementSize:(NSString*)path
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
-    AppiumMacSessionController *session = [self controllerForSession:sessionId];
+    AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     SystemEventsUIElement *element = [session.elements objectForKey:elementId];
     if (element != nil)

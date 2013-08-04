@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacElementLocator.h"
+#import "AfMElementLocator.h"
 
-@implementation AppiumMacElementLocator
+@implementation AfMElementLocator
 
--(id) initWithSession:(AppiumMacSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive{
+-(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive{
     self = [super init];
     if (self) {
 		self.session = session;
@@ -21,15 +21,15 @@
     return self;
 }
 
-+(AppiumMacElementLocator*) locatorWithSession:(AppiumMacSessionController*)session using:(NSString*)using value:(NSString*)value
++(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value
 {
 	if ([using isEqualToString:@"name"])
 	{
-		return [[AppiumMacElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyName value:value isRecursive:YES];
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyName value:value isRecursive:YES];
 	}
 	else if ([using isEqualToString:@"tag name"])
 	{
-		return [[AppiumMacElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyTagName value:value isRecursive:YES];
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyTagName value:value isRecursive:YES];
 	}
 	return nil;
 }

@@ -6,16 +6,16 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacHTTPServer.h"
+#import "AfMHTTPServer.h"
 #import "AppiumForMacAppDelegate.h"
 
-@implementation AppiumMacHTTPServer
+@implementation AfMHTTPServer
 
 -(id) init
 {
     self = [super init];
     if (self) {
-        self.handler = [AppiumMacHandlers new];
+        self.handler = [AfMHandlers new];
     }
     return self;
 }

@@ -8,8 +8,8 @@
 
 #import "AppiumForMacAppDelegate.h"
 
-#import "AppiumMacHTTPServer.h"
-#import "AppiumMacHTTPConnection.h"
+#import "AfMHTTPServer.h"
+#import "AfMHTTPConnection.h"
 #import "HTTPServer.h"
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -22,11 +22,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 -(void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    self.server = [[AppiumMacHTTPServer alloc] init];
+    self.server = [[AfMHTTPServer alloc] init];
     [self.server setType:@"_http._tcp."];
     [self.server setPort:8080];
     [self.server setName:[NSString stringWithFormat:@"Appium for Mac (%@)", [Utility bundleVersion]]];
-    [self.server setConnectionClass:[AppiumMacHTTPConnection class]];
+    [self.server setConnectionClass:[AfMHTTPConnection class]];
 	NSError *error = nil;
 	if(![self.server start:&error])
 	{

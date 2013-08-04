@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AppiumMacSessionController.h"
+#import "AfMSessionController.h"
 #import "SystemEvents.h"
 
 typedef enum appiumMacLocatoryStrategy
@@ -18,19 +18,19 @@ typedef enum appiumMacLocatoryStrategy
 
 } AppiumMacLocatoryStrategy;
 
-@interface AppiumMacElementLocator : NSObject
+@interface AfMElementLocator : NSObject
 
-@property AppiumMacSessionController *session;
+@property AfMSessionController *session;
 @property AppiumMacLocatoryStrategy strategy;
 @property NSString *value;
 @property BOOL isRecursive;
 @property BOOL isXPath;
-@property AppiumMacElementLocator *nextLocator;
+@property AfMElementLocator *nextLocator;
 
--(id) initWithSession:(AppiumMacSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive
+-(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive
 ;
 
-+(AppiumMacElementLocator*) locatorWithSession:(AppiumMacSessionController*)session using:(NSString*)using value:(NSString*)value;
++(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value;
 
 -(SystemEventsUIElement*) findUsingBaseElement:(SystemEventsUIElement*)baseElement;
 -(void)findAllUsingBaseElement:(SystemEventsUIElement*)baseElement results:(NSMutableArray*)results;

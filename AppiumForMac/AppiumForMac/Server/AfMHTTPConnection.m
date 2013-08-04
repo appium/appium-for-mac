@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacHTTPConnection.h"
+#import "AfMHTTPConnection.h"
 #import "AppiumForMacAppDelegate.h"
 #import "HTTPDataResponse.h"
 #import "HTTPLogging.h"
@@ -17,7 +17,7 @@
 // Other flags: trace
 static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
 
-@implementation AppiumMacHTTPConnection
+@implementation AfMHTTPConnection
 
 - (BOOL)supportsMethod:(NSString *)method atPath:(NSString *)path
 {

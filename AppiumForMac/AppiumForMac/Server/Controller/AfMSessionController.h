@@ -10,7 +10,7 @@
 #import "Finder.h"
 #import "SystemEvents.h"
 
-@interface AppiumMacSessionController : NSObject
+@interface AfMSessionController : NSObject
 
 @property NSMutableDictionary *elements;
 @property int elementIndex;

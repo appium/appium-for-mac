@@ -8,6 +8,6 @@
 
 #import "HTTPConnection.h"
 
-@interface AppiumMacHTTPConnection : HTTPConnection
+@interface AfMHTTPConnection : HTTPConnection
 
 @end

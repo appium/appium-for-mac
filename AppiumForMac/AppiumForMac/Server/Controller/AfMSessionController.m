@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
-#import "AppiumMacSessionController.h"
+#import "AfMSessionController.h"
 
-@implementation AppiumMacSessionController
+@implementation AfMSessionController
 
 - (id)init
 {
