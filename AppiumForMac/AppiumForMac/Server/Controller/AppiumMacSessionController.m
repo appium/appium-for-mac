@@ -24,7 +24,7 @@
     return self;
 }
 
--(NSArray*) allProcesses
+-(NSArray*) allProcessNames
 {
     NSMutableArray *processes = [NSMutableArray new];
     for(SystemEventsProcess *process in [self.systemEvents processes])
@@ -37,7 +37,7 @@
 -(NSArray*) allWindowHandles
 {
     NSMutableArray *windowHandles = [NSMutableArray new];
-    SBElementArray *allWindows = [self processForName:self.currentProcessName].windows;
+    SBElementArray *allWindows = self.currentProcess.windows;
     for(int i=0; i < allWindows.count; i++)
     {
         SystemEventsWindow *currentWindow = [allWindows objectAtIndex:i];
@@ -76,9 +76,10 @@
 {
     // activate application for supplied process
     NSDictionary *errorDict;
-    NSAppleScript *activateWindowScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"SytemEvents\" to tell process \"%@\" to perform action \"AXRaise\" of window %@", processName, windowHandle]];
+    NSAppleScript *activateWindowScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\" to tell process \"%@\" to perform action \"AXRaise\" of window %@", processName, windowHandle]];
     [activateWindowScript executeAndReturnError:&errorDict];
     [self setCurrentWindowHandle:windowHandle];
+	
     // TODO: error handling
     // TODO: convert to scripting bridge
 }
@@ -223,26 +224,15 @@
     return source;
 }
 
--(int) pidForProcessName:(NSString*)processName
+-(NSInteger) pidForProcessName:(NSString*)processName
 {
-    NSDictionary *errorDict;
-    NSAppleScript *pidScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\" to return unix id of process \"%@\"", processName]];
-    int pid = [[pidScript executeAndReturnError:&errorDict] int32Value];
-    // TODO: Add error handling
-    return pid;
-
+	// TODO: Add error handling
+    return [self processForName:processName].unixId;
 }
 
 -(SystemEventsProcess*) processForName:(NSString*)processName
 {
-    for (SystemEventsProcess *process in self.systemEvents.processes)
-    {
-        if ([process.name isEqualToString:processName])
-        {
-			return process;
-        }
-    }
-    return nil;
+	return [self.systemEvents.processes objectWithName:processName];
 }
 
 -(NSString*) processNameForApplicationName:(NSString*) applicationName
@@ -272,16 +262,6 @@
         [self selectElement:element];
     }
     [self.systemEvents keystroke:keys using:0];
-}
-
--(SystemEventsWindow*) windowWithName:(NSString*)windowName forProcess:(SystemEventsProcess*)process
-{
-    for (SystemEventsWindow *window in [process windows])
-    {
-        if ([window.name isEqualToString:windowName])
-            return window;
-    }
-    return nil;
 }
 
 @end
