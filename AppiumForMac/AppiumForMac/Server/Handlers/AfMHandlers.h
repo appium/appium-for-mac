@@ -68,8 +68,18 @@
 // DELETE /session/:sessionId/window
 -(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString *)path;
 
-// /session/:sessionId/window/:windowHandle/size
-// /session/:sessionId/window/:windowHandle/position
+// POST /session/:sessionId/window/:windowHandle/size
+-(AppiumMacHTTPJSONResponse*) postWindowSize:(NSString*)path data:(NSData*)postData;
+
+// GET /session/:sessionId/window/:windowHandle/size
+-(AppiumMacHTTPJSONResponse*) getWindowSize:(NSString*)path;
+
+// POST /session/:sessionId/window/:windowHandle/position
+-(AppiumMacHTTPJSONResponse*) postWindowPosition:(NSString*)path data:(NSData*)postData;
+
+// GET /session/:sessionId/window/:windowHandle/position
+-(AppiumMacHTTPJSONResponse*) getWindowPosition:(NSString*)path;
+
 // /session/:sessionId/window/:windowHandle/maximize
 // /session/:sessionId/cookie
 // /session/:sessionId/cookie/:name

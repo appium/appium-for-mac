@@ -241,15 +241,84 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
 
-    // TODO: close the frontmost window
     [session closeWindow:session.currentWindowHandle forProcessName:session.currentProcessName];
 
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];
 }
 
-// /session/:sessionId/window/:windowHandle/size
-// /session/:sessionId/window/:windowHandle/position
+// POST /session/:sessionId/window/:windowHandle/size
+-(AppiumMacHTTPJSONResponse*) postWindowSize:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
+	SystemEventsWindow *window = [session windowForHandle:windowHandle forProcess:session.currentProcessName];
+
+	NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    CGFloat width = [(NSNumber*)[postParams objectForKey:@"width"] floatValue];
+	CGFloat height = [(NSNumber*)[postParams objectForKey:@"height"] floatValue];
+
+	NSRect bounds = window.bounds;
+	bounds.size.width = width;
+	bounds.size.height = height;
+
+	[window setBounds:bounds];
+	
+    // TODO: error handling
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
+// GET /session/:sessionId/window/:windowHandle/size
+-(AppiumMacHTTPJSONResponse*) getWindowSize:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
+	SystemEventsWindow *window = [session windowForHandle:windowHandle forProcess:session.currentProcessName];
+
+	NSRect bounds = window.bounds;
+
+    // TODO: error handling
+    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:bounds.size.width], "width", [NSNumber numberWithFloat:bounds.size.height], @"height", nil] status:0 session: sessionId];
+}
+
+// POST /session/:sessionId/window/:windowHandle/position
+-(AppiumMacHTTPJSONResponse*) postWindowPosition:(NSString*)path data:(NSData*)postData
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
+	SystemEventsWindow *window = [session windowForHandle:windowHandle forProcess:session.currentProcessName];
+
+	NSDictionary *postParams = [self dictionaryFromPostData:postData];
+    CGFloat x = [(NSNumber*)[postParams objectForKey:@"x"] floatValue];
+	CGFloat y = [(NSNumber*)[postParams objectForKey:@"y"] floatValue];
+
+	NSRect bounds = window.bounds;
+	bounds.origin.x = x;
+	bounds.origin.y = y;
+
+	[window setBounds:bounds];
+	
+    // TODO: error handling
+    return [self respondWithJson:nil status:0 session: sessionId];
+}
+
+// GET /session/:sessionId/window/:windowHandle/position
+-(AppiumMacHTTPJSONResponse*) getWindowPosition:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
+	SystemEventsWindow *window = [session windowForHandle:windowHandle forProcess:session.currentProcessName];
+
+	NSRect bounds = window.bounds;
+
+    // TODO: error handling
+    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:bounds.origin.x], "x", [NSNumber numberWithFloat:bounds.origin.y], @"y", nil] status:0 session: sessionId];
+}
+
 // /session/:sessionId/window/:windowHandle/maximize
 // /session/:sessionId/cookie
 // /session/:sessionId/cookie/:name

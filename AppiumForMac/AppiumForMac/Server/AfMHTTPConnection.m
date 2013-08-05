@@ -141,9 +141,31 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler deleteWindow:path];
 	}
 
-    // /session/:sessionId/window/:windowHandle/size
-    // /session/:sessionId/window/:windowHandle/position
-    // /session/:sessionId/window/:windowHandle/maximize
+    // POST /session/:sessionId/window/:windowHandle/size
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [[pathComponents objectAtIndex:4] isEqualToString:@"size"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postWindowSize:path data:[request body]];
+	}
+	
+    // GET /session/:sessionId/window/:windowHandle/size
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [[pathComponents objectAtIndex:4] isEqualToString:@"size"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getWindowSize:path];
+	}
+
+    // POST /session/:sessionId/window/:windowHandle/position
+	if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [[pathComponents objectAtIndex:4] isEqualToString:@"position"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postWindowPosition:path data:[request body]];
+	}
+	
+	// GET /session/:sessionId/window/:windowHandle/position
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"window"] && [[pathComponents objectAtIndex:4] isEqualToString:@"position"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getWindowPosition:path];
+	}
+
+	// /session/:sessionId/window/:windowHandle/maximize
     // /session/:sessionId/cookie
     // /session/:sessionId/cookie/:name
 
