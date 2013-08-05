@@ -33,7 +33,6 @@
 -(void) clickElement:(SystemEventsUIElement*)element;
 -(SystemEventsUIElement*) elementByName:(NSString*)name baseElement:(SystemEventsUIElement*)baseElement;
 -(void) closeWindow:(NSString*)windowHandle forProcessName:(NSString*)processName;
--(SystemEventsWindow*) getWindowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName;
 -(NSDictionary*) pageSource;
 -(NSInteger) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;
@@ -41,5 +40,6 @@
 -(void) selectElement:(SystemEventsUIElement*)element;
 -(void) sendKeys:(NSString*)keys;
 -(void) sendKeys:(NSString*)keys toElement:(SystemEventsUIElement*)element;
+-(SystemEventsWindow*) windowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName;
 
 @end

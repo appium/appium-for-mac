@@ -8,6 +8,8 @@
 
 #import "AfMSessionController.h"
 
+#import "AfMDomElement.h"
+
 @implementation AfMSessionController
 
 - (id)init
@@ -18,6 +20,7 @@
         [self setElements:[NSMutableDictionary new]];
         [self setCurrentApplicationName:nil];
         [self setCurrentProcessName:nil];
+		[self setCurrentWindowHandle:nil];
         [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
         [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
     }
@@ -106,7 +109,7 @@
 {
     for (SystemEventsWindow *window in [[self processForName:processName] windows])
     {
-        SystemEventsWindow *window = [self getWindowForHandle:windowHandle forProcess:processName];
+		SystemEventsWindow *window = [self windowForHandle:windowHandle forProcess:processName];
         if (window != nil)
         {
             [window closeSaving:SystemEventsSavoNo savingIn:nil];
@@ -180,48 +183,18 @@
     return [self processNameForApplicationName:self.frontmostApplicationName];
 }
 
--(SystemEventsWindow*) getWindowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName
-{
-    if ([windowHandle hasPrefix:@"\""])
-    {
-        // string handle
-        windowHandle = [[windowHandle substringToIndex:windowHandle.length-2] substringFromIndex:1];
-        for(SystemEventsWindow *window in [[self processForName:processName] windows])
-        {
-            if ([[window name] isEqualToString:windowHandle])
-            {
-                return window;
-            }
-        }
-    }
-    else
-    {
-        //TODO: actually parse the number from the handle
-        SBElementArray *windows = [[self processForName:processName] windows];
-        for (int i=0 ; i < windows.count; i++)
-        {
-            if ([[NSString stringWithFormat:@"%d", i+1] isEqualToString:windowHandle])
-            {
-                return [windows objectAtIndex:i];
-            }
-        }
-    }
-    return nil;
-}
-
 -(NSDictionary*) pageSource
 {
-    NSMutableArray *children = [NSMutableArray new];
-    NSDictionary *source = [NSDictionary dictionaryWithObject:children forKey:@"source"];
+	NSMutableArray *source = [NSMutableArray new];
     SystemEventsProcess *process = [self processForName:self.currentProcessName];
-    if (process.name != nil)
-    {
-        for(SystemEventsUIElement *element in process.entireContents)
-        {
-            [children addObject:[NSString stringWithFormat:@"%@ %@", element.class, element.name]];
-        }
-    }
-    return source;
+	for (SystemEventsUIElement* element in [process entireContents])
+	{
+		[source addObject:element.description];
+	}
+	NSDictionary *dom = [AfMDomElement pageSource:[source componentsJoinedByString:@"<<<APPIUM_DIVIDER>>>"]];
+	NSString *json = [(AfMDomElement*)[dom objectForKey:@"source"] jsonify];
+
+    return [NSDictionary dictionaryWithObject:json forKey:@"source"];
 }
 
 -(NSInteger) pidForProcessName:(NSString*)processName
@@ -262,6 +235,35 @@
         [self selectElement:element];
     }
     [self.systemEvents keystroke:keys using:0];
+}
+
+-(SystemEventsWindow*) windowForHandle:(NSString*)windowHandle forProcess:(NSString*)processName
+{
+    if ([windowHandle hasPrefix:@"\""])
+    {
+        // string handle
+        windowHandle = [[windowHandle substringToIndex:windowHandle.length-2] substringFromIndex:1];
+        for(SystemEventsWindow *window in [[self processForName:processName] windows])
+        {
+            if ([[window name] isEqualToString:windowHandle])
+            {
+                return window;
+            }
+        }
+    }
+    else
+    {
+        //TODO: actually parse the number from the handle
+        SBElementArray *windows = [[self processForName:processName] windows];
+        for (int i=0 ; i < windows.count; i++)
+        {
+            if ([[NSString stringWithFormat:@"%d", i+1] isEqualToString:windowHandle])
+            {
+                return [windows objectAtIndex:i];
+            }
+        }
+    }
+    return nil;
 }
 
 @end

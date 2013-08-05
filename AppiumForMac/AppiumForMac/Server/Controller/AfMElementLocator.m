@@ -73,7 +73,7 @@
 		// get elements from the current window of the process if no base element is supplied
         if (self.session.currentProcess != nil)
         {
-            elementsToSearch = [self.session getWindowForHandle:self.session.currentWindowHandle forProcess:self.session.currentProcessName].UIElements;
+            elementsToSearch = [self.session windowForHandle:self.session.currentWindowHandle forProcess:self.session.currentProcessName].UIElements;
         }
     }
 
@@ -123,7 +123,7 @@
 		// get elements from the current window of the process if no base element is supplied
         if (self.session.currentProcess != nil)
         {
-            elementsToSearch = [self.session getWindowForHandle:self.session.currentWindowHandle forProcess:self.session.currentProcessName].UIElements;
+            elementsToSearch = [self.session windowForHandle:self.session.currentWindowHandle forProcess:self.session.currentProcessName].UIElements;
         }
     }
 

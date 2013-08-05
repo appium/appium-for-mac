@@ -56,6 +56,7 @@
 		36D203DB17A5D6B300011A3A /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36D203C017A5D6B300011A3A /* README.txt */; };
 		36D203DF17A5D8B900011A3A /* AfMHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203DE17A5D8B900011A3A /* AfMHTTPConnection.m */; };
 		36D203E217A5DE7000011A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D203E117A5DE7000011A3A /* Security.framework */; };
+		36D6C83217AF1E6D00C9B507 /* AfMDomElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D6C83117AF1E6D00C9B507 /* AfMDomElement.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +166,8 @@
 		36D203DD17A5D8B900011A3A /* AfMHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AfMHTTPConnection.h; sourceTree = "<group>"; };
 		36D203DE17A5D8B900011A3A /* AfMHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AfMHTTPConnection.m; sourceTree = "<group>"; };
 		36D203E117A5DE7000011A3A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		36D6C83017AF1E6D00C9B507 /* AfMDomElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AfMDomElement.h; sourceTree = "<group>"; };
+		36D6C83117AF1E6D00C9B507 /* AfMDomElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AfMDomElement.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,6 +339,8 @@
 		36B117F617AD609F008F4EDF /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				36D6C83017AF1E6D00C9B507 /* AfMDomElement.h */,
+				36D6C83117AF1E6D00C9B507 /* AfMDomElement.m */,
 				36C0B51717AD9DCC002A27CA /* AfMElementLocator.h */,
 				36C0B51817AD9DCC002A27CA /* AfMElementLocator.m */,
 				36AA9D9617A6103000AEC70A /* AfMSessionController.h */,
@@ -624,6 +629,7 @@
 				36AA9D9817A6103000AEC70A /* AfMSessionController.m in Sources */,
 				36C0B51917AD9DCC002A27CA /* AfMElementLocator.m in Sources */,
 				3621D0BE17AEC31100E97463 /* NSString+Extensions.m in Sources */,
+				36D6C83217AF1E6D00C9B507 /* AfMDomElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
