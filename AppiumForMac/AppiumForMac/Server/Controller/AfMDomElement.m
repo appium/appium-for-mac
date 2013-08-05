@@ -53,22 +53,22 @@
 		return [NSString stringWithFormat:@"%@ %@", self.type, self.identifier];
 }
 
--(NSString*) jsonify
+-(NSDictionary*) dictionaryify
 {
-	NSString *childJson = @"[";
-	for (AfMDomElement *child in self.children)
+	NSMutableArray *children = [NSMutableArray new];
+	for(AfMDomElement *element in self.children)
 	{
-		childJson = [childJson stringByAppendingFormat:@"%@,", [child jsonify]];
+		[children addObject:[element dictionaryify]];
 	}
-	if ([childJson hasSuffix:@","])
-	{
-		childJson = [childJson substringToIndex:childJson.length-2];
-	}
-	childJson = [childJson stringByAppendingString:@"]"];
-	return [NSString stringWithFormat:@"{\"type\":\"%@\",\"id\":\"%@\",\"children\":%@}",[self.type stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""], [self.identifier stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""], childJson];
+	
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+			self.type, @"type",
+			self.identifier, @"id",
+			children, @"children",
+			nil];
 }
 
-+(NSString*) pageSource:(NSString*)content
++(NSDictionary*) pageSource:(NSString*)content
 {
 	NSError *error;
 	NSRegularExpression *domRegex = [NSRegularExpression regularExpressionWithPattern:@"([^\":\\s]+\\s)+(\"[^\"]*\"|\\d+)" options:0 error:&error];
@@ -163,12 +163,7 @@
 		// increment and continue the loop
 		index++;
 	}
-	NSMutableArray *jsonifiedItems = [NSMutableArray new];
-	for (AfMDomElement *domElement in ocDom)
-	{
-		[jsonifiedItems addObject:[domElement jsonify]];
-	}
-	return [NSString stringWithFormat:@"[%@]", [jsonifiedItems componentsJoinedByString:@","]];
+	return [[ocDom objectAtIndex:0] dictionaryify];
 }
 
 

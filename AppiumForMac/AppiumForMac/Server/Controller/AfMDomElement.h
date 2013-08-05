@@ -15,10 +15,10 @@
 @property AfMDomElement *parent;
 @property NSMutableArray *children;
 
-+(NSString*) pageSource:(NSString*)content;
++(NSDictionary*) pageSource:(NSString*)content;
 
 -(BOOL) isEqualTo:(AfMDomElement*)otherElement;
 -(NSString*) stringValue;
--(NSString*) jsonify;
+-(NSDictionary*) dictionaryify;
 
 @end

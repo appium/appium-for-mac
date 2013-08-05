@@ -191,9 +191,20 @@
 	{
 		[source addObject:element.description];
 	}
-	NSString *dom = [AfMDomElement pageSource:[source componentsJoinedByString:@"<<<APPIUM_DIVIDER>>>"]];
+	NSDictionary *dom = [AfMDomElement pageSource:[source componentsJoinedByString:@"<<<APPIUM_DIVIDER>>>"]];
 
-    return [NSDictionary dictionaryWithObject:dom forKey:@"source"];
+	NSError *error;
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dom
+													   options:NSJSONWritingPrettyPrinted
+														 error:&error];
+	if (! jsonData)
+	{
+		return nil;
+	}
+	else
+	{
+		return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+	}
 }
 
 -(NSInteger) pidForProcessName:(NSString*)processName
