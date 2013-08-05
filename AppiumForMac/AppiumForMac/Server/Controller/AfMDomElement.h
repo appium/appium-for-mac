@@ -15,7 +15,7 @@
 @property AfMDomElement *parent;
 @property NSMutableArray *children;
 
-+(NSDictionary*) pageSource:(NSString*)content;
++(NSString*) pageSource:(NSString*)content;
 
 -(BOOL) isEqualTo:(AfMDomElement*)otherElement;
 -(NSString*) stringValue;

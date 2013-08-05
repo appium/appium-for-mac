@@ -183,7 +183,7 @@
     return [self processNameForApplicationName:self.frontmostApplicationName];
 }
 
--(NSDictionary*) pageSource
+-(NSString*) pageSource
 {
 	NSMutableArray *source = [NSMutableArray new];
     SystemEventsProcess *process = [self processForName:self.currentProcessName];
@@ -191,10 +191,9 @@
 	{
 		[source addObject:element.description];
 	}
-	NSDictionary *dom = [AfMDomElement pageSource:[source componentsJoinedByString:@"<<<APPIUM_DIVIDER>>>"]];
-	NSString *json = [(AfMDomElement*)[dom objectForKey:@"source"] jsonify];
+	NSString *dom = [AfMDomElement pageSource:[source componentsJoinedByString:@"<<<APPIUM_DIVIDER>>>"]];
 
-    return [NSDictionary dictionaryWithObject:json forKey:@"source"];
+    return [NSDictionary dictionaryWithObject:dom forKey:@"source"];
 }
 
 -(NSInteger) pidForProcessName:(NSString*)processName

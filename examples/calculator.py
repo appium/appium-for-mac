@@ -32,9 +32,9 @@ for num in str(rand2):
 print 'Clicking the "=" button'
 eequals.click()
 
-#print 'Page Source'
-#source = driver.page_source
-#print source
+print 'Page Source'
+source = driver.page_source
+print source
 
 print 'Reading result from screen'
 els = driver.find_elements_by_tag_name('AXGroup')
