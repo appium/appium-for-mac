@@ -100,7 +100,7 @@
 	AfMSessionController *session = [AfMSessionController new];
     [self.sessions setValue:session forKey:newSession];
 
-    return [self respondWithJson:@"" status:0 session: newSession];
+    return [self respondWithJson:session.capabilities status:0 session: newSession];
 }
 
 // GET /sessions
