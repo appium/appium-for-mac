@@ -97,11 +97,9 @@
         newSession = [Utility randomStringOfLength:8];
     }
 
-    [self.sessions setValue:[AfMSessionController new] forKey:newSession];
+	AfMSessionController *session = [AfMSessionController new];
+    [self.sessions setValue:session forKey:newSession];
 
-    // respond with the session
-    // TODO: Add capabilities support
-    // set empty capabilities for now
     return [self respondWithJson:@"" status:0 session: newSession];
 }
 

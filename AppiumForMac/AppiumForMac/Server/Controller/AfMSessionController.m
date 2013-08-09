@@ -9,6 +9,7 @@
 #import "AfMSessionController.h"
 
 #import "AfMDomElement.h"
+#import "Utility.h"
 
 @implementation AfMSessionController
 
@@ -23,6 +24,16 @@
 		[self setCurrentWindowHandle:nil];
         [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
         [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
+		[self setCapabilities:[NSDictionary dictionaryWithObjectsAndKeys:
+			[Utility version], @"version",
+			[NSNumber numberWithBool:NO], @"webStorageEnabled",
+			[NSNumber numberWithBool:NO], @"locationContextEnabled",
+			@"Mac", @"browserName",
+			@"Mac", @"platform",
+			[NSNumber numberWithBool:YES], @"javascriptEnabled",
+			[NSNumber numberWithBool:NO], @"databaseEnabled",
+			[NSNumber numberWithBool:YES], @"takesScreenshot",
+			nil]];
     }
     return self;
 }

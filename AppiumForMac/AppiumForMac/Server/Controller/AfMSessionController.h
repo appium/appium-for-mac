@@ -17,6 +17,7 @@
 
 @property (readonly) NSArray* allProcesses;
 @property (readonly) NSArray* allWindowHandles;
+@property NSDictionary *capabilities;
 @property NSString *currentApplicationName;
 @property NSString *currentProcessName;
 @property NSString *currentWindowHandle;
