@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>PFObserverDelegate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style><!--
+#tocMenu {
+		display: block;
+		position:fixed;
+		top:0px;
+		left:0px;
+		width:210px;
+		height:100%;
+		background:transparent;
+}
+#bodyText {
+		margin-left: 210px;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+function hidetoc() {
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var toc = document.getElementById('tocMenu');
+		var body = document.getElementById('bodyText');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+--></script><style type="text/css"><!--.keyword {background:#ffffff; color:#761550;}.template {background:#ffffff; color:#761550;}.number {background: #ffffff; color:#0000ff;}.function {background:#ffffff; color:#000000;}.string {background: #ffffff; color:#891315;}.preprocessor {background:#ffffff; color:#236e25}.comment {background:#ffffff; color:#236e25}.char {background: #ffffff; color:#0000ff;}.var {background:#ffffff; color:#000000;}.type {background:#ffffff; color:#761550;}.param {background:#ffffff; color:#000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; }.param_indent { margin-left: 40px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.hd_tocAccess { font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+
+<!-- headerDoc=intf; uid=//apple_ref/occ/intf/PFObserverDelegate;  name=PFObserverDelegate-->
+<a name="//apple_ref/occ/intf/PFObserverDelegate"></a><div id="tocMenu">
+<iframe id="toc_content" name="toc_content" src="toc.html" width="210" height="100%" align="left" frameborder="0">This document set is best viewed in a browser that supports iFrames.</iframe>
+</div>
+<div id="bodyText">
+<a name="top"></a>
+<hr>
+<table border="0" cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5">
+<h1><a name="PFObserverDelegate">PFObserverDelegate</a></h1>
+</td></tr></table>
+<hr>
+<p><!-- begin abstract --></p>
+<p>A formal protocol declaring delegate messages sent by PFObserver.
+<!-- end abstract --></p>
+<p><b>Extends&nbsp;Protocol:</b> <!-- a logicalPath="//apple_ref/occ/intf/NSObject" -->NSObject<!-- /a --><br><b>Declared In:</b> <a href="../../index.html" target="_top">PFObserver.h</a><br></p>
+<div class="declaration_indent">
+</div>
+<h5 class="tight">
+<font face="Lucida Grande,Helvetica,Arial">Discussion</font>
+</h5>
+<!-- begin discussion --><p>The PFObserverDelegate protocol implements one optional delegate method, <a href="index.html#//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:" logicalPath="//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:" target="_top">applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:</a>.
+</p>
+<p>Clients that implement this delegate method must declare that they adopt this formal protocol.
+<!-- end discussion -->
+</p>
+<p></p>
+<hr>
+<br><a name="HeaderDoc_methods"></a>
+<h2>Methods</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:" target="_top">-applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:</a></tt></dt>
+<dd><p>Sent when the receiving observer detects an accessibility notification.
+</p></dd>
+</dl>
+<hr>
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:;   name=PFObserverDelegate::applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement: --><a name="//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:"></a>
+<table border="0" cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5">
+<h3><a name="applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:">applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:</a></h3>
+</td></tr></table>
+<hr>
+<p><!-- begin abstract --></p>
+<p>Sent when the receiving observer detects an accessibility notification.
+<!-- end abstract --></p>
+<p></p>
+<div class="declaration_indent">
+<pre>- (<!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/econst/void //apple_ref/occ/struct/void //apple_ref/occ/clconst/void //apple_ref/occ/intf/void" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/occ/instm/applicationWithIdentifier //apple_ref/occ/clm/applicationWithIdentifier //apple_ref/occ/intfcm/applicationWithIdentifier //apple_ref/occ/intfm/applicationWithIdentifier //apple_ref/occ/func/applicationWithIdentifier //apple_ref/occ/ftmplt/applicationWithIdentifier //apple_ref/occ/defn/applicationWithIdentifier //apple_ref/occ/macro/applicationWithIdentifier" --><span class="function">applicationWithIdentifier</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/econst/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/clconst/NSString //apple_ref/occ/intf/NSString" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">identifier</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/atPath //apple_ref/occ/clm/atPath //apple_ref/occ/intfcm/atPath //apple_ref/occ/intfm/atPath //apple_ref/occ/func/atPath //apple_ref/occ/ftmplt/atPath //apple_ref/occ/defn/atPath //apple_ref/occ/macro/atPath" --><span class="function">atPath</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/econst/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/clconst/NSString //apple_ref/occ/intf/NSString" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">fullPath</span> <!-- a logicalPath="//apple_ref/occ/instm/didPostAccessibilityNotification //apple_ref/occ/clm/didPostAccessibilityNotification //apple_ref/occ/intfcm/didPostAccessibilityNotification //apple_ref/occ/intfm/didPostAccessibilityNotification //apple_ref/occ/func/didPostAccessibilityNotification //apple_ref/occ/ftmplt/didPostAccessibilityNotification //apple_ref/occ/defn/didPostAccessibilityNotification //apple_ref/occ/macro/didPostAccessibilityNotification" --><span class="function">didPostAccessibilityNotification</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/econst/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/clconst/NSString //apple_ref/occ/intf/NSString" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">notification</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/fromObservedUIElement //apple_ref/occ/clm/fromObservedUIElement //apple_ref/occ/intfcm/fromObservedUIElement //apple_ref/occ/intfm/fromObservedUIElement //apple_ref/occ/func/fromObservedUIElement //apple_ref/occ/ftmplt/fromObservedUIElement //apple_ref/occ/defn/fromObservedUIElement //apple_ref/occ/macro/fromObservedUIElement" --><span class="function">fromObservedUIElement</span><!-- /a -->:(<a href="../../../PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/cl/PFUIElement" logicalPath="//apple_ref/occ/cl/PFUIElement" target="_top"><span class="type">PFUIElement</span></a> <span class="type">*</span>)<span class="param">observedUIElement</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/forAffectedUIElement //apple_ref/occ/clm/forAffectedUIElement //apple_ref/occ/intfcm/forAffectedUIElement //apple_ref/occ/intfm/forAffectedUIElement //apple_ref/occ/func/forAffectedUIElement //apple_ref/occ/ftmplt/forAffectedUIElement //apple_ref/occ/defn/forAffectedUIElement //apple_ref/occ/macro/forAffectedUIElement" --><span class="function">forAffectedUIElement</span><!-- /a -->:(<a href="../../../PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/cl/PFUIElement" logicalPath="//apple_ref/occ/cl/PFUIElement" target="_top"><span class="type">PFUIElement</span></a> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/occ/econst/affectedUIElement //apple_ref/occ/data/affectedUIElement" --><span class="var">affectedUIElement</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt><code>identifier</code></dt>
+<dd><p>The identifier of the observed target application.</p></dd>
+<dt><code>fullPath</code></dt>
+<dd><p>The full path to the observed target application.</p></dd>
+<dt><code>notification</code></dt>
+<dd><p>An NSString representing the notification.</p></dd>
+<dt><code>observedUIElement</code></dt>
+<dd><p>A PFUIElement object representing the observed UI element.</p></dd>
+<dt><code>affectedUIElement</code></dt>
+<dd><p>A PFUIElement object representing the affected UI element.</p></dd>
+</dl>
+</div>
+<h5 class="tight">
+<font face="Lucida Grande,Helvetica,Arial">Discussion</font>
+</h5>
+<!-- begin discussion --><p>Sent when the accessibility API detects a change in the observed UI element.
+</p>
+<p>To use this delegate method, a client application must implement it, create a PFObserver object using <a href="../../Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPath:" logicalPath="//apple_ref/occ/instm/PFObserver/initWithPath:" target="_top">-initWithPath:</a>, <a href="../../Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPid:" logicalPath="//apple_ref/occ/instm/PFObserver/initWithPid:" target="_top">-initWithPid:</a>  or one of the factory methods that do not include parameters for a callback (i.e., temporary notification delegate and callback selector), set one of its classes as the delegate of the PFObserver object, and register to observe the notification. In the delegate method, use the <code>identifier</code> or <code>fullPath</code> parameter to identify the application that posted the notification, and use the <code>notification</code>, <code>observedUIElement</code> and <code>affectedUIElement</code> parameters to obtain information about the notification that was triggered by a change in the target application. It is the client's responsibility to manage the observer's delegate appropriately.
+</p>
+<p>As an alternative to this delegate method, a client application can implement an Objective-C callback method and register it with the observer using <a href="../../Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPath:notificationDelegate:callbackSelector:" logicalPath="//apple_ref/occ/instm/PFObserver/initWithPath:notificationDelegate:callbackSelector:" target="_top">-initWithPath:notificationDelegate:callbackSelector:</a>, <a href="../../Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPid:notificationDelegate:callbackSelector:" logicalPath="//apple_ref/occ/instm/PFObserver/initWithPid:notificationDelegate:callbackSelector:" target="_top">-initWithPid:notificationDelegate:callbackSelector:</a>, or one of the factory methods that include parameters for a callback (i.e., temporary notification delegate and callback selector). Use a callback method for more complex scenarios, where the client application must use information saved in the <code>contextInfo</code> parameter when the observer was registered. The client application's Objective-C callback selector must have the following signature:
+</p>
+<p>- (void)observer:(PFObserver *)observer notification:(NSString *)notification element:(PFUIElement *)element contextInfo:(void *)contextInfo
+<!-- end discussion -->
+</p>
+<p></p>
+<p>Last Updated: Wednesday, May 19, 2010
+</p>
+</div>
+</body>
+</html>

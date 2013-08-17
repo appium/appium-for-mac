@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>PFUIElement.h</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style><!--
+#tocMenu {
+		display: block;
+		position:fixed;
+		top:0px;
+		left:0px;
+		width:210px;
+		height:100%;
+		background:transparent;
+}
+#bodyText {
+		margin-left: 210px;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+function hidetoc() {
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var toc = document.getElementById('tocMenu');
+		var body = document.getElementById('bodyText');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+--></script><style type="text/css"><!--.keyword {background:#ffffff; color:#761550;}.template {background:#ffffff; color:#761550;}.number {background: #ffffff; color:#0000ff;}.function {background:#ffffff; color:#000000;}.string {background: #ffffff; color:#891315;}.preprocessor {background:#ffffff; color:#236e25}.comment {background:#ffffff; color:#236e25}.char {background: #ffffff; color:#0000ff;}.var {background:#ffffff; color:#000000;}.type {background:#ffffff; color:#761550;}.param {background:#ffffff; color:#000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #0000ff;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: small; color: #ff6600;}h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;}.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; }.param_indent { margin-left: 40px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.hd_tocAccess { font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+
+<!-- headerDoc=Header;  uid=//apple_ref/doc/header/PFUIElement.h;   name=PFUIElement.h -->
+<a name="//apple_ref/doc/header/PFUIElement.h"></a>
+<div id="tocMenu">
+<iframe id="toc_content" name="toc_content" src="toc.html" width="210" height="100%" align="left" frameborder="0">This document set is best viewed in a browser that supports iFrames.</iframe>
+</div>
+<div id="bodyText">
+<a name="top"></a>
+<hr>
+<table border="0" cellpadding="2" cellspacing="2" width="300"><tr><td valign="top" height="12" colspan="5">
+<h1><a name="PFUIElement.h">PFUIElement.h</a></h1>
+</td></tr></table>
+<hr>
+<p><!-- begin abstract --></p>
+<p>PFUIElement.h supports reading and controlling a UI element in a running application.
+<!-- end abstract --></p>
+<p><b>Version:</b> 3.1.1<br></p>
+<div class="declaration_indent">
+</div>
+<h5 class="tight">
+<font face="Lucida Grande,Helvetica,Arial">Discussion</font>
+</h5>
+<!-- begin discussion --><p>The accessibility API implements the concept of a "UI element," an object based on Core Foundation's CFTypeRef type that represents a user interface element on the screen in a running application. PFUIElement.h implements this same concept in its PFUIElement and PFApplicationUIElement classes.
+</p>
+<p>The following preprocessor macros are used in this header:
+</p>
+<ul>
+<li>
+<b>PFA_DEBUG</b> Defining this macro causes the framework to log information about accessibility API errors to stderr.
+</li>
+<li>
+<b>PFA_BLOCK_EXPECTED_ERROR_LOGS</b> Defining this macro when PFA_DEBUG is also defined suppresses logging of accessibility API errors in certain situations where normal usage is expected to generate errors, in order to prevent flooding stderr with uninteresting error messages.</li>
+</ul>
+<p>It is recommended that you set both of these macros in the framework Target's Preprocessor Macros build setting for the Debug configuration only.
+<!-- end discussion -->
+</p>
+<p></p>
+<hr>
+<br><a name="HeaderDoc_classes"></a>
+<h2>Classes</h2>
+<dl>
+<dt><tt><a href="Classes/PFApplicationUIElement/index.html#//apple_ref/occ/cl/PFApplicationUIElement" target="_top">PFApplicationUIElement</a></tt></dt>
+<dd><p>A concrete class representing the root application UI element of a running application or the system-wide UI element.
+</p></dd>
+<dt><tt><a href="Classes/PFUIElement/index.html#//apple_ref/occ/cl/PFUIElement" target="_top">PFUIElement</a></tt></dt>
+<dd><p>A concrete class representing a UI element in a running application.
+</p></dd>
+</dl>
+<a name="HeaderDoc_protocols"></a>
+<h2>Protocols</h2>
+<dl>
+<dt><tt><a href="Protocols/PFUIElementDelegate/index.html#//apple_ref/occ/intf/PFUIElementDelegate" target="_top">PFUIElementDelegate</a></tt></dt>
+<dd><p>A formal protocol declaring delegate messages sent by PFUIElement.
+</p></dd>
+</dl>
+<a name="HeaderDoc_categories"></a>
+<h2>Categories</h2>
+<dl>
+<dt><tt><a href="Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/cat/PFUIElement(Attributes)" target="_top">PFUIElement(Attributes)</a></tt></dt>
+<dd><p>A category on PFUIElement for attribute properties and methods.
+</p></dd>
+</dl>
+<hr>
+<br><p></p>
+<p>&copy; 2003-2010 Bill Cheeseman. Used by permission. All rights reserved.
+ Last Updated: Monday, July 19, 2010
+</p>
+</div>
+</body>
+</html>

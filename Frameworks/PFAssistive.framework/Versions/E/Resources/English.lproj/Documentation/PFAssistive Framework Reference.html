@@ -1,0 +1,634 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>API Reference: PFAssistive Framework</title>
+<!-- A big scary CSS block --><style type="text/css"><!--#pagehead { FONT-WEIGHT: bold; FONT-SIZE: 32px; COLOR: #000000; FONT-FAMILY: lucida grande, geneva, helvetica, arial, sans-serif; } td { font-size: 10px; } a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;} body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;} --></style>
+<!-- End big scary CSS block -->
+</head>
+<head><meta name="ROBOTS" content="NOINDEX"></head>
+<body bgcolor="#ffffff">
+
+<a name="MYTAG"></a>
+
+<center>
+
+<!-- start of header -->
+<!--#include virtual="/path/to/header.html"-->
+<!-- end of header -->
+
+<table border="0" cellpadding="0" cellspacing="0" width="600">
+<tr height="5">
+<td width="600" height="5"><br></td>
+			</tr>
+<tr>
+<td width="600">
+					<div id="pagehead">PFAssistive Framework</div>
+				</td>
+			</tr>
+<tr height="10">
+<td width="600" height="10"><br></td>
+			</tr>
+<tr>
+<td valign="top" width="600"><font face="Geneva,Helvetica,Arial" size="2"><span id="bodytext"> 
+<p>The PFAssistive framework is an Objective-C wrapper for Apple's accessibility API. It enables you to use familiar Cocoa techniques to write assistive applications for persons with disabilities as well as other applications that monitor and control User Interface elements in any application running on the computer.
+</p>
+<p>The accessibility API is a set of C header files located in the HIServices subframework of the Mac OS X ApplicationServices framework, in /System/Library/Frameworks. The API was introduced in Mac OS X 10.2.0 Jaguar and is installed by default on every Macintosh computer running Mac OS X 10.2 or newer. See Apple's <i>Accessibility (ApplicationServices/HIServices Reference</i> and its <i>Accessibility Roles and Attributes Reference</i> for documentation of the C API.
+</p>
+<p>All standard UI elements in Cocoa and Carbon applications are prewired to support the accessibility API. Custom elements in an application may have been written to support the accessibility API, as well. However, some applications use custom elements that do not support the accessibility API.
+</p>
+<p>The PFAssistive framework is brought to you by PFiddlesoft. You can see it in use by downloading the free 30-day trial version of UI Browser, available at <a href="http://pfiddlesoft.com/frameworks/" target="_top">pfiddlesoft.com/frameworks/</a>. The framework has been the engine underlying UI Browser since UI Browser was introduced in 2003. The PFAssistive framework automatically works around all known accessibility API bugs. It is designed to make the accessibility API work seamlessly with applications based on Apple's Cocoa frameworks, using convenient Objective-C techniques such as delegate methods.
+</p>
+<p>Sample code in the form of a simple screen reader is provided with the framework.
+</p>
+<p>This documentation is written for version 3.0 of the framework. Version 3.0 requires Mac OS X 10.5 Leopard or newer, and it supports all accessibility features introduced through Mac OS X 10.6 Snow Leopard. It is a universal binary supporting clients that run natively on PowerPC or Intel processors using a 32-bit or 64-bit architecture with reference counted memory management. Support for garbage-collected client applications is not yet available.
+</p>
+<p>Public methods in the framework, unless otherwise noted, take Objective-C objects as parameters and, when they return Objective-C objects, return them autoreleased. Unless otherwise noted, methods with return values return <code>nil</code>, <code>NULL</code>, <code>0</code>, or <code>NO</code> in the event of an error.
+</p>
+<p>The framework uses CFTypeRef-style Core Foundation structures internally, particularly the accessibility API's AXUIElementRef and AXObserverRef. The framework contains a few public methods that return CFTypeRef-style structures. All such structures are returned CFRetained.
+</p>
+<p>The two most important classes in the framework are PFUIElement and PFObserver. The PFUIElement.h header covers the part of the accessibility API that reads and controls user interface elements in running applications, such as menus, windows, and buttons. The PFObserver.h header covers the part of the accessibility API that observes user interface elements in running applications and receives notifications in real time when changes occur.
+</p>
+<p>The PFAssistive Framework is copyrighted software. See the licenses embedded in the framework bundle for applicable terms and conditions of use.
+ </p></span></font></td>
+			</tr>
+<tr height="10">
+<td height="10" width="600"></td>
+			</tr>
+<tr height="5">
+<td height="5" width="600">
+					<hr alt="">
+<br>
+</td>
+			</tr>
+<tr>
+<td width="600" align="center" valign="top">
+<h2>Headers</h2>
+				
+      <blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="100%">
+<a name="group___header_PF" href="Reference%20Content/PFObserver_h/index.html" target="_top">PFObserver</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a href="Reference%20Content/PFUIElement_h/index.html" target="_top">PFUIElement</a><br>
+</td>
+</tr>
+</table>
+</blockquote>
+
+<h2>Functions</h2>
+      <blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/elementAtPoint:" name="group___function_PF" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/elementAtPoint:">-[ PFApplicationUIElement elementAtPoint: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/initSystemWideWithDelegate:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/initSystemWideWithDelegate:">-[ PFApplicationUIElement initSystemWideWithDelegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/initWithPath:delegate:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/initWithPath:delegate:">-[ PFApplicationUIElement initWithPath:delegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/initWithPid:delegate:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/initWithPid:delegate:">-[ PFApplicationUIElement initWithPid:delegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/pidNumber" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/pidNumber">-[ PFApplicationUIElement pidNumber ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFApplicationUIElement/typeCharacters:keyCode:withModifierFlags:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/instm/PFApplicationUIElement/typeCharacters:keyCode:withModifierFlags:">-[ PFApplicationUIElement typeCharacters:keyCode:withModifierFlags: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFApplicationUIElement/typeCharactersSystemWide:keyCode:withModifierFlags:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html#//apple_ref/occ/clm/PFApplicationUIElement/typeCharactersSystemWide:keyCode:withModifierFlags:">+[ PFApplicationUIElement typeCharactersSystemWide:keyCode:withModifierFlags: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/delegate" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/delegate">-[ PFObserver delegate ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/description" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/description">-[ PFObserver description ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/initWithPath:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPath:">-[ PFObserver initWithPath: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/initWithPath:notificationDelegate:callbackSelector:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPath:notificationDelegate:callbackSelector:">-[ PFObserver initWithPath:notificationDelegate:callbackSelector: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/initWithPid:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPid:">-[ PFObserver initWithPid: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/initWithPid:notificationDelegate:callbackSelector:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/initWithPid:notificationDelegate:callbackSelector:">-[ PFObserver initWithPid:notificationDelegate:callbackSelector: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/invalidate" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/invalidate">-[ PFObserver invalidate ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/isEqualToObserver:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/isEqualToObserver:">-[ PFObserver isEqualToObserver: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/isRegisteredForNotification:fromElement:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/isRegisteredForNotification:fromElement:">-[ PFObserver isRegisteredForNotification:fromElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/isValid" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/isValid">-[ PFObserver isValid ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/observersForPid:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/observersForPid:">+[ PFObserver observersForPid: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/observerWithName:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/observerWithName:">+[ PFObserver observerWithName: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/observerWithName:notificationDelegate:callbackSelector:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/observerWithName:notificationDelegate:callbackSelector:">+[ PFObserver observerWithName:notificationDelegate:callbackSelector: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/observerWithPid:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/observerWithPid:">+[ PFObserver observerWithPid: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/observerWithPid:notificationDelegate:callbackSelector:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/observerWithPid:notificationDelegate:callbackSelector:">+[ PFObserver observerWithPid:notificationDelegate:callbackSelector: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/pidNumber" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/pidNumber">-[ PFObserver pidNumber ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/registerForNotification:fromElement:contextInfo:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/registerForNotification:fromElement:contextInfo:">-[ PFObserver registerForNotification:fromElement:contextInfo: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/registrations" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/registrations">-[ PFObserver registrations ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFObserver/removeObserversForPid:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/clm/PFObserver/removeObserversForPid:">+[ PFObserver removeObserversForPid: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/setDelegate:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/setDelegate:">-[ PFObserver setDelegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/unregisterForAllNotifications" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/unregisterForAllNotifications">-[ PFObserver unregisterForAllNotifications ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/unregisterForAllNotificationsFromElement:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/unregisterForAllNotificationsFromElement:">-[ PFObserver unregisterForAllNotificationsFromElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFObserver/unregisterForNotification:fromElement:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Classes/PFObserver/index.html#//apple_ref/occ/instm/PFObserver/unregisterForNotification:fromElement:">-[ PFObserver unregisterForNotification:fromElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:" retarget="yes" target="_top" href="Reference%20Content/PFObserver_h/Protocols/PFObserverDelegate/index.html#//apple_ref/occ/intfm/PFObserverDelegate/applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement:">+[ PFObserverDelegate applicationWithIdentifier:atPath:didPostAccessibilityNotification:fromObservedUIElement:forAffectedUIElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXAttributedStringForRange:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXAttributedStringForRange:">-[ PFUIElement(Attributes) AXAttributedStringForRange: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXBoundsForRange:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXBoundsForRange:">-[ PFUIElement(Attributes) AXBoundsForRange: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXCellForColumnAndRow:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXCellForColumnAndRow:">-[ PFUIElement(Attributes) AXCellForColumnAndRow: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXLayoutPointForScreenPoint:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXLayoutPointForScreenPoint:">-[ PFUIElement(Attributes) AXLayoutPointForScreenPoint: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXLayoutSizeForScreenSize:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXLayoutSizeForScreenSize:">-[ PFUIElement(Attributes) AXLayoutSizeForScreenSize: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXLineForIndex:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXLineForIndex:">-[ PFUIElement(Attributes) AXLineForIndex: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForIndex:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForIndex:">-[ PFUIElement(Attributes) AXRangeForIndex: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForLine:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForLine:">-[ PFUIElement(Attributes) AXRangeForLine: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForPosition:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXRangeForPosition:">-[ PFUIElement(Attributes) AXRangeForPosition: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXRTFForRange:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXRTFForRange:">-[ PFUIElement(Attributes) AXRTFForRange: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXScreenPointForLayoutPoint:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXScreenPointForLayoutPoint:">-[ PFUIElement(Attributes) AXScreenPointForLayoutPoint: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXScreenSizeForLayoutSize:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXScreenSizeForLayoutSize:">-[ PFUIElement(Attributes) AXScreenSizeForLayoutSize: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXStringForRange:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXStringForRange:">-[ PFUIElement(Attributes) AXStringForRange: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement(Attributes)/AXStyleRangeForIndex:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html#//apple_ref/occ/instm/PFUIElement(Attributes)/AXStyleRangeForIndex:">-[ PFUIElement(Attributes) AXStyleRangeForIndex: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/actions" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/actions">-[ PFUIElement actions ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/activateApplication" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/activateApplication">-[ PFUIElement activateApplication ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/applicationElement" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/applicationElement">-[ PFUIElement applicationElement ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/attributedStringFromAXAttributedString:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/attributedStringFromAXAttributedString:">-[ PFUIElement attributedStringFromAXAttributedString: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/attributes" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/attributes">-[ PFUIElement attributes ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/childrenCount" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/childrenCount">-[ PFUIElement childrenCount ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/clippedRect" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/clippedRect">-[ PFUIElement clippedRect ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/delegate" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/delegate">-[ PFUIElement delegate ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/description" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/description">-[ PFUIElement description ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/descriptionForAction:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/descriptionForAction:">-[ PFUIElement descriptionForAction: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/descriptionForAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/descriptionForAttribute:">-[ PFUIElement descriptionForAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/descriptionForNotification:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/descriptionForNotification:">+[ PFUIElement descriptionForNotification: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/descriptionForSubrole:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/descriptionForSubrole:">-[ PFUIElement descriptionForSubrole: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/descriptionOfTypeForAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/descriptionOfTypeForAttribute:">-[ PFUIElement descriptionOfTypeForAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/elementAtPoint:withDelegate:error:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/elementAtPoint:withDelegate:error:">+[ PFUIElement elementAtPoint:withDelegate:error: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/elementInfo" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/elementInfo">-[ PFUIElement elementInfo ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/elementRef" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/elementRef">-[ PFUIElement elementRef ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/elementsWithRole:inArray:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/elementsWithRole:inArray:">+[ PFUIElement elementsWithRole:inArray: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/exists" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/exists">-[ PFUIElement exists ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/existsAction:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/existsAction:">-[ PFUIElement existsAction: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/existsAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/existsAttribute:">-[ PFUIElement existsAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/existsNonParameterizedAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/existsNonParameterizedAttribute:">-[ PFUIElement existsNonParameterizedAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/existsParameterizedAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/existsParameterizedAttribute:">-[ PFUIElement existsParameterizedAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/existsValueForAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/existsValueForAttribute:">-[ PFUIElement existsValueForAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/firstElementWithRole:inArray:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/firstElementWithRole:inArray:">+[ PFUIElement firstElementWithRole:inArray: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/indexAmongLikeElementsInArray:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/indexAmongLikeElementsInArray:">-[ PFUIElement indexAmongLikeElementsInArray: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/initWithElementRef:delegate:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/initWithElementRef:delegate:">-[ PFUIElement initWithElementRef:delegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/invalidate" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/invalidate">-[ PFUIElement invalidate ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/isAccessEnabled" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/isAccessEnabled">+[ PFUIElement isAccessEnabled ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/isAccessImplemented" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/isAccessImplemented">+[ PFUIElement isAccessImplemented ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isEqualToElement:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isEqualToElement:">-[ PFUIElement isEqualToElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isParameterizedAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isParameterizedAttribute:">-[ PFUIElement isParameterizedAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/isProcessTrusted" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/isProcessTrusted">+[ PFUIElement isProcessTrusted ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isRole:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isRole:">-[ PFUIElement isRole: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isSettableAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isSettableAttribute:">-[ PFUIElement isSettableAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isSiblingOfElement:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isSiblingOfElement:">-[ PFUIElement isSiblingOfElement: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isValid" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isValid">-[ PFUIElement isValid ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/isVisibleAtPoint:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/isVisibleAtPoint:">-[ PFUIElement isVisibleAtPoint: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/nonParameterizedAttributes" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/nonParameterizedAttributes">-[ PFUIElement nonParameterizedAttributes ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/notifications" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/notifications">-[ PFUIElement notifications ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/clm/PFUIElement/notifications" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/clm/PFUIElement/notifications">+[ PFUIElement notifications ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/parameterizedAttributes" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/parameterizedAttributes">-[ PFUIElement parameterizedAttributes ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/parentPath" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/parentPath">-[ PFUIElement parentPath ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/path" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/path">-[ PFUIElement path ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/performAction:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/performAction:">-[ PFUIElement performAction: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/pid" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/pid">-[ PFUIElement pid ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setDelegate:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setDelegate:">-[ PFUIElement setDelegate: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setElementInfo:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setElementInfo:">-[ PFUIElement setElementInfo: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setElementRef:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setElementRef:">-[ PFUIElement setElementRef: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setExists:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setExists:">-[ PFUIElement setExists: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setMessagingTimeout:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setMessagingTimeout:">-[ PFUIElement setMessagingTimeout: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/setValue:forAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/setValue:forAttribute:">-[ PFUIElement setValue:forAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/typeForAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/typeForAttribute:">-[ PFUIElement typeForAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/valueForAttribute:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/valueForAttribute:">-[ PFUIElement valueForAttribute: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/valueForAttribute:atIndex:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/valueForAttribute:atIndex:">-[ PFUIElement valueForAttribute:atIndex: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/valueForAttribute:parameter:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/valueForAttribute:parameter:">-[ PFUIElement valueForAttribute:parameter: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/instm/PFUIElement/valuesForAttributes:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Classes/PFUIElement/index.html#//apple_ref/occ/instm/PFUIElement/valuesForAttributes:">-[ PFUIElement valuesForAttributes: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/intfm/PFUIElementDelegate/PFUIElementReportError:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Protocols/PFUIElementDelegate/index.html#//apple_ref/occ/intfm/PFUIElementDelegate/PFUIElementReportError:">+[ PFUIElementDelegate PFUIElementReportError: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="100%">
+<a logicalpath="//apple_ref/occ/intfm/PFUIElementDelegate/PFUIElementWasDestroyed:" retarget="yes" target="_top" href="Reference%20Content/PFUIElement_h/Protocols/PFUIElementDelegate/index.html#//apple_ref/occ/intfm/PFUIElementDelegate/PFUIElementWasDestroyed:">+[ PFUIElementDelegate PFUIElementWasDestroyed: ]</a><br>
+</td>
+</tr>
+</table>
+</blockquote>
+
+    </td>
+			</tr>
+</table>
+<!-- start of footer --><!-- START FOOTER TABLE --><table width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td width="600"><img width="1" height="48" src="/images/1dot.gif" alt=""></td></tr>
+<tr><td bgcolor="#919699" colspan="2"><img width="600" height="1" src="/images/1dot.gif" alt=""></td></tr>
+<tr><td><img src="/images/1dot.gif" width="1" height="17" alt=""></td></tr>
+<tr>
+<td> 
+	<div align="center">
+	
+	</div>
+	</td>
+</tr>
+</table>
+</center>
+<!-- END FOOTER TABLE -->
+
+<!-- end of footer -->
+	
+
+
+	
+
+</body>
+</html>
