@@ -13,6 +13,7 @@
 
 typedef enum appiumMacLocatoryStrategy
 {
+	AppiumMacLocatoryStrategyID,
 	AppiumMacLocatoryStrategyName,
 	AppiumMacLocatoryStrategyTagName,
 	AppiumMacLocatoryStrategyXPath
@@ -24,16 +25,13 @@ typedef enum appiumMacLocatoryStrategy
 @property AfMSessionController *session;
 @property AppiumMacLocatoryStrategy strategy;
 @property NSString *value;
-@property BOOL isRecursive;
-@property BOOL isXPath;
-@property AfMElementLocator *nextLocator;
 
--(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive
-;
+-(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value;
 
 +(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value;
 
 -(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement;
+
 -(void)findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results;
 
 @end

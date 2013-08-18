@@ -10,30 +10,34 @@
 
 @implementation AfMElementLocator
 
--(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value isRecursive:(BOOL)isRecursive{
+-(id) initWithSession:(AfMSessionController*)session strategy:(AppiumMacLocatoryStrategy)strategy value:(NSString*)value
+{
     self = [super init];
     if (self) {
 		self.session = session;
 		self.strategy = strategy;
 		self.value = value;
-		self.isRecursive = isRecursive;
     }
     return self;
 }
 
 +(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value
 {
-	if ([using isEqualToString:@"name"])
+	if ([using isEqualToString:@"id"])
 	{
-		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyName value:value isRecursive:YES];
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyID value:value];
+	}
+	else if ([using isEqualToString:@"name"])
+	{
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyName value:value];
 	}
 	else if ([using isEqualToString:@"tag name"])
 	{
-		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyTagName value:value isRecursive:YES];
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyTagName value:value];
 	}
 	else if ([using isEqualToString:@"xpath"])
 	{
-		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyXPath value:value isRecursive:YES];
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyXPath value:value];
 	}
 	return nil;
 }
@@ -42,6 +46,15 @@
 {
 	switch(self.strategy)
 	{
+		case AppiumMacLocatoryStrategyID:
+		{
+			if (element == nil)
+			{
+				return NO;
+			}
+			NSString *identifier = [element valueForAttribute:@"AXIdentifier"];
+			return identifier != nil && [self.value isEqualToString:identifier];
+		}
 		case AppiumMacLocatoryStrategyName:
 			return element != nil && [self.value isEqualToString:element.AXTitle];
 		case AppiumMacLocatoryStrategyTagName:
@@ -78,12 +91,7 @@
 
     // search the children
     NSArray *elementsToSearch;
-	if (!self.isRecursive)
-	{
-		// don't search children if recursion is not requested
-		elementsToSearch = nil;
-	}
-	else if (baseElement != nil)
+	if (baseElement != nil)
     {
         // search the children if this is an element
         elementsToSearch = baseElement.AXChildren;
@@ -93,7 +101,8 @@
 		// get elements from the current window of the process if no base element is supplied
         if (self.session.currentProcess != nil)
         {
-            elementsToSearch = [self.session windowForHandle:self.session.currentWindowHandle].AXChildren;
+            elementsToSearch = self.session.currentWindow != nil ? self.session.currentWindow.AXChildren : [NSArray new];
+			// TODO: Fix crash that occurs when there are no windows
         }
     }
 
@@ -142,12 +151,7 @@
 
     // search the children
     NSArray *elementsToSearch;
-	if (!self.isRecursive)
-	{
-		// don't search children if recursion is not requested
-		elementsToSearch = nil;
-	}
-	else if (baseElement != nil)
+	if (baseElement != nil)
     {
         // search the children if this is an element
         elementsToSearch = baseElement.AXChildren;

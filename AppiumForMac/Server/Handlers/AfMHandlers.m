@@ -226,7 +226,8 @@
 
     // activate application for supplied process
     NSString *windowHandle = (NSString*)[postParams objectForKey:@"name"];
-    [session activateWindow:windowHandle];
+	[session setCurrentWindowHandle:windowHandle];
+    [session activateWindow];
 
     // TODO: error handling
     return [self respondWithJson:nil status:0 session: sessionId];

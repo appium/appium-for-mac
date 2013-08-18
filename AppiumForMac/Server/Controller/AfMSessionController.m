@@ -71,9 +71,9 @@
     [self.currentApplication activateApplication];
 }
 
--(void) activateWindow:(NSString*)windowHandle
+-(void) activateWindow
 {
-	[[self windowForHandle:windowHandle] performAction:(NSString*)kAXRaiseAction];
+	[self.currentWindow performAction:(NSString*)kAXRaiseAction];
 }
 
 -(PFApplicationUIElement*) applicationForName:(NSString*)applicationName
@@ -193,12 +193,11 @@
 
 -(void) sendKeys:(NSString*)keys toElement:(PFUIElement*)element
 {
-    [self activateApplication];
 	if (element != nil)
 	{
-		[element performAction:(NSString*)kAXRaiseAction];
+		[element activateApplication];
 	}
-    [self.systemEvents keystroke:keys using:0];
+	[self.systemEvents keystroke:keys using:0];
 }
 
 -(PFUIElement*) windowForHandle:(NSString*)windowHandle
@@ -235,6 +234,18 @@
 	[element addAttribute:[GDataXMLElement attributeWithName:@"AXRole" stringValue:root.AXRole]];
 	[element addAttribute:[GDataXMLElement attributeWithName:@"AXTitle" stringValue:root.AXTitle]];
 	[element addAttribute:[GDataXMLElement attributeWithName:@"AXDescription" stringValue:root.AXDescription]];
+	[element addAttribute:[GDataXMLElement attributeWithName:@"AXRoleDescription" stringValue:root.AXRoleDescription]];
+
+	if (root.AXValue != nil)
+	{
+		[element addAttribute:[GDataXMLElement attributeWithName:@"AXValue" stringValue:[NSString stringWithFormat:@"%@",root.AXValue]]];
+	 }
+
+	NSString *identifier = [root valueForAttribute:@"AXIdenitifer"];
+	if (identifier != nil)
+	{
+		[element addAttribute:[GDataXMLElement attributeWithName:@"AXIdentifier" stringValue:[NSString stringWithFormat:@"%@",[root valueForAttribute:@"AXIdentifier"]]]];
+	}
 
 	if (pathMap != nil)
 	{

@@ -32,7 +32,7 @@
 @property SystemEventsApplication *systemEvents;
 
 -(void) activateApplication;
--(void) activateWindow:(NSString*)windowHandle;
+-(void) activateWindow;
 -(NSString*) applicationNameForProcessName:(NSString*)processName;
 -(void) clickElement:(PFUIElement*)element;
 -(void) closeWindow:(NSString*)windowHandle;
