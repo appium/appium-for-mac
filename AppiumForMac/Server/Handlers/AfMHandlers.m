@@ -325,7 +325,12 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
-    return [self respondWithJson:[session pageSource] status:0 session: sessionId];
+
+	// xml page source
+	return [self respondWithJson:[[NSString alloc]initWithData:[session xmlPageSource].XMLData encoding:NSUTF8StringEncoding] status:0 session:sessionId];
+
+	// json page source
+	//return [self respondWithJson:[session pageSource] status:0 session: sessionId];
 }
 
 // /session/:sessionId/title
