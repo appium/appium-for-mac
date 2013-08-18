@@ -80,6 +80,12 @@
     }
 }
 
+-(AppiumMacHTTPJSONResponse*) respondWithJsonError:(int)statusCode session:(NSString*)sessionId
+{
+	NSDictionary *errorJson = [NSDictionary dictionaryWithObjectsAndKeys:kAfMStatusCodeMessages[statusCode],@"message" , nil];
+	return [self respondWithJson:errorJson status:statusCode session:sessionId];
+}
+
 // GET /status
 -(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path
 {
@@ -147,7 +153,12 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
-    return [self respondWithJson:session.currentWindowHandle status:kAfMStatusCodeSuccess session: sessionId];
+	if ([session.currentWindowHandle intValue] >= session.allWindows.count)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+
+	return [self respondWithJson:session.currentWindowHandle status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/window_handles
@@ -227,6 +238,11 @@
 
     // activate application for supplied process
     NSString *windowHandle = (NSString*)[postParams objectForKey:@"name"];
+	if ([windowHandle intValue] >= session.allWindows.count)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+	
 	[session setCurrentWindowHandle:windowHandle];
     [session activateWindow];
 
