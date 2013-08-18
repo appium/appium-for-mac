@@ -31,6 +31,10 @@
 	{
 		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyTagName value:value isRecursive:YES];
 	}
+	else if ([using isEqualToString:@"xpath"])
+	{
+		return [[AfMElementLocator alloc] initWithSession:session strategy:AppiumMacLocatoryStrategyXPath value:value isRecursive:YES];
+	}
 	return nil;
 }
 
@@ -49,6 +53,22 @@
 
 -(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement
 {
+	// use different method for xpath
+	if (self.strategy == AppiumMacLocatoryStrategyXPath)
+	{
+		NSMutableDictionary *pathMap = [NSMutableDictionary new];
+		GDataXMLDocument *doc = [self.session xmlPageSourceFromElement:baseElement pathMap:pathMap];
+		NSError *error;
+		NSArray *matches = [doc nodesForXPath:self.value error:&error];
+		if (matches.count < 1)
+		{
+			return nil;
+		}
+		NSString *matchedPath = [(GDataXMLElement*)[matches objectAtIndex:0] attributeForName:@"path"].stringValue;
+		PFUIElement *matchedElement = [pathMap objectForKey:matchedPath];
+		return matchedElement;
+	}
+
     // check if this the element we are looking for
     if ([self matchesElement:baseElement])
     {
@@ -98,6 +118,21 @@
 
 -(void)findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results
 {
+	// use different method for xpath
+	if (self.strategy == AppiumMacLocatoryStrategyXPath)
+	{
+		NSMutableDictionary *pathMap = [NSMutableDictionary new];
+		GDataXMLDocument *doc = [self.session xmlPageSourceFromElement:baseElement pathMap:pathMap];
+		NSError *error;
+		NSArray *matches = [doc nodesForXPath:self.value error:&error];
+		for(GDataXMLElement *match in matches)
+		{
+			PFUIElement *matchedElement = [pathMap objectForKey:[match attributeForName:@"path"].stringValue];
+			[results addObject:matchedElement];
+			return;
+		}
+	}
+
     // check if this the element we are looking for
     if ([self matchesElement:baseElement])
     {

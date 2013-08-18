@@ -7,8 +7,8 @@
 //
 
 #import "AfMSessionController.h"
-
 #import "Utility.h"
+
 
 @interface AfMSessionController()
 @property NSString *_currentApplicationName;
@@ -153,11 +153,11 @@
 
 -(void)pageSourceHelperFromElement:(PFUIElement*)root dictionary:(NSMutableDictionary*) dict
 {
-	[dict setValue:root.AXRole forKey:@"role"];
-	[dict setValue:root.AXTitle forKey:@"title"];
-	[dict setValue:root.AXDescription forKey:@"description"];
+	[dict setValue:root.AXRole forKey:@"AXRole"];
+	[dict setValue:root.AXTitle forKey:@"AXTitle"];
+	[dict setValue:root.AXDescription forKey:@"AXDescription"];
 	NSMutableArray *children = [NSMutableArray new];
-	[dict setValue:children forKey:@"children"];
+	[dict setValue:children forKey:@"AXChildren"];
 	for (PFUIElement *child in root.AXChildren)
 	{
 		NSMutableDictionary *childDict = [NSMutableDictionary new];
@@ -210,6 +210,45 @@
 		return nil;
 	}
 	return [windows objectAtIndex:windowIndex];
+}
+
+-(GDataXMLDocument*)xmlPageSource
+{
+	return [self xmlPageSourceFromElement:nil pathMap:nil];
+}
+
+-(GDataXMLDocument*)xmlPageSourceFromElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap
+{
+	if (rootUIElement == nil)
+	{
+		rootUIElement = self.currentWindow;
+	}
+
+	GDataXMLElement *root = [GDataXMLNode elementWithName:rootUIElement.AXRole];
+	[self xmlPageSourceHelperFromElement:self.currentWindow element:root path:@"/*[1]" pathMap:pathMap];
+	GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithRootElement:root];
+	return doc;
+}
+
+-(void)xmlPageSourceHelperFromElement:(PFUIElement*)root element:(GDataXMLElement*) element path:(NSString*)path pathMap:(NSMutableDictionary*)pathMap
+{
+	[element addAttribute:[GDataXMLElement attributeWithName:@"AXRole" stringValue:root.AXRole]];
+	[element addAttribute:[GDataXMLElement attributeWithName:@"AXTitle" stringValue:root.AXTitle]];
+	[element addAttribute:[GDataXMLElement attributeWithName:@"AXDescription" stringValue:root.AXDescription]];
+
+	if (pathMap != nil)
+	{
+		[pathMap setValue:root forKey:path];
+		[element addAttribute:[GDataXMLElement attributeWithName:@"path" stringValue:path]];
+	}
+
+	for (int i=0; i < root.AXChildren.count; i++)
+	{
+		PFUIElement *child = [root.AXChildren objectAtIndex:i];
+		GDataXMLElement *childElement = [GDataXMLElement elementWithName:child.AXRole];
+		[self xmlPageSourceHelperFromElement:child element:childElement path:[path stringByAppendingFormat:@"/*[%d]", i+1] pathMap:pathMap];
+		[element addChild:childElement];
+	}
 }
 
 @end

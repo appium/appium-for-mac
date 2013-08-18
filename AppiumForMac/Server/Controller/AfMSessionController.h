@@ -9,6 +9,8 @@
 #import "AppiumMacHTTPJSONResponse.h"
 #import "Finder.h"
 #import "SystemEvents.h"
+#import "GDataXMLNode.h"
+
 #import <PFAssistive/PFAssistive.h>
 
 @interface AfMSessionController : NSObject
@@ -41,5 +43,7 @@
 -(void) sendKeys:(NSString*)keys;
 -(void) sendKeys:(NSString*)keys toElement:(PFUIElement*)element;
 -(PFUIElement*) windowForHandle:(NSString*)windowHandle;
+-(GDataXMLDocument*)xmlPageSource;
+-(GDataXMLDocument*)xmlPageSourceFromElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap;
 
 @end
