@@ -132,65 +132,6 @@
     return [self windowForHandle:self.currentWindowHandle];
 }
 
--(PFUIElement*) elementByName:(NSString*)name baseElement:(PFUIElement*)baseElement
-{
-    // check if this the element
-    if (baseElement != nil && [baseElement.AXTitle isEqualToString:name])
-    {
-        // return the element if it matches
-        return baseElement;
-    }
-
-    // search the children
-    NSArray *elementsToSearch;
-    if (baseElement != nil)
-    {
-        // search the children if this is an element
-        elementsToSearch = baseElement.AXChildren;
-    }
-    else
-    {
-        SystemEventsProcess *process = self.currentProcess;
-        if (process != nil)
-        {
-            elementsToSearch = process.UIElements;
-        }
-    }
-
-    if (elementsToSearch != nil)
-    {
-        for(PFUIElement* childElement in elementsToSearch)
-        {
-            // check the child
-            PFUIElement *childResult = [self elementByName:name baseElement:childElement];
-
-            //return the child if it matches
-            if (childResult != nil)
-            {
-                return childResult;
-            }
-        }
-    }
-
-    // return nil because there was no match
-    return nil;
-}
-
--(NSString*) frontmostApplicationName
-{
-    NSDictionary *errorDict;
-    NSAppleScript *frontMostApplicationScript = [[NSAppleScript alloc] initWithSource:
-												 @"tell application \"Finder\"\nset appPath to the path to the frontmost application\nset appName to the name of file appPath\nset appName to text 1 thru ((offset of \".\" in appName) - 1) of appName\nend tell"];
-    NSString *statusString = [[frontMostApplicationScript executeAndReturnError:&errorDict] stringValue];
-    // TODO: Add error handling
-    return statusString;
-}
-
--(NSString*) frontmostProcessName
-{
-    return [self processNameForApplicationName:self.frontmostApplicationName];
-}
-
 -(NSString*) pageSource
 {
 	NSMutableDictionary *dom = [NSMutableDictionary new];
@@ -253,7 +194,10 @@
 -(void) sendKeys:(NSString*)keys toElement:(PFUIElement*)element
 {
     [self activateApplication];
-	[element performAction:(NSString*)kAXRaiseAction];
+	if (element != nil)
+	{
+		[element performAction:(NSString*)kAXRaiseAction];
+	}
     [self.systemEvents keystroke:keys using:0];
 }
 
