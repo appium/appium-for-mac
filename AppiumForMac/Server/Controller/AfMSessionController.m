@@ -71,9 +71,9 @@
     [self.currentApplication activateApplication];
 }
 
--(void) activateWindow
+-(BOOL) activateWindow
 {
-	[self.currentWindow performAction:(NSString*)kAXRaiseAction];
+	return [self.currentWindow performAction:(NSString*)kAXRaiseAction];
 }
 
 -(PFApplicationUIElement*) applicationForName:(NSString*)applicationName
@@ -91,22 +91,23 @@
     NSDictionary *errorDict;
     NSAppleScript *appForProcNameScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\"\nset process_bid to get the bundle identifier of process \"%@\"\nset application_name to file of (application processes where bundle identifier is process_bid)\nend tell\nreturn application_name", processName]];
     NSString *statusString = [[appForProcNameScript executeAndReturnError:&errorDict] stringValue];
-    // TODO: Add error handling
-    return statusString;
+    return errorDict.count > 0 ? nil : statusString;
 }
 
 
--(void) clickElement:(PFUIElement*)element
+-(BOOL) clickElement:(PFUIElement*)element
 {
-    [element performAction:(NSString*)kAXPressAction];
-    // TODO: error handling
-    // TODO: check if element is enabled (clickable)
+	if (element == nil)
+	{
+		return NO;
+	}
+    return [element performAction:(NSString*)kAXPressAction];
 }
 
--(void) closeWindow:(NSString*)windowHandle
+-(void) closeWindow
 {
-	// NOT YET WORKING
-    //[[self windowForHandle:windowHandle] performAction:@"AXCancel"];
+	// TODO: Implement working close window method
+    [self.currentWindow performAction:@"AXCancel"];
 }
 
 -(NSString*) currentApplicationName
@@ -183,7 +184,7 @@
     NSAppleScript *fronstMostProcessScript = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"System Events\"\nset application_id to (get the id of application \"%@\" as string)\nset process_name to name of (application processes where bundle identifier is application_id)\nend tell\nreturn item 1 of process_name as text", applicationName]];
     NSString *statusString = [[fronstMostProcessScript executeAndReturnError:&errorDict] stringValue];
     // TODO: Add error handling
-    return statusString;
+    return errorDict.count > 0 ? nil : statusString;
 }
 
 -(void) sendKeys:(NSString*)keys

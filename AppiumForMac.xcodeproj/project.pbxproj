@@ -119,6 +119,7 @@
 		3621D0BC17AEC31100E97463 /* NSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extensions.h"; sourceTree = "<group>"; };
 		3621D0BD17AEC31100E97463 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		3623981217AFF9C700DE5719 /* appium-for-mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "appium-for-mac.icns"; sourceTree = "<group>"; };
+		3662E89517C187090076BB96 /* AfMStatusCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AfMStatusCodes.h; sourceTree = "<group>"; };
 		3672147D17A5E4490021082C /* AppiumMacHTTPJSONResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiumMacHTTPJSONResponse.h; sourceTree = "<group>"; };
 		3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppiumMacHTTPJSONResponse.m; sourceTree = "<group>"; };
 		369A0FE717C12F6700D66163 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -364,6 +365,7 @@
 		36AA9D9517A60CFA00AEC70A /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				3662E89517C187090076BB96 /* AfMStatusCodes.h */,
 				36AA9D9217A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.h */,
 				36AA9D9317A60CA700AEC70A /* AppiumMacHTTP303JSONResponse.m */,
 				3672147D17A5E4490021082C /* AppiumMacHTTPJSONResponse.h */,

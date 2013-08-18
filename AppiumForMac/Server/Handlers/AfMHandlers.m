@@ -9,6 +9,7 @@
 #import "AfMHandlers.h"
 
 #import "AfMElementLocator.h"
+#import "AfMStatusCodes.h"
 #import "AppiumMacHTTP303JSONResponse.h"
 #import "NSData+Base64.h"
 #import "Utility.h"
@@ -85,7 +86,7 @@
     NSDictionary *buildJson = [NSDictionary dictionaryWithObjectsAndKeys:[Utility bundleVersion], @"version", [Utility bundleRevision], @"revision", [NSString stringWithFormat:@"%d", [Utility unixTimestamp]], @"time", nil];
     NSDictionary *osJson = [NSDictionary dictionaryWithObjectsAndKeys:[Utility arch], @"arch", @"Mac OS X", @"name", [Utility version], @"version", nil];
     NSDictionary *json = [NSDictionary dictionaryWithObjectsAndKeys:buildJson, @"build", osJson, @"os", nil];
-    return [self respondWithJson:json status:0 session:nil];
+    return [self respondWithJson:json status:kAfMStatusCodeSuccess session:nil];
 }
 
 // POST /session
@@ -101,7 +102,7 @@
 	AfMSessionController *session = [AfMSessionController new];
     [self.sessions setValue:session forKey:newSession];
 
-    return [self respondWithJson:session.capabilities status:0 session: newSession];
+    return [self respondWithJson:session.capabilities status:kAfMStatusCodeSuccess session: newSession];
 }
 
 // GET /sessions
@@ -115,7 +116,7 @@
         [json addObject:[NSDictionary dictionaryWithObjectsAndKeys:key, @"id", [self.sessions objectForKey:key], @"capabilities", nil]];
     }
 
-    return [self respondWithJson:json status:0 session: nil];
+    return [self respondWithJson:json status:kAfMStatusCodeSuccess session: nil];
 }
 
 // GET /session/:sessionId
@@ -123,7 +124,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     // TODO: show error if session does not exist
-    return [self respondWithJson:[self.sessions objectForKey:sessionId] status:0 session:sessionId];
+    return [self respondWithJson:[self.sessions objectForKey:sessionId] status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // DELETE /session/:sessionId
@@ -134,7 +135,7 @@
     {
         [self.sessions removeObjectForKey:sessionId];
     }
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/timeouts
@@ -146,7 +147,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
-    return [self respondWithJson:session.currentWindowHandle status:0 session: sessionId];
+    return [self respondWithJson:session.currentWindowHandle status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/window_handles
@@ -155,7 +156,7 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     // TODO: add error handling
-    return [self respondWithJson:session.allWindowHandles status:0 session: sessionId];
+    return [self respondWithJson:session.allWindowHandles status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/url
@@ -163,7 +164,7 @@
 {
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
-    return [self respondWithJson:session.currentApplicationName status:0 session: sessionId];
+    return [self respondWithJson:session.currentApplicationName status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/url
@@ -179,7 +180,7 @@
 	[session activateApplication];
 
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/forward
@@ -202,11 +203,11 @@
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:classArray options:options];
         NSImage *image = [objectsToPaste objectAtIndex:0];
         NSString *base64Image = [[image TIFFRepresentation] base64EncodedString];
-        return [self respondWithJson:base64Image status:0 session:[Utility getSessionIDFromPath:path]];
+        return [self respondWithJson:base64Image status:kAfMStatusCodeSuccess session:[Utility getSessionIDFromPath:path]];
     }
     else
     {
-        return [self respondWithJson:nil status:0 session: [Utility getSessionIDFromPath:path]];
+        return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: [Utility getSessionIDFromPath:path]];
     }
 }
 
@@ -230,7 +231,7 @@
     [session activateWindow];
 
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // DELETE /session/:sessionId/window
@@ -239,10 +240,10 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
 
-    [session closeWindow:session.currentWindowHandle];
+    [session closeWindow];
 
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/window/:windowHandle/size
@@ -264,7 +265,7 @@
 	[window setAXSize:[NSValue valueWithSize:size]];
 	
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/window/:windowHandle/size
@@ -278,7 +279,7 @@
 	NSSize size = [window.AXSize sizeValue];
 
     // TODO: error handling
-    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], "width", [NSNumber numberWithFloat:size.height], @"height", nil] status:0 session: sessionId];
+    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], "width", [NSNumber numberWithFloat:size.height], @"height", nil] status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/window/:windowHandle/position
@@ -300,7 +301,7 @@
 	[window setAXPosition:[NSValue valueWithPoint:position]];
 	
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/window/:windowHandle/position
@@ -314,7 +315,7 @@
 	NSPoint position = [[window AXPosition] pointValue];
 
     // TODO: error handling
-    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:position.x], "x", [NSNumber numberWithFloat:position.y], @"y", nil] status:0 session: sessionId];
+    return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:position.x], "x", [NSNumber numberWithFloat:position.y], @"y", nil] status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/window/:windowHandle/maximize
@@ -328,7 +329,7 @@
     AfMSessionController *session = [self controllerForSession:sessionId];
 
 	// xml page source
-	return [self respondWithJson:[[NSString alloc]initWithData:[session xmlPageSource].XMLData encoding:NSUTF8StringEncoding] status:0 session:sessionId];
+	return [self respondWithJson:[[NSString alloc]initWithData:[session xmlPageSource].XMLData encoding:NSUTF8StringEncoding] status:kAfMStatusCodeSuccess session:sessionId];
 
 	// json page source
 	//return [self respondWithJson:[session pageSource] status:0 session: sessionId];
@@ -356,14 +357,14 @@
             session.elementIndex++;
             NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
             [session.elements setValue:element forKey:myKey];
-            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
+            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:kAfMStatusCodeSuccess session:sessionId];
         }
 	}
 	
 	// TODO: add error handling
 	// TODO: move element id code into session controller
 
-    return [self respondWithJson:nil status:-1 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
 }
 
 // POST /session/:sessionId/elements
@@ -392,14 +393,14 @@
 				[session.elements setValue:element forKey:myKey];
 				[elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
 			}
-			return [self respondWithJson:elements status:0 session:sessionId];
+			return [self respondWithJson:elements status:kAfMStatusCodeSuccess session:sessionId];
         }
 	}
 
 	// TODO: add error handling
 	// TODO: move element id code into session controller
 
-    return [self respondWithJson:nil status:-1 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
 }
 
 // /session/:sessionId/element/active
@@ -426,14 +427,14 @@
             session.elementIndex++;
             NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
             [session.elements setValue:element forKey:myKey];
-            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:0 session:sessionId];
+            return [self respondWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:kAfMStatusCodeSuccess session:sessionId];
         }
 	}
 
 	// TODO: add error handling
 	// TODO: move element id code into session controller
 
-    return [self respondWithJson:nil status:-1 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
 }
 
 // POST /session/:sessionId/element/:id/elements
@@ -463,7 +464,7 @@
 				[session.elements setValue:element forKey:myKey];
 				[elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
 			}
-			return [self respondWithJson:elements status:0 session:sessionId];
+			return [self respondWithJson:elements status:kAfMStatusCodeSuccess session:sessionId];
         }
 	}
 
@@ -487,7 +488,7 @@
         [session clickElement:element];
     }
     // TODO: error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/element/:id/submit
@@ -506,12 +507,12 @@
 		if (valueAttribute != nil)
 		{
 			NSString *text = [NSString stringWithFormat:@"%@", valueAttribute];
-				return [self respondWithJson:text status:0 session: sessionId];
+				return [self respondWithJson:text status:kAfMStatusCodeSuccess session: sessionId];
 		}
     }
 
 	// TODO: Add error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:-1 session: sessionId];
 }
 
 // POST /session/:sessionId/element/:id/value
@@ -528,7 +529,7 @@
     // TODO: add error handling
     // TODO: elements are session based
 
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/keys
@@ -544,7 +545,7 @@
     // TODO: add error handling
     // TODO: elements are session based
 
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/element/:id/name
@@ -558,7 +559,7 @@
     {
         return [self respondWithJson:element.AXTitle status:0 session: sessionId];
     }
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/element/:id/clear
@@ -575,7 +576,7 @@
     }
 
     // TODO: Add error handling
-    return [self respondWithJson:nil status:0 session: sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/element/:id/selected
@@ -589,7 +590,7 @@
     {
         return [self respondWithJson:element.AXFocused status:0 session: sessionId];
     }
-    return [self respondWithJson:nil status:0 session:sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // GET /session/:sessionId/element/:id/enabled
@@ -603,7 +604,7 @@
     {
         return [self respondWithJson:element.AXEnabled status:0 session: sessionId];
     }
-    return [self respondWithJson:nil status:0 session:sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // GET /session/:sessionId/element/:id/attribute/:name
@@ -623,7 +624,7 @@
 			return [self respondWithJson:[NSString stringWithFormat:@"%@", attributeValue] status:0 session: sessionId];
 		}
     }
-    return [self respondWithJson:nil status:0 session:sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // GET /session/:sessionId/element/:id/equals/:other
@@ -654,7 +655,7 @@
         return [self respondWithJson:position status:0 session: sessionId];
     }
     // TODO: Add error handling
-    return [self respondWithJson:nil status:0 session:sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // /session/:sessionId/element/:id/location_in_view
@@ -674,7 +675,7 @@
         return [self respondWithJson:sizeDict status:0 session: sessionId];
     }
     // TODO: Add error handling
-    return [self respondWithJson:nil status:0 session:sessionId];
+    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // /session/:sessionId/element/:id/css/:propertyName
