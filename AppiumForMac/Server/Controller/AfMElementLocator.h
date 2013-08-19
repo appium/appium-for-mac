@@ -30,8 +30,8 @@ typedef enum appiumMacLocatoryStrategy
 
 +(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value;
 
--(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement;
+-(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement statusCode:(int*)statusCode;
 
--(void)findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results;
+-(void) findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results statusCode:(int*)statusCode;
 
 @end

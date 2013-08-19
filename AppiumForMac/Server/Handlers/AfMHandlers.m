@@ -246,7 +246,6 @@
 	[session setCurrentWindowHandle:windowHandle];
     [session activateWindow];
 
-    // TODO: error handling
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -256,10 +255,16 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
 
-    [session closeWindow];
+	// check that there is at least one window
+	NSUInteger originalWindowCount = session.allWindows.count;
+	if (originalWindowCount < 1)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
 
-    // TODO: error handling
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
+	// close the window
+    [session closeWindow];
+	return (session.allWindows.count < originalWindowCount) ? [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId] : [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
 }
 
 // POST /session/:sessionId/window/:windowHandle/size
@@ -270,6 +275,11 @@
 	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
 	PFUIElement *window = [session windowForHandle:windowHandle];
 
+	if (windowHandle == nil)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+
 	NSDictionary *postParams = [self dictionaryFromPostData:postData];
     CGFloat width = [(NSNumber*)[postParams objectForKey:@"width"] floatValue];
 	CGFloat height = [(NSNumber*)[postParams objectForKey:@"height"] floatValue];
@@ -279,8 +289,7 @@
 	size.height = height;
 
 	[window setAXSize:[NSValue valueWithSize:size]];
-	
-    // TODO: error handling
+
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -292,9 +301,13 @@
 	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
 	PFUIElement *window = [session windowForHandle:windowHandle];
 
+	if (windowHandle == nil)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+
 	NSSize size = [window.AXSize sizeValue];
 
-    // TODO: error handling
     return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], "width", [NSNumber numberWithFloat:size.height], @"height", nil] status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -306,6 +319,11 @@
 	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
 	PFUIElement *window = [session windowForHandle:windowHandle];
 
+	if (windowHandle == nil)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+
 	NSDictionary *postParams = [self dictionaryFromPostData:postData];
     CGFloat x = [(NSNumber*)[postParams objectForKey:@"x"] floatValue];
 	CGFloat y = [(NSNumber*)[postParams objectForKey:@"y"] floatValue];
@@ -316,7 +334,6 @@
 
 	[window setAXPosition:[NSValue valueWithPoint:position]];
 	
-    // TODO: error handling
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -328,9 +345,13 @@
 	NSString *windowHandle = [Utility getItemFromPath:path withSeparator:@"window"];
 	PFUIElement *window = [session windowForHandle:windowHandle];
 
+	if (windowHandle == nil)
+	{
+		return [self respondWithJsonError:kAfMStatusCodeNoSuchWindow session:sessionId];
+	}
+
 	NSPoint position = [[window AXPosition] pointValue];
 
-    // TODO: error handling
     return [self respondWithJson:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:position.x], "x", [NSNumber numberWithFloat:position.y], @"y", nil] status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -364,10 +385,13 @@
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
 	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
-	
+
+	// initialize status as though no element were found
+	int statusCode = kAfMStatusCodeNoSuchElement;
+
 	if (locator != nil)
 	{
-		PFUIElement *element = [locator findUsingBaseElement:nil];
+		PFUIElement *element = [locator findUsingBaseElement:nil statusCode:&statusCode];
         if (element != nil)
         {
             session.elementIndex++;
@@ -377,10 +401,7 @@
         }
 	}
 	
-	// TODO: add error handling
-	// TODO: move element id code into session controller
-
-    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
+	return [self respondWithJsonError:statusCode session:sessionId];
 }
 
 // POST /session/:sessionId/elements
@@ -394,11 +415,14 @@
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
 	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
+
+	// initialize status as though no element were found
+	int statusCode = kAfMStatusCodeNoSuchElement;
 	
 	if (locator != nil)
 	{
 		NSMutableArray *matches = [NSMutableArray new];
-		[locator findAllUsingBaseElement:nil results:matches];
+		[locator findAllUsingBaseElement:nil results:matches statusCode:&statusCode];
         if (matches.count > 0)
         {
 			NSMutableArray *elements = [NSMutableArray new];
@@ -409,14 +433,12 @@
 				[session.elements setValue:element forKey:myKey];
 				[elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
 			}
-			return [self respondWithJson:elements status:kAfMStatusCodeSuccess session:sessionId];
+			
+			return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
         }
 	}
 
-	// TODO: add error handling
-	// TODO: move element id code into session controller
-
-    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
+    return [self respondWithJsonError:statusCode session:sessionId];
 }
 
 // /session/:sessionId/element/active
@@ -434,10 +456,13 @@
     NSString *value = (NSString*)[postParams objectForKey:@"value"];
 
 	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
+
+	// initialize status as though no element were found
+	int statusCode = kAfMStatusCodeNoSuchElement;
 	
 	if (locator != nil)
 	{
-		PFUIElement *element = [locator findUsingBaseElement:rootElement];
+		PFUIElement *element = [locator findUsingBaseElement:rootElement statusCode:&statusCode];
         if (element != nil)
         {
             session.elementIndex++;
@@ -447,10 +472,7 @@
         }
 	}
 
-	// TODO: add error handling
-	// TODO: move element id code into session controller
-
-    return [self respondWithJson:nil status:kAfMStatusCodeNoSuchElement session: sessionId];
+    return [self respondWithJsonError:statusCode session:sessionId];
 }
 
 // POST /session/:sessionId/element/:id/elements
@@ -466,10 +488,13 @@
 
 	AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
 
+	// initialize status as though no element were found
+	int statusCode = kAfMStatusCodeNoSuchElement;
+
 	if (locator != nil)
 	{
 		NSMutableArray *matches = [NSMutableArray new];
-		[locator findAllUsingBaseElement:rootElement results:matches];
+		[locator findAllUsingBaseElement:rootElement results:matches statusCode:&statusCode];
         if (matches.count > 0)
         {
 			NSMutableArray *elements = [NSMutableArray new];
@@ -484,10 +509,7 @@
         }
 	}
 
-	// TODO: add error handling
-	// TODO: move element id code into session controller
-
-    return [self respondWithJson:nil status:-1 session: sessionId];
+    return [self respondWithJsonError:statusCode session:sessionId];
 }
 
 

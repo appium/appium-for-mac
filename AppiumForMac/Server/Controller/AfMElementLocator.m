@@ -7,6 +7,7 @@
 //
 
 #import "AfMElementLocator.h"
+#import "AfMStatusCodes.h"
 
 @implementation AfMElementLocator
 
@@ -64,7 +65,7 @@
 	}
 }
 
--(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement
+-(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement statusCode:(int *)statusCode
 {
 	// use different method for xpath
 	if (self.strategy == AppiumMacLocatoryStrategyXPath)
@@ -73,12 +74,19 @@
 		GDataXMLDocument *doc = [self.session xmlPageSourceFromElement:baseElement pathMap:pathMap];
 		NSError *error;
 		NSArray *matches = [doc nodesForXPath:self.value error:&error];
+		if (error != nil)
+		{
+			*statusCode = kAfMStatusCodeXPathLookupError;
+			return nil;
+		}
 		if (matches.count < 1)
 		{
+			*statusCode = kAfMStatusCodeNoSuchElement;
 			return nil;
 		}
 		NSString *matchedPath = [(GDataXMLElement*)[matches objectAtIndex:0] attributeForName:@"path"].stringValue;
 		PFUIElement *matchedElement = [pathMap objectForKey:matchedPath];
+		*statusCode = kAfMStatusCodeSuccess;
 		return matchedElement;
 	}
 
@@ -86,6 +94,7 @@
     if ([self matchesElement:baseElement])
     {
         // return the element if it matches
+		*statusCode = kAfMStatusCodeSuccess;
         return baseElement;
     }
 
@@ -98,12 +107,22 @@
     }
     else
     {
-		// get elements from the current window of the process if no base element is supplied
-        if (self.session.currentProcess != nil)
-        {
-            elementsToSearch = self.session.currentWindow != nil ? self.session.currentWindow.AXChildren : [NSArray new];
-			// TODO: Fix crash that occurs when there are no windows
-        }
+		@try
+		{
+			// get elements from the current window if no base element is supplied
+			if (self.session.currentWindow == nil)
+			{
+				*statusCode = kAfMStatusCodeNoSuchWindow;
+				return nil;
+			}
+
+			elementsToSearch = self.session.currentWindow.AXChildren;
+		}
+		@catch (NSException *exception)
+		{
+			*statusCode = kAfMStatusCodeNoSuchWindow;
+			return nil;
+		}
     }
 
 	// check the children
@@ -112,20 +131,22 @@
         for(PFUIElement* childElement in elementsToSearch)
         {
             // check the child
-            PFUIElement *childResult = [self findUsingBaseElement:childElement];
+            PFUIElement *childResult = [self findUsingBaseElement:childElement statusCode:statusCode];
 
             //return the child if it matches
             if (childResult != nil)
             {
+				*statusCode = kAfMStatusCodeSuccess;
                 return childResult;
             }
         }
     }
     // return nil because there was no match
+	*statusCode = kAfMStatusCodeNoSuchElement;
     return nil;
 }
 
--(void)findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results
+-(void)findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results statusCode:(int *)statusCode
 {
 	// use different method for xpath
 	if (self.strategy == AppiumMacLocatoryStrategyXPath)
@@ -134,6 +155,18 @@
 		GDataXMLDocument *doc = [self.session xmlPageSourceFromElement:baseElement pathMap:pathMap];
 		NSError *error;
 		NSArray *matches = [doc nodesForXPath:self.value error:&error];
+		if (error != nil)
+		{
+			*statusCode = kAfMStatusCodeXPathLookupError;
+			return;
+		}
+		if (matches.count < 1)
+		{
+			*statusCode = kAfMStatusCodeNoSuchElement;
+			return;
+		}
+
+		*statusCode = kAfMStatusCodeSuccess;
 		for(GDataXMLElement *match in matches)
 		{
 			PFUIElement *matchedElement = [pathMap objectForKey:[match attributeForName:@"path"].stringValue];
@@ -146,6 +179,7 @@
     if ([self matchesElement:baseElement])
     {
         // return the element if it matches
+		*statusCode = kAfMStatusCodeSuccess;
         [results addObject: baseElement];
     }
 
@@ -159,10 +193,12 @@
     else
     {
 		// get elements from the current window of the process if no base element is supplied
-        if (self.session.currentProcess != nil)
+        if (self.session.currentWindow == nil)
         {
-            elementsToSearch = self.session.currentWindow.AXChildren;
+			*statusCode = kAfMStatusCodeNoSuchWindow;
+			return;
         }
+		elementsToSearch = self.session.currentWindow.AXChildren;
     }
 
 	// check the children
@@ -171,7 +207,7 @@
         for(PFUIElement* childElement in elementsToSearch)
         {
             // check the child
-            [self findAllUsingBaseElement:childElement results:results];
+            [self findAllUsingBaseElement:childElement results:results statusCode:statusCode];
         }
     }
 }
