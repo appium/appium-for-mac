@@ -86,6 +86,31 @@
 	return [self respondWithJson:errorJson status:statusCode session:sessionId];
 }
 
+-(int) checkElement:(PFUIElement*)element forSession:(AfMSessionController*)session
+{
+	if (element == nil)
+	{
+		return kAfMStatusCodeNoSuchElement;
+	}
+	if (![session.currentWindow exists])
+	{
+		return kAfMStatusCodeNoSuchWindow;
+	}
+	if (![element exists])
+	{
+		return kAfMStatusCodeStaleElementReference;
+	}
+	NSPoint middlePoint = [[element AXPosition] pointValue];
+	NSSize elementSize = [[element AXSize] sizeValue];
+	middlePoint.x += elementSize.width/2.0;
+	middlePoint.y += elementSize.height/2.0;
+	if (![element isVisibleAtPoint:middlePoint])
+	{
+		return kAfMStatusCodeElementNotVisible;
+	}
+	return kAfMStatusCodeSuccess;
+}
+
 // GET /status
 -(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path
 {
@@ -520,13 +545,20 @@
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
 
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-        [session clickElement:element];
-    }
-    // TODO: error handling
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	BOOL result = [session clickElement:element];
+
+    return result ? [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId] :
+	[self respondWithJsonError:kAfMStatusCodeUnknownError session:sessionId];
 }
 
 // /session/:sessionId/element/:id/submit
@@ -538,19 +570,24 @@
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
 
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-		id valueAttribute = element.AXValue;
-		if (valueAttribute != nil)
-		{
-			NSString *text = [NSString stringWithFormat:@"%@", valueAttribute];
-				return [self respondWithJson:text status:kAfMStatusCodeSuccess session: sessionId];
-		}
-    }
 
-	// TODO: Add error handling
-    return [self respondWithJson:nil status:-1 session: sessionId];
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+	
+	id valueAttribute = element.AXValue;
+	if (valueAttribute != nil)
+	{
+		NSString *text = [NSString stringWithFormat:@"%@", valueAttribute];
+			return [self respondWithJson:text status:kAfMStatusCodeSuccess session: sessionId];
+	}
+
+    return [self respondWithJson:nil status:kAfMStatusCodeUnknownError session: sessionId];
 }
 
 // POST /session/:sessionId/element/:id/value
@@ -562,10 +599,19 @@
     NSDictionary *postParams = [self dictionaryFromPostData:postData];
 
     NSArray *value = [postParams objectForKey:@"value"];
-    [session sendKeys:[value componentsJoinedByString:@""] toElement:[session.elements objectForKey:elementId]];
 
-    // TODO: add error handling
-    // TODO: elements are session based
+	// get the element
+    PFUIElement *element = [session.elements objectForKey:elementId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	// send the keystrokes
+    [session sendKeys:[value componentsJoinedByString:@""] toElement:element];
 
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
@@ -580,9 +626,6 @@
     NSArray *value = [postParams objectForKey:@"value"];
     [session sendKeys:[value componentsJoinedByString:@""] toElement:nil];
 
-    // TODO: add error handling
-    // TODO: elements are session based
-
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
 
@@ -592,12 +635,18 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-        return [self respondWithJson:element.AXTitle status:0 session: sessionId];
-    }
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	return [self respondWithJson:element.AXTitle status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // POST /session/:sessionId/element/:id/clear
@@ -606,8 +655,18 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    id value = [element value];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	id value = [element value];
     if (value != nil && [value isKindOfClass:[NSString class]])
     {
         [element setValue:@""];
@@ -623,12 +682,18 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-        return [self respondWithJson:element.AXFocused status:0 session: sessionId];
-    }
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	return [self respondWithJson:element.AXFocused status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // GET /session/:sessionId/element/:id/enabled
@@ -637,12 +702,19 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-        return [self respondWithJson:element.AXEnabled status:0 session: sessionId];
-    }
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	return [self respondWithJson:element.AXEnabled status:kAfMStatusCodeSuccess session: sessionId];
+
 }
 
 // GET /session/:sessionId/element/:id/attribute/:name
@@ -653,16 +725,18 @@
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSString *attributeName = [Utility getItemFromPath:path withSeparator:@"/attribute/"];
 
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-		id attributeValue = [element valueForAttribute:attributeName];
-		if (attributeValue != nil)
-		{
-			return [self respondWithJson:[NSString stringWithFormat:@"%@", attributeValue] status:0 session: sessionId];
-		}
-    }
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+	
+	id attributeValue = [element valueForAttribute:attributeName];
+		return [self respondWithJson:[NSString stringWithFormat:@"%@", attributeValue] status:0 session: sessionId];
 }
 
 // GET /session/:sessionId/element/:id/equals/:other
@@ -672,9 +746,28 @@
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
     NSString *otherElementId = [Utility getItemFromPath:path withSeparator:@"/equals/"];
+
+	// get the first element
     PFUIElement *element = [session.elements objectForKey:elementId];
+
+	// check that the first element is valid
+	int status1 = [self checkElement:element forSession:session];
+	if (status1 != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status1 session:sessionId];
+	}
+
+	// get the second element
     PFUIElement *otherElement = [session.elements objectForKey:otherElementId];
-    return [self respondWithJson:[NSNumber numberWithBool:[element isEqualTo:otherElement]] status:0 session:sessionId];
+
+	// check that the second element is valid
+	int status2 = [self checkElement:otherElement forSession:session];
+	if (status2 != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status2 session:sessionId];
+	}
+
+    return [self respondWithJson:[NSNumber numberWithBool:[element isEqualToElement:otherElement]] status:kAfMStatusCodeSuccess session:sessionId];
 }
 
 // /session/:sessionId/element/:id/displayed
@@ -685,15 +778,20 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-		NSPoint point = [element.AXPosition pointValue];
-		NSDictionary *position = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:point.x], @"x", [NSNumber numberWithFloat:point.y], @"y", nil];
-        return [self respondWithJson:position status:0 session: sessionId];
-    }
-    // TODO: Add error handling
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	NSPoint point = [element.AXPosition pointValue];
+	NSDictionary *position = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:point.x], @"x", [NSNumber numberWithFloat:point.y], @"y", nil];
+	return [self respondWithJson:position status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/element/:id/location_in_view
@@ -705,15 +803,20 @@
     NSString *sessionId = [Utility getSessionIDFromPath:path];
     AfMSessionController *session = [self controllerForSession:sessionId];
     NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
     PFUIElement *element = [session.elements objectForKey:elementId];
-    if (element != nil)
-    {
-		NSSize size = [element.AXSize sizeValue];
-		NSDictionary *sizeDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], @"width", [NSNumber numberWithFloat:size.height], @"height", nil];
-        return [self respondWithJson:sizeDict status:0 session: sessionId];
-    }
-    // TODO: Add error handling
-    return [self respondWithJson:nil status:kAfMStatusCodeSuccess session:sessionId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+
+	NSSize size = [element.AXSize sizeValue];
+	NSDictionary *sizeDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], @"width", [NSNumber numberWithFloat:size.height], @"height", nil];
+	return [self respondWithJson:sizeDict status:kAfMStatusCodeSuccess session: sessionId];
 }
 
 // /session/:sessionId/element/:id/css/:propertyName
