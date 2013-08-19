@@ -201,7 +201,7 @@
 {
 	if (element != nil)
 	{
-		[element activateApplication];
+		[element setAXFocused:[NSNumber numberWithBool:YES]];
 	}
 	[self.systemEvents keystroke:keys using:0];
 }

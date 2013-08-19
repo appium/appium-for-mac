@@ -610,8 +610,8 @@
 		[self respondWithJsonError:status session:sessionId];
 	}
 
-	// send the keystrokes
-    [session sendKeys:[value componentsJoinedByString:@""] toElement:element];
+	// set the value
+    [element setAXValue:[value componentsJoinedByString:@""]];
 
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];
 }
