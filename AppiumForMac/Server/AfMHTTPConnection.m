@@ -265,7 +265,11 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
         return [SERVER.handler getElementIsEqual:path];
 	}
 
-    // /session/:sessionId/element/:id/displayed
+    // GET /session/:sessionId/element/:id/displayed
+    if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"displayed"] && [method isEqualToString:@"GET"])
+	{
+        return [SERVER.handler getElementDisplayed:path];
+	}
 
     // GET /session/:sessionId/element/:id/location
     if (pathComponents.count == 5 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"element"] && [[pathComponents objectAtIndex:4] isEqualToString:@"location"] && [method isEqualToString:@"GET"])

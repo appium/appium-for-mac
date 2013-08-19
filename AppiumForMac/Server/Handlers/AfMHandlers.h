@@ -135,7 +135,8 @@
 // GET /session/:sessionId/element/:id/equals/:other
 -(AppiumMacHTTPJSONResponse*) getElementIsEqual:(NSString*)path;
 
-// /session/:sessionId/element/:id/displayed
+// GET /session/:sessionId/element/:id/displayed
+-(AppiumMacHTTPJSONResponse*) getElementDisplayed:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/location
 -(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path;

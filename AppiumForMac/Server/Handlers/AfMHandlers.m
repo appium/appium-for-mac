@@ -770,7 +770,25 @@
     return [self respondWithJson:[NSNumber numberWithBool:[element isEqualToElement:otherElement]] status:kAfMStatusCodeSuccess session:sessionId];
 }
 
-// /session/:sessionId/element/:id/displayed
+// GET /session/:sessionId/element/:id/displayed
+-(AppiumMacHTTPJSONResponse*) getElementDisplayed:(NSString*)path
+{
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+    NSString *elementId = [Utility getElementIDFromPath:path];
+
+	// get the element
+    PFUIElement *element = [session.elements objectForKey:elementId];
+
+	// check the element is valid
+	int status = [self checkElement:element forSession:session];
+	if (status != kAfMStatusCodeSuccess && status != kAfMStatusCodeElementNotVisible)
+	{
+		[self respondWithJsonError:status session:sessionId];
+	}
+	BOOL visible = status != kAfMStatusCodeElementNotVisible;
+	return [self respondWithJson:[NSNumber numberWithBool:visible] status:kAfMStatusCodeSuccess session: sessionId];
+}
 
 // GET /session/:sessionId/element/:id/location
 -(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path
