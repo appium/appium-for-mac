@@ -7,6 +7,9 @@ driver = webdriver.Remote( command_executor='http://localhost:8080/wd/hub', desi
 print 'Opening the "Calculator" app'
 driver.get("Calculator")
 
+print 'Selecting the 1st Window'
+driver.switch_to_window("1")
+
 rand1 = randint(0,100)
 rand2 = randint(0,100)
 

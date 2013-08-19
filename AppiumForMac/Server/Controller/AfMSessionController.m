@@ -52,7 +52,7 @@
 
 -(NSArray*) allWindows
 {
-    return [self.currentApplication AXWindows];
+    return [[NSArray arrayWithObject:self.currentApplication] arrayByAddingObjectsFromArray:[self.currentApplication AXWindows]];
 }
 
 -(NSArray*) allWindowHandles
@@ -73,6 +73,11 @@
 
 -(BOOL) activateWindow
 {
+	if ([self.currentWindow isEqualToElement:self.currentApplication])
+	{
+		[self activateApplication];
+		return YES;
+	}
 	return [self.currentWindow performAction:(NSString*)kAXRaiseAction];
 }
 
