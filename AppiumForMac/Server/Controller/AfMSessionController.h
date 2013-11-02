@@ -36,6 +36,7 @@
 -(NSString*) applicationNameForProcessName:(NSString*)processName;
 -(BOOL) clickElement:(PFUIElement*)element;
 -(void) closeWindow;
+-(id) executeScript:(NSString*)scriptText;
 -(NSDictionary*) pageSource;
 -(NSInteger) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;

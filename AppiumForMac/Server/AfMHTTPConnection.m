@@ -113,7 +113,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/forward
     // /session/:sessionId/back
     // /session/:sessionId/refresh
-    // /session/:sessionId/execute
+
+	// POST /session/:sessionId/execute
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"execute"] && [method isEqualToString:@"POST"])
+	{
+        return [SERVER.handler postExecute:path data:[request body]];
+	}
+
     // /session/:sessionId/execute_async
 
     // GET /session/:sessionId/screenshot

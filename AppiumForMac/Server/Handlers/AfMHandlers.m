@@ -222,7 +222,34 @@
 // /session/:sessionId/forward
 // /session/:sessionId/back
 // /session/:sessionId/refresh
-// /session/:sessionId/execute
+
+// POST /session/:sessionId/execute
+-(HTTPDataResponse*) postExecute:(NSString*)path data:(NSData*)postData
+{
+	NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+    NSDictionary *postParams = [self dictionaryFromPostData:postData];
+
+    // run the script
+    NSString *script = (NSString*)[postParams objectForKey:@"script"];
+	id result = [session executeScript:script];
+
+	// send back the result
+	if ([result isKindOfClass:[NSAppleEventDescriptor class]])
+	{
+		NSString *resultText = [(NSAppleEventDescriptor*)result stringValue];
+		if (resultText == nil)
+		{
+			resultText = @"";
+		}
+		return [self respondWithJson:[NSDictionary dictionaryWithObject:resultText forKey:@"result"] status:kAfMStatusCodeSuccess session: sessionId];
+	}
+	else
+	{
+		return [self respondWithJson:(NSDictionary*)result status:kAfMStatusCodeJavascriptError session: sessionId];
+	}
+}
+
 // /session/:sessionId/execute_async
 
 // GET /session/:sessionId/screenshot

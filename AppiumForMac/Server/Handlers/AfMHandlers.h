@@ -48,7 +48,10 @@
 // /session/:sessionId/forward
 // /session/:sessionId/back
 // /session/:sessionId/refresh
-// /session/:sessionId/execute
+
+// POST /session/:sessionId/execute
+-(HTTPDataResponse*) postExecute:(NSString*)path data:(NSData*)postData;
+
 // /session/:sessionId/execute_async
 
 // GET /session/:sessionId/screenshot

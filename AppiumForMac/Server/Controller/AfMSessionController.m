@@ -138,6 +138,14 @@
     return [self windowForHandle:self.currentWindowHandle];
 }
 
+-(id) executeScript:(NSString*)scriptText
+{
+	NSDictionary *errorDict;
+	NSAppleScript *script = [[NSAppleScript alloc] initWithSource:scriptText];
+	NSAppleEventDescriptor *result = [script executeAndReturnError:&errorDict];
+    return errorDict.count > 0 ? errorDict : result;
+}
+
 -(NSString*) pageSource
 {
 	NSMutableDictionary *dom = [NSMutableDictionary new];
