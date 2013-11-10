@@ -24,7 +24,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     self.server = [[AfMHTTPServer alloc] init];
     [self.server setType:@"_http._tcp."];
-    [self.server setPort:8080];
+    [self.server setPort:4622];
     [self.server setName:[NSString stringWithFormat:@"Appium for Mac (%@)", [Utility bundleVersion]]];
     [self.server setConnectionClass:[AfMHTTPConnection class]];
 	NSError *error = nil;

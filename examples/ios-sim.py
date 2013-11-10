@@ -3,7 +3,7 @@ from random import randint
 from time import sleep
 
 print 'Starting the WebDriver session'
-driver = webdriver.Remote( command_executor='http://localhost:8080/wd/hub', desired_capabilities={'platform':'Mac'})
+driver = webdriver.Remote( command_executor='http://localhost:4622/wd/hub', desired_capabilities={'platform':'Mac'})
 
 print 'Opening the "iPhone Simulator" app'
 driver.get("iPhone Simulator")
