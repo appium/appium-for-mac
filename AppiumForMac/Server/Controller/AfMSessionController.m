@@ -149,7 +149,7 @@
 -(NSString*) pageSource
 {
 	NSMutableDictionary *dom = [NSMutableDictionary new];
-	[self pageSourceHelperFromElement:self.currentWindow dictionary:dom];
+	[self pageSourceHelperFromElement:self.currentApplication dictionary:dom];
 
 	NSError *error;
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dom
@@ -234,11 +234,11 @@
 {
 	if (rootUIElement == nil)
 	{
-		rootUIElement = self.currentWindow;
+		rootUIElement = self.currentApplication;
 	}
 
 	GDataXMLElement *root = [GDataXMLNode elementWithName:rootUIElement.AXRole];
-	[self xmlPageSourceHelperFromElement:self.currentWindow element:root path:@"/*[1]" pathMap:pathMap];
+	[self xmlPageSourceHelperFromElement:rootUIElement element:root path:@"/*[1]" pathMap:pathMap];
 	GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithRootElement:root];
 	return doc;
 }

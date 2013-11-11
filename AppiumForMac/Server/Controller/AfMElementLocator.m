@@ -110,13 +110,13 @@
 		@try
 		{
 			// get elements from the current window if no base element is supplied
-			if (self.session.currentWindow == nil)
+			if (self.session.currentApplication == nil)
 			{
 				*statusCode = kAfMStatusCodeNoSuchWindow;
 				return nil;
 			}
 
-			elementsToSearch = self.session.currentWindow.AXChildren;
+			elementsToSearch = self.session.currentApplication.AXChildren;
 		}
 		@catch (NSException *exception)
 		{
@@ -192,13 +192,13 @@
     }
     else
     {
-		// get elements from the current window of the process if no base element is supplied
-        if (self.session.currentWindow == nil)
+		// get elements from the current appliction if no base element is supplied
+        if (self.session.currentApplication == nil)
         {
 			*statusCode = kAfMStatusCodeNoSuchWindow;
 			return;
         }
-		elementsToSearch = self.session.currentWindow.AXChildren;
+		elementsToSearch = self.session.currentApplication.AXChildren;
     }
 
 	// check the children
