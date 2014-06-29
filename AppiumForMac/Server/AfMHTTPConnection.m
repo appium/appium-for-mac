@@ -123,7 +123,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE;
     // /session/:sessionId/execute_async
 
     // GET /session/:sessionId/screenshot
-    if ([path isEqualToString:@"/screenshot"] && [method isEqualToString:@"GET"])
+    if (pathComponents.count == 3 && [[pathComponents objectAtIndex:0] isEqualToString:@"session"] && [[pathComponents objectAtIndex:2] isEqualToString:@"screenshot"] && [method isEqualToString:@"GET"])
 	{
         return [SERVER.handler getScreenshot:path];
 	}
