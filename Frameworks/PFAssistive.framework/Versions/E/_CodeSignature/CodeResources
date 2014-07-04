@@ -6,215 +6,116 @@
 	<dict>
 		<key>Resources/.DS_Store</key>
 		<data>
-		IA3WTVQ7kBSNi/TUDlRD1tMts2Q=
+		JHQjMWvZs3gR4FOeyeacNsNPIoE=
 		</data>
-		<key>Resources/English.lproj/Documentation/Assistive Application Programming Guide.pdf</key>
+		<key>Resources/English.lproj/.DS_Store</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			BGsjr9Eioi0WFMoooNKX2HOEYjU=
+			3y++sUAKzaCQmjLBz2v0kvESHgc=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/PFA Distribution License.rtf</key>
+		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			4zE6Op/cMl4dSQVa8ArCJyghJsU=
+			9lKQBrAovlp0jWqwiFYcCkC/m1U=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/PFA Single User License.rtf</key>
+		<key>Resources/English.lproj/PFActionDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Ynbmh6lwvImPYsgeyt86yD23JvU=
+			gW9QcJ0COd9XJGlZonrWDA0dKWg=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/PFAssistive Framework Reference.html</key>
+		<key>Resources/English.lproj/PFAssistiveErrors.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			V6ZkdM7mB9/A46fYJt11LGaoxZw=
+			zE2yPkv9sff/sPKLbX9lqAc7WLA=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Read Me.rtf</key>
+		<key>Resources/English.lproj/PFAttributeDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			FZgoem0lPYahXR4hte8tMdQIxqg=
+			n3cdXyZMwsZnC6+SAVtRa7PFNE8=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/HeaderDoc_hdoc/index.html</key>
+		<key>Resources/English.lproj/PFNotificationDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3Za+0jYW4heRdDiaQAW2mAqD1ZM=
+			9GtGhwwa2SZRisE25ny1HrlQMHc=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/HeaderDoc_hdoc/toc.html</key>
+		<key>Resources/English.lproj/PFRoleDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			gnwROEB+q243o9mmhR99IDu0FV0=
+			PYxRYRWerHA9aDvmZd00gIdkvxA=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/Classes/PFObserver/index.html</key>
+		<key>Resources/English.lproj/PFSubroleDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			EpmZlULCfQIe1Al2ZxCC/+lJmAA=
+			XJ7kkb8IRHGDzpCAyFvvKV3NbtY=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/Classes/PFObserver/toc.html</key>
+		<key>Resources/English.lproj/PFTypeDescriptions.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			mkWPf0b3yTopxGjp6p7tV9KWyNc=
+			8Tl5I4Rqy+rHCssZR8nHGPqdi5M=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/Protocols/PFObserverDelegate/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Nbhy+MS3o0cE+o5onIFVPcXqL3U=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/Protocols/PFObserverDelegate/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			8ZW8flX+eBNmFG0xFUlMF5zlBpg=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			C78d2NXG4RzyZDcKkmfukXWCntY=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFObserver_h/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			fI2J+oqDodlLrvHX+NkvhLfAoZg=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Categories/PFUIElement_Attributes_/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			NpHxLz4Glv+PE1ou8yQSC+mDf8Q=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Categories/PFUIElement_Attributes_/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			fLKsDHa+fqVofsfyLOWKbBpH0Pc=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Classes/PFApplicationUIElement/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			nc3cjikddLH4Vtv3EA9WsQctyWw=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Classes/PFApplicationUIElement/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			hYE42xOq4kkaqSNkB0giQ6PGhQI=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Classes/PFUIElement/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			znmjJU7Xzd0v5SZdiEFagqFzp8Q=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Classes/PFUIElement/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			E5Y1WfBy3TFoaSdMjpQ+sz71Uoo=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Protocols/PFUIElementDelegate/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			YyTgVoCjPhARFGliYLczTPb7sjg=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/Protocols/PFUIElementDelegate/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			LVICtMWqzKoTL9uy/njKGl1PbYo=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/index.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			g47yFBaDbbqs7gE2mmfc7MNnFr4=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
-		<key>Resources/English.lproj/Documentation/Reference Content/PFUIElement_h/toc.html</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			m+8QED026u8ptWcKi3df62s92Mw=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
+		<key>Resources/HeaderDoc.hdoc</key>
+		<data>
+		vfBJAW9BieZuDkZx1CXyD29ZmiU=
+		</data>
+		<key>Resources/Info.plist</key>
+		<data>
+		gZfmVepg6huBF1XwMy767qhr/sM=
+		</data>
+	</dict>
+	<key>files2</key>
+	<dict>
+		<key>Headers/PFAssistive.h</key>
+		<data>
+		1GpFMR79EKsucl/ykNUaeMBr0lo=
+		</data>
+		<key>Headers/PFAssistiveError.h</key>
+		<data>
+		5jXRIpzRIZY0Ol79AM0Lq+J/XZE=
+		</data>
+		<key>Headers/PFObserver.h</key>
+		<data>
+		sij2Qz3a6StuqQi3OE5huS8o/Jg=
+		</data>
+		<key>Headers/PFUIElement.h</key>
+		<data>
+		YAhXKsHIsXiNnS1ioG/dxV05ccI=
+		</data>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
 			<key>hash</key>
@@ -316,6 +217,80 @@
 		</dict>
 		<key>^version.plist$</key>
 		<true/>
+	</dict>
+	<key>rules2</key>
+	<dict>
+		<key>.*\.dSYM($|/)</key>
+		<dict>
+			<key>weight</key>
+			<real>11</real>
+		</dict>
+		<key>^(.*/)?\.DS_Store$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>2000</real>
+		</dict>
+		<key>^(Frameworks|SharedFrameworks|PlugIns|Plug-ins|XPCServices|Helpers|MacOS|Library/(Automator|Spotlight|LoginItems))/</key>
+		<dict>
+			<key>nested</key>
+			<true/>
+			<key>weight</key>
+			<real>10</real>
+		</dict>
+		<key>^.*</key>
+		<true/>
+		<key>^Info\.plist$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^PkgInfo$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^Resources/</key>
+		<dict>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^Resources/.*\.lproj/</key>
+		<dict>
+			<key>optional</key>
+			<true/>
+			<key>weight</key>
+			<real>1000</real>
+		</dict>
+		<key>^Resources/.*\.lproj/locversion.plist$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>1100</real>
+		</dict>
+		<key>^[^/]+$</key>
+		<dict>
+			<key>nested</key>
+			<true/>
+			<key>weight</key>
+			<real>10</real>
+		</dict>
+		<key>^embedded\.provisionprofile$</key>
+		<dict>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^version\.plist$</key>
+		<dict>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
 	</dict>
 </dict>
 </plist>
