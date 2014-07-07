@@ -21,7 +21,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			ZSVB1h0tdA6268hUgSzCLRdDGOI=
+			jL+vkU40ikTbBnr6wTkaifAjeVA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -30,7 +30,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gW9QcJ0COd9XJGlZonrWDA0dKWg=
+			w/wBwqAZWYu4ix5ZxehTDLJkW90=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -39,7 +39,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			zE2yPkv9sff/sPKLbX9lqAc7WLA=
+			G09wio4WIKTX4XyqI0YNPhqgb9g=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -48,7 +48,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			n3cdXyZMwsZnC6+SAVtRa7PFNE8=
+			a1/qJZT/agAqk63juhNw7FSGpPo=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -57,7 +57,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9GtGhwwa2SZRisE25ny1HrlQMHc=
+			QHVNUbPmN03R3M2WuRzKr2SOYqQ=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -66,7 +66,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			PYxRYRWerHA9aDvmZd00gIdkvxA=
+			yt2ATP8Oax9tzOM1QBnQaA+AWxk=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -75,7 +75,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			XJ7kkb8IRHGDzpCAyFvvKV3NbtY=
+			VP4ezI4Nkt9zweX5bbxm3Cgxaj4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -84,43 +84,39 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			8Tl5I4Rqy+rHCssZR8nHGPqdi5M=
+			wEZ7fLW2HSzFDrzHEkNQ6XndM/c=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/HeaderDoc.hdoc</key>
-		<data>
-		cSwORel1pcG+1B0Rr5sHuMooxiA=
-		</data>
 		<key>Resources/Info.plist</key>
 		<data>
-		9oTrJMN1ceg4iUX1jNLVLWZAq6U=
+		MJrnjr5fXy4cKeQrsooGSl8H9Sg=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>Headers/PFAssistive.h</key>
 		<data>
-		1GpFMR79EKsucl/ykNUaeMBr0lo=
+		jxkuadVIMseEs7pSqmsDMKvRNL8=
 		</data>
 		<key>Headers/PFAssistiveError.h</key>
 		<data>
-		5jXRIpzRIZY0Ol79AM0Lq+J/XZE=
+		/8QitWWywGn5KDjtIA7ie2roh3E=
 		</data>
 		<key>Headers/PFObserver.h</key>
 		<data>
-		wz3Rzbi2Eert8VCT5WpNqpY32a0=
+		mrRiPYqWeinggGZRW0a/byjXlYQ=
 		</data>
 		<key>Headers/PFUIElement.h</key>
 		<data>
-		xW69A074Hg1fKq6TuyLcCgf+fCQ=
+		wFlswkiPiy05J+aFk6NMAijABqE=
 		</data>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			ZSVB1h0tdA6268hUgSzCLRdDGOI=
+			jL+vkU40ikTbBnr6wTkaifAjeVA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -129,7 +125,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gW9QcJ0COd9XJGlZonrWDA0dKWg=
+			w/wBwqAZWYu4ix5ZxehTDLJkW90=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -138,7 +134,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			zE2yPkv9sff/sPKLbX9lqAc7WLA=
+			G09wio4WIKTX4XyqI0YNPhqgb9g=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -147,7 +143,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			n3cdXyZMwsZnC6+SAVtRa7PFNE8=
+			a1/qJZT/agAqk63juhNw7FSGpPo=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -156,7 +152,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9GtGhwwa2SZRisE25ny1HrlQMHc=
+			QHVNUbPmN03R3M2WuRzKr2SOYqQ=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -165,7 +161,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			PYxRYRWerHA9aDvmZd00gIdkvxA=
+			yt2ATP8Oax9tzOM1QBnQaA+AWxk=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -174,7 +170,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			XJ7kkb8IRHGDzpCAyFvvKV3NbtY=
+			VP4ezI4Nkt9zweX5bbxm3Cgxaj4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -183,18 +179,14 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			8Tl5I4Rqy+rHCssZR8nHGPqdi5M=
+			wEZ7fLW2HSzFDrzHEkNQ6XndM/c=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/HeaderDoc.hdoc</key>
-		<data>
-		cSwORel1pcG+1B0Rr5sHuMooxiA=
-		</data>
 		<key>Resources/Info.plist</key>
 		<data>
-		9oTrJMN1ceg4iUX1jNLVLWZAq6U=
+		MJrnjr5fXy4cKeQrsooGSl8H9Sg=
 		</data>
 	</dict>
 	<key>rules</key>

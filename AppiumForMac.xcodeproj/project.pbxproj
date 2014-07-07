@@ -23,7 +23,6 @@
 		3614DE1B17A59B3000853962 /* AfMHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3614DE1A17A59B3000853962 /* AfMHandlers.m */; };
 		3621D0BE17AEC31100E97463 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3621D0BD17AEC31100E97463 /* NSString+Extensions.m */; };
 		3623981317AFF9C700DE5719 /* appium-for-mac.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3623981217AFF9C700DE5719 /* appium-for-mac.icns */; };
-		36619DFC17BF1A97009BAA34 /* PFAssistive.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; };
 		3662E89C17C1A1A10076BB96 /* AfMStatusCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3662E89B17C1A1A10076BB96 /* AfMStatusCodes.m */; };
 		3672147F17A5E4490021082C /* AppiumMacHTTPJSONResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3672147E17A5E4490021082C /* AppiumMacHTTPJSONResponse.m */; };
 		369A0FE817C12F6700D66163 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 369A0FE717C12F6700D66163 /* libxml2.dylib */; };
@@ -62,6 +61,7 @@
 		36D203DF17A5D8B900011A3A /* AfMHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D203DE17A5D8B900011A3A /* AfMHTTPConnection.m */; };
 		36D203E217A5DE7000011A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D203E117A5DE7000011A3A /* Security.framework */; };
 		36D7968A17BF1A4B00D1B81E /* PFAssistive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; };
+		4F31407119662998009BDF33 /* PFAssistive.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,11 +77,11 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		36619DFB17BF1A8D009BAA34 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				36619DFC17BF1A97009BAA34 /* PFAssistive.framework in CopyFiles */,
+				4F31407119662998009BDF33 /* PFAssistive.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,7 +557,7 @@
 			name = AppiumForMacTests;
 			productName = AppiumAppleScriptProxyTests;
 			productReference = 361034A517A4990F00DB79AA /* AppiumForMacTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -803,9 +803,11 @@
 				GCC_PREFIX_HEADER = "AppiumForMac/AppiumForMac-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "AppiumForMac/AppiumForMac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = AppiumForMac;
+				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = app;
 			};
@@ -823,9 +825,11 @@
 				GCC_PREFIX_HEADER = "AppiumForMac/AppiumForMac-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "AppiumForMac/AppiumForMac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = AppiumForMac;
+				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = app;
 			};
