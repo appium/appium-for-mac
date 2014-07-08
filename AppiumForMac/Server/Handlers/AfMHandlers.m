@@ -265,7 +265,13 @@
     {
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:classArray options:options];
         NSImage *image = [objectsToPaste objectAtIndex:0];
-        NSString *base64Image = [[image TIFFRepresentation] base64EncodedString];
+        CGImageRef cgRef = [image CGImageForProposedRect:NULL
+                                                 context:nil
+                                                   hints:nil];
+        NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
+        [newRep setSize:[image size]];
+        NSData *pngData = [newRep representationUsingType:NSPNGFileType properties:nil];
+        NSString *base64Image = [pngData base64EncodedString];
         return [self respondWithJson:base64Image status:kAfMStatusCodeSuccess session:[Utility getSessionIDFromPath:path]];
     }
     else
