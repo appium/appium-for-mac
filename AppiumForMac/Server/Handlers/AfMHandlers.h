@@ -5,7 +5,7 @@
 //  Created by Dan Cuellar on 7/28/13.
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
-
+#import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 #import "AppiumMacHTTPJSONResponse.h"
 #import "AfMSessionController.h"
