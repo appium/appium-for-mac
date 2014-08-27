@@ -44,6 +44,7 @@
 -(void) sendKeys:(NSString*)keys;
 -(void) sendKeys:(NSString*)keys toElement:(PFUIElement*)element;
 -(PFUIElement*) windowForHandle:(NSString*)windowHandle;
+-(NSDictionary*) frontmostAppWindowInfo;
 -(GDataXMLDocument*)xmlPageSource;
 -(GDataXMLDocument*)xmlPageSourceFromElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap;
 

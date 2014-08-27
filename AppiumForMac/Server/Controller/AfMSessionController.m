@@ -225,6 +225,19 @@
 	return [windows objectAtIndex:windowIndex];
 }
 
+-(NSDictionary *) frontmostAppWindowInfo{
+    
+    NSArray *windowList = (__bridge NSArray *) CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements, kCGNullWindowID);
+    for (NSDictionary *dictionary in windowList) {
+        NSNumber *windowLayer = [dictionary objectForKey:@"kCGWindowLayer"];
+        NSNumber *windowOwnerPID  = [dictionary objectForKey:@"kCGWindowOwnerPID"];
+        if (([windowLayer isEqualToNumber:[NSNumber numberWithInt:0]]) && ([windowOwnerPID  isEqualToNumber:[NSNumber numberWithInteger:[self pidForProcessName:[self currentProcessName]]]])) {
+            return dictionary;
+        }
+    }
+    return nil;
+}
+
 -(GDataXMLDocument*)xmlPageSource
 {
 	return [self xmlPageSourceFromElement:nil pathMap:nil];

@@ -255,27 +255,19 @@
 // GET /session/:sessionId/screenshot
 -(HTTPDataResponse*) getScreenshot:(NSString*)path
 {
-    system([@"/usr/sbin/screencapture -c" UTF8String]);
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-    NSArray *classArray = [NSArray arrayWithObject:[NSImage class]];
-    NSDictionary *options = [NSDictionary dictionary];
-
-    BOOL foundImage = [pasteboard canReadObjectForClasses:classArray options:options];
-    if (foundImage)
-    {
-        NSArray *objectsToPaste = [pasteboard readObjectsForClasses:classArray options:options];
-        NSImage *image = [objectsToPaste objectAtIndex:0];
-        CGImageRef cgRef = [image CGImageForProposedRect:NULL
-                                                 context:nil
-                                                   hints:nil];
-        NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
-        [newRep setSize:[image size]];
-        NSData *pngData = [newRep representationUsingType:NSPNGFileType properties:nil];
+    NSString *sessionId = [Utility getSessionIDFromPath:path];
+    AfMSessionController *session = [self controllerForSession:sessionId];
+    NSDictionary *frontmostAppWindow = [session frontmostAppWindowInfo];
+    CGWindowID windowID = [[frontmostAppWindow objectForKey:@"kCGWindowNumber"] unsignedIntValue];
+	CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageBoundsIgnoreFraming);
+    if (screenShot) {
+        NSSize size = NSMakeSize(CGImageGetWidth(screenShot), CGImageGetHeight(screenShot));
+        NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithCGImage:screenShot];
+        [bitmapRep setSize:size];
+        NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
         NSString *base64Image = [pngData base64EncodedString];
         return [self respondWithJson:base64Image status:kAfMStatusCodeSuccess session:[Utility getSessionIDFromPath:path]];
-    }
-    else
-    {
+    }else{
         return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: [Utility getSessionIDFromPath:path]];
     }
 }
