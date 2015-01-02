@@ -8,20 +8,11 @@
 		<data>
 		IA3WTVQ7kBSNi/TUDlRD1tMts2Q=
 		</data>
-		<key>Resources/English.lproj/.DS_Store</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			3y++sUAKzaCQmjLBz2v0kvESHgc=
-			</data>
-			<key>optional</key>
-			<true/>
-		</dict>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			9RSYRk8Ux44hfe0EP0L/FQ2MPPI=
+			DyXA8N2lKrlxjx/C10XOkcHjnOk=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -66,7 +57,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5tNghAqpvc4Jq4y9t4/+7Puk2ls=
+			9lTnNJh1l/EkzHByjtgS/H4WHmc=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -75,7 +66,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9v/u3SBJhbxzss0yZMvOz1XdnjI=
+			Ruy2QM7mFE/0A3jlr1MRVSEOIc4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -84,7 +75,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9YMO2kj4ezek0BZAHsMK10ci/ss=
+			V7JF4I1HWTBZa6UypSqTSrd3J30=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -109,7 +100,7 @@
 		</dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		jqca+sLGYeGRIpCHotNjP0ahzRM=
+		PEEJKrIrBSKUByb/ezDU0vQUHfI=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -124,17 +115,17 @@
 		</data>
 		<key>Headers/PFObserver.h</key>
 		<data>
-		oUvvZGOAdxGYqFTQmKu6aII/k9M=
+		CIe2k4dvdzl9y4R7vSm2eOEptFA=
 		</data>
 		<key>Headers/PFUIElement.h</key>
 		<data>
-		azn7qDzb/etGaegj2EItnJ9zmV0=
+		2M7JmUnKHsxDvEGWtCmTJLxIGrE=
 		</data>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			9RSYRk8Ux44hfe0EP0L/FQ2MPPI=
+			DyXA8N2lKrlxjx/C10XOkcHjnOk=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -179,7 +170,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5tNghAqpvc4Jq4y9t4/+7Puk2ls=
+			9lTnNJh1l/EkzHByjtgS/H4WHmc=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -188,7 +179,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9v/u3SBJhbxzss0yZMvOz1XdnjI=
+			Ruy2QM7mFE/0A3jlr1MRVSEOIc4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -197,7 +188,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9YMO2kj4ezek0BZAHsMK10ci/ss=
+			V7JF4I1HWTBZa6UypSqTSrd3J30=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -222,7 +213,7 @@
 		</dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		jqca+sLGYeGRIpCHotNjP0ahzRM=
+		PEEJKrIrBSKUByb/ezDU0vQUHfI=
 		</data>
 	</dict>
 	<key>rules</key>
