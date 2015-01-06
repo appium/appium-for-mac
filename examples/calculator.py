@@ -69,10 +69,10 @@ eequals.click()
 
 print 'Reading result from screen'
 #result_text_element = driver.find_element_by_xpath('//AXStaticText[@AXDescription="main display"]')
-result_text_element = driver.find_element_by_id('_NS:490')
+result_text_element = driver.find_element_by_id('_NS:494')
 print '****'
-print result_text_element
 answer = result_text_element.text
+print '****'
 
 if int(answer) == (rand1 + rand2):
   print 'Correct Result: ' + answer
