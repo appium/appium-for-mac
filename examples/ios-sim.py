@@ -6,7 +6,7 @@ print 'Starting the WebDriver session'
 driver = webdriver.Remote( command_executor='http://localhost:4622/wd/hub', desired_capabilities={'platform':'Mac'})
 
 print 'Opening the "iPhone Simulator" app'
-driver.get("iPhone Simulator")
+driver.get("iOS Simulator")
 
 print 'Selecting the 1st Window'
 driver.switch_to_window("1")

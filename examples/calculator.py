@@ -68,8 +68,8 @@ eequals.click()
 #print source
 
 print 'Reading result from screen'
-#result_text_element = driver.find_element_by_xpath('//AXStaticText[@AXDescription="main display"]')
-result_text_element = driver.find_element_by_id('_NS:494')
+result_text_element = driver.find_element_by_xpath('//AXStaticText[@AXDescription="main display"]')
+#result_text_element = driver.find_element_by_id('_NS:494')
 print '****'
 answer = result_text_element.text
 print '****'
