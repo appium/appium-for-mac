@@ -691,11 +691,11 @@
 		[self respondWithJsonError:status session:sessionId];
 	}
 
-	id value = [element value];
-    if (value != nil && [value isKindOfClass:[NSString class]])
-    {
-        [element setValue:@""];
-    }
+	//id value = [element value];
+    //if (value != nil && [value isKindOfClass:[NSString class]])
+    //{
+    //    [element setValue:@""];
+    //}
 
     // TODO: Add error handling
     return [self respondWithJson:nil status:kAfMStatusCodeSuccess session: sessionId];

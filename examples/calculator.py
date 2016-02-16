@@ -38,9 +38,9 @@ rand1 = randint(0,100)
 rand2 = randint(0,100)
 
 print 'Finding Some Elements...'
-eclear = driver.find_element_by_id('_NS:751')
+eclear = driver.find_element_by_id('_NS:752')
 eplus = driver.find_element_by_id('_NS:131')
-eequals = driver.find_element_by_id('_NS:698')
+eequals = driver.find_element_by_id('_NS:699')
 
 print 'Clearing the calculator'
 eclear.click()
