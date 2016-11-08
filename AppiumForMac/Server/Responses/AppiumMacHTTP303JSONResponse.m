@@ -1,6 +1,6 @@
 //
 //  AppiumMacHTTP303JSONResponse.m
-//  AppiumAppleScriptProxy
+//  AppiumForMac
 //
 //  Created by Dan Cuellar on 7/28/13.
 //  Copyright (c) 2013 Appium. All rights reserved.

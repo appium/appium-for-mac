@@ -1026,6 +1026,13 @@ enum GCDAsyncSocketConfig
 		{
 			socketQueue = dispatch_queue_create([GCDAsyncSocketQueueName UTF8String], NULL);
 		}
+        
+        // 10.9 deprecates dispatch_get_current_queue, so use a supported
+        // way to identify the queue. This is supported in 10.7 and later.
+        // The key can be any pointer
+        void *key = (__bridge void *)self;
+        void *nonNullValue = (__bridge void *)self;
+        dispatch_queue_set_specific(socketQueue, key, nonNullValue, NULL);
 		
 		readQueue = [[NSMutableArray alloc] initWithCapacity:5];
 		currentRead = nil;
@@ -1042,7 +1049,7 @@ enum GCDAsyncSocketConfig
 {
 	LogInfo(@"%@ - %@ (start)", THIS_METHOD, self);
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		[self closeWithError:nil];
 	}
@@ -1074,7 +1081,7 @@ enum GCDAsyncSocketConfig
 
 - (id)delegate
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return delegate;
 	}
@@ -1096,7 +1103,7 @@ enum GCDAsyncSocketConfig
 		delegate = newDelegate;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if ([self isOnSocketQueue]) {
 		block();
 	}
 	else {
@@ -1119,7 +1126,7 @@ enum GCDAsyncSocketConfig
 
 - (dispatch_queue_t)delegateQueue
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return delegateQueue;
 	}
@@ -1147,7 +1154,7 @@ enum GCDAsyncSocketConfig
 		delegateQueue = newDelegateQueue;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if ([self isOnSocketQueue]) {
 		block();
 	}
 	else {
@@ -1170,7 +1177,7 @@ enum GCDAsyncSocketConfig
 
 - (void)getDelegate:(id *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		if (delegatePtr) *delegatePtr = delegate;
 		if (delegateQueuePtr) *delegateQueuePtr = delegateQueue;
@@ -1204,7 +1211,7 @@ enum GCDAsyncSocketConfig
 		delegateQueue = newDelegateQueue;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if ([self isOnSocketQueue]) {
 		block();
 	}
 	else {
@@ -1229,7 +1236,7 @@ enum GCDAsyncSocketConfig
 {
 	// Note: YES means kAllowHalfDuplexConnection is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return ((config & kAllowHalfDuplexConnection) == 0);
 	}
@@ -1257,7 +1264,7 @@ enum GCDAsyncSocketConfig
 			config |= kAllowHalfDuplexConnection;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1267,7 +1274,7 @@ enum GCDAsyncSocketConfig
 {
 	// Note: YES means kIPv4Disabled is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return ((config & kIPv4Disabled) == 0);
 	}
@@ -1295,7 +1302,7 @@ enum GCDAsyncSocketConfig
 			config |= kIPv4Disabled;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1305,7 +1312,7 @@ enum GCDAsyncSocketConfig
 {
 	// Note: YES means kIPv6Disabled is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return ((config & kIPv6Disabled) == 0);
 	}
@@ -1333,7 +1340,7 @@ enum GCDAsyncSocketConfig
 			config |= kIPv6Disabled;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1343,7 +1350,7 @@ enum GCDAsyncSocketConfig
 {
 	// Note: YES means kPreferIPv6 is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return ((config & kPreferIPv6) == 0);
 	}
@@ -1371,7 +1378,7 @@ enum GCDAsyncSocketConfig
 			config |= kPreferIPv6;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1386,7 +1393,7 @@ enum GCDAsyncSocketConfig
 		result = userData;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -1404,7 +1411,7 @@ enum GCDAsyncSocketConfig
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1692,7 +1699,7 @@ enum GCDAsyncSocketConfig
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -1834,7 +1841,7 @@ enum GCDAsyncSocketConfig
 **/
 - (BOOL)preConnectWithInterface:(NSString *)interface error:(NSError **)errPtr
 {
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	if (delegate == nil) // Must have delegate set
 	{
@@ -1999,7 +2006,7 @@ enum GCDAsyncSocketConfig
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2113,7 +2120,7 @@ enum GCDAsyncSocketConfig
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2226,7 +2233,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	NSAssert(address4 || address6, @"Expected at least one valid address");
 	
 	if (aConnectIndex != connectIndex)
@@ -2280,7 +2287,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2300,7 +2307,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	LogVerbose(@"IPv4: %@:%hu", [[self class] hostFromAddress:address4], [[self class] portFromAddress:address4]);
 	LogVerbose(@"IPv6: %@:%hu", [[self class] hostFromAddress:address6], [[self class] portFromAddress:address6]);
@@ -2413,7 +2420,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2540,7 +2547,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2625,7 +2632,7 @@ enum GCDAsyncSocketConfig
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	[self endConnectTimeout];
@@ -2672,11 +2679,7 @@ enum GCDAsyncSocketConfig
 			// You need to add the Security Framework to your application.
 			
 			SSLClose(sslContext);
-			
-			#if !TARGET_OS_IPHONE
-			// SSLDisposeContext doesn't exist in iOS for some odd reason.
-			SSLDisposeContext(sslContext);
-			#endif
+			CFRelease(sslContext);
 			
 			sslContext = NULL;
 		}
@@ -2788,7 +2791,7 @@ enum GCDAsyncSocketConfig
 	
 	// Synchronous disconnection, as documented in the header file
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2837,7 +2840,7 @@ enum GCDAsyncSocketConfig
 **/
 - (void)maybeClose
 {
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	BOOL shouldClose = NO;
 	
@@ -3006,7 +3009,7 @@ enum GCDAsyncSocketConfig
 		result = (flags & kSocketStarted) ? NO : YES;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3022,7 +3025,7 @@ enum GCDAsyncSocketConfig
 		result = (flags & kConnected) ? YES : NO;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3032,7 +3035,7 @@ enum GCDAsyncSocketConfig
 
 - (NSString *)connectedHost
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self connectedHostFromSocket4:socket4FD];
@@ -3059,7 +3062,7 @@ enum GCDAsyncSocketConfig
 
 - (uint16_t)connectedPort
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self connectedPortFromSocket4:socket4FD];
@@ -3087,7 +3090,7 @@ enum GCDAsyncSocketConfig
 
 - (NSString *)localHost
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self localHostFromSocket4:socket4FD];
@@ -3114,7 +3117,7 @@ enum GCDAsyncSocketConfig
 
 - (uint16_t)localPort
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self localPortFromSocket4:socket4FD];
@@ -3328,7 +3331,7 @@ enum GCDAsyncSocketConfig
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3364,7 +3367,7 @@ enum GCDAsyncSocketConfig
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3374,7 +3377,7 @@ enum GCDAsyncSocketConfig
 
 - (BOOL)isIPv4
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return (socket4FD != SOCKET_NULL);
 	}
@@ -3392,7 +3395,7 @@ enum GCDAsyncSocketConfig
 
 - (BOOL)isIPv6
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return (socket6FD != SOCKET_NULL);
 	}
@@ -3410,7 +3413,7 @@ enum GCDAsyncSocketConfig
 
 - (BOOL)isSecure
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 	{
 		return (flags & kSocketSecure) ? YES : NO;
 	}
@@ -3756,6 +3759,13 @@ enum GCDAsyncSocketConfig
 	}
 }
 
+#pragma mark Queue Thread Safety
+- (BOOL)isOnSocketQueue
+{
+	void *key = (__bridge void *)self;
+	return (dispatch_get_specific(key) != NULL);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Reading
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3948,7 +3958,7 @@ enum GCDAsyncSocketConfig
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3969,7 +3979,7 @@ enum GCDAsyncSocketConfig
 - (void)maybeDequeueRead
 {
 	LogTrace();
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	// If we're not currently processing a read AND we have an available read stream
 	if ((currentRead == nil) && (flags & kConnected))
@@ -5193,7 +5203,7 @@ enum GCDAsyncSocketConfig
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if ([self isOnSocketQueue])
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -5214,7 +5224,7 @@ enum GCDAsyncSocketConfig
 - (void)maybeDequeueWrite
 {
 	LogTrace();
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	// If we're not currently processing a write AND we have an available write stream
@@ -6089,7 +6099,9 @@ static OSStatus SSLReadFunction(SSLConnectionRef connection, void *data, size_t 
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
 	
-	NSCAssert(dispatch_get_current_queue() == asyncSocket->socketQueue, @"What the deuce?");
+	// The correct queue will have a key matching it's "owner", in this case asyncSocket.
+	void *key = (__bridge void *)asyncSocket;
+	NSCAssert(dispatch_get_specific(key) != NULL, @"What the deuce?");
 	
 	return [asyncSocket sslReadWithBuffer:data length:dataLength];
 }
@@ -6098,9 +6110,59 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
 	
-	NSCAssert(dispatch_get_current_queue() == asyncSocket->socketQueue, @"What the deuce?");
+	// The correct queue will have a key matching it's "owner", in this case asyncSocket.
+    void *key = (__bridge void *)asyncSocket;
+	NSCAssert(dispatch_get_specific(key) != NULL, @"What the deuce?");
 	
 	return [asyncSocket sslWriteWithBuffer:data length:dataLength];
+}
+
+// This is a long and winding replacement for SSLSetAllowsExpiredRoots and SSLSetAllowsExpiredCerts.
+// afaik, SecTrustSetOptions does not support SSLSetAllowsAnyRoot and SSLSetEnableCertVerify.
+// The code is derived from example code for SSLSetAllowsExpiredCerts in SecureTransport.h.
+- (OSStatus)secTrustEvaluate:(SecTrustOptionFlags)optionFlags
+{
+    OSStatus status = SSLSetSessionOption(sslContext, kSSLSessionOptionBreakOnServerAuth, true);
+    
+    do {
+        status = SSLHandshake(sslContext);
+        if (status == errSSLServerAuthCompleted) {
+            SecTrustRef peerTrust = NULL;
+            status = SSLCopyPeerTrust(sslContext, &peerTrust);
+            if (status == errSecSuccess) {
+                SecTrustResultType trustResult;
+                // set flag to allow expired certificates
+                SecTrustSetOptions(peerTrust, optionFlags);
+                status = SecTrustEvaluate(peerTrust, &trustResult);
+                if (status == errSecSuccess) {
+                    // A "proceed" result means the cert is explicitly trusted,
+                    // e.g. "Always Trust" was clicked;
+                    // "Unspecified" means the cert has no explicit trust settings,
+                    // but is implicitly OK since it chains back to a trusted root.
+                    // Any other result means the cert is not trusted.
+                    //
+                    if (trustResult == kSecTrustResultProceed ||
+                        trustResult == kSecTrustResultUnspecified) {
+                        // certificate is trusted
+                        status = errSSLWouldBlock; // so we call SSLHandshake again
+                    } else if (trustResult == kSecTrustResultRecoverableTrustFailure) {
+                        // not trusted, for some reason other than being expired;
+                        // could ask the user whether to allow the connection here
+                        //
+                        status = errSSLXCertChainInvalid;
+                    } else {
+                        // cannot use this certificate (fatal)
+                        status = errSSLBadCert;
+                    }
+                }
+                if (peerTrust) {
+                    CFRelease(peerTrust);
+                }
+            }
+        } // errSSLServerAuthCompleted
+    } while (status == errSSLWouldBlock);
+    
+    return status;
 }
 
 - (void)ssl_startTLS
@@ -6118,29 +6180,17 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	BOOL isServer = [[tlsSettings objectForKey:(NSString *)kCFStreamSSLIsServer] boolValue];
 	
-	#if TARGET_OS_IPHONE
-	{
-		if (isServer)
-			sslContext = SSLCreateContext(kCFAllocatorDefault, kSSLServerSide, kSSLStreamType);
-		else
-			sslContext = SSLCreateContext(kCFAllocatorDefault, kSSLClientSide, kSSLStreamType);
-		
-		if (sslContext == NULL)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLCreateContext"]];
-			return;
-		}
-	}
-	#else
-	{
-		status = SSLNewContext(isServer, &sslContext);
-		if (status != noErr)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLNewContext"]];
-			return;
-		}
-	}
-	#endif
+    if (isServer) {
+        sslContext = SSLCreateContext(kCFAllocatorDefault, kSSLServerSide, kSSLStreamType);
+    } else {
+        sslContext = SSLCreateContext(kCFAllocatorDefault, kSSLClientSide, kSSLStreamType);
+    }
+    
+    if (sslContext == NULL)
+    {
+        [self closeWithError:[self otherError:@"Error in SSLCreateContext"]];
+        return;
+    }
 	
 	status = SSLSetIOFuncs(sslContext, &SSLReadFunction, &SSLWriteFunction);
 	if (status != noErr)
@@ -6189,47 +6239,49 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		}
 	}
 	
-	// 2. kCFStreamSSLAllowsAnyRoot
+    // Commented out. kCFStreamSSLAllowsAnyRoot is deprecated with the Yosemite 10.10 SDK.
+    //	// 2. kCFStreamSSLAllowsAnyRoot
+    //	
+    //	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+    //	if (value && [value boolValue])
+    //	{
+    //		#if TARGET_OS_IPHONE
+    //		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsAnyRoot");
+    //		#else
+    //		
+    //        // Defaults to disabled, so we only get here if someone wants to enable it.
+    //
+    //		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsAnyRoot");
+    //        
+    ////        status = [self secTrustEvaluate:(SecTrustOptionFlags) what to pass in ??]
+    ////		if (status != noErr)
+    ////		{
+    ////			[self closeWithError:[self otherError:@"Error in SSLSetAllowsAnyRoot"]];
+    ////			return;
+    ////		}
+    //		#endif
+    //	}
 	
-	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-	if (value)
-	{
-		#if TARGET_OS_IPHONE
-		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsAnyRoot");
-		#else
-		
-		BOOL allowsAnyRoot = [value boolValue];
-		
-		status = SSLSetAllowsAnyRoot(sslContext, allowsAnyRoot);
-		if (status != noErr)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLSetAllowsAnyRoot"]];
-			return;
-		}
-		
-		#endif
-	}
-	
-	// 3. kCFStreamSSLAllowsExpiredRoots
-	
-	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsExpiredRoots];
-	if (value)
-	{
-		#if TARGET_OS_IPHONE
-		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsExpiredRoots");
-		#else
-		
-		BOOL allowsExpiredRoots = [value boolValue];
-		
-		status = SSLSetAllowsExpiredRoots(sslContext, allowsExpiredRoots);
-		if (status != noErr)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLSetAllowsExpiredRoots"]];
-			return;
-		}
-		
-		#endif
-	}
+    // Commented out. kCFStreamSSLAllowsExpiredRoots is deprecated with the Yosemite 10.10 SDK.
+    //	// 3. kCFStreamSSLAllowsExpiredRoots
+    //	
+    //	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsExpiredRoots];
+    //	if (value && [value boolValue])
+    //	{
+    //		#if TARGET_OS_IPHONE
+    //		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsExpiredRoots");
+    //		#else
+    //		
+    //        // Defaults to disabled, so we only get here if someone wants to enable it.
+    //       status = [self secTrustEvaluate:kSecTrustOptionAllowExpiredRoot];
+    //		if (status != noErr)
+    //		{
+    //			[self closeWithError:[self otherError:@"Error in SSLSetAllowsExpiredRoots"]];
+    //			return;
+    //		}
+    //		
+    //		#endif
+    //	}
 	
 	// 4. kCFStreamSSLValidatesCertificateChain
 	
@@ -6239,39 +6291,41 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		#if TARGET_OS_IPHONE
 		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLValidatesCertificateChain");
 		#else
+
+        // Defaults to disabled, so we only get here if someone wants to enable it.
+
+        NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLValidatesCertificateChain");
 		
-		BOOL validatesCertChain = [value boolValue];
-		
-		status = SSLSetEnableCertVerify(sslContext, validatesCertChain);
-		if (status != noErr)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLSetEnableCertVerify"]];
-			return;
-		}
+//        status = [self secTrustEvaluate:(SecTrustOptionFlags) what to pass in ??]
+//		if (status != noErr)
+//		{
+//			[self closeWithError:[self otherError:@"Error in SSLSetEnableCertVerify"]];
+//			return;
+//		}
 		
 		#endif
 	}
 	
-	// 5. kCFStreamSSLAllowsExpiredCertificates
-	
-	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsExpiredCertificates];
-	if (value)
-	{
-		#if TARGET_OS_IPHONE
-		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsExpiredCertificates");
-		#else
-		
-		BOOL allowsExpiredCerts = [value boolValue];
-		
-		status = SSLSetAllowsExpiredCerts(sslContext, allowsExpiredCerts);
-		if (status != noErr)
-		{
-			[self closeWithError:[self otherError:@"Error in SSLSetAllowsExpiredCerts"]];
-			return;
-		}
-		
-		#endif
-	}
+    // Commented out. kCFStreamSSLAllowsExpiredCertificates is deprecated with the Yosemite 10.10 SDK.
+    //	// 5. kCFStreamSSLAllowsExpiredCertificates
+    //	
+    //	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLAllowsExpiredCertificates];
+    //	if (value && [value boolValue])
+    //	{
+    //		#if TARGET_OS_IPHONE
+    //		NSAssert(NO, @"Security option unavailable via SecureTransport in iOS - kCFStreamSSLAllowsExpiredCertificates");
+    //		#else
+    //		
+    //        // Defaults to disabled, so we only get here if someone wants to enable it.
+    //        status = [self secTrustEvaluate:kSecTrustOptionAllowExpired];
+    //		if (status != noErr)
+    //		{
+    //			[self closeWithError:[self otherError:@"Error in SSLSetAllowsExpiredCerts"]];
+    //			return;
+    //		}
+    //		
+    //		#endif
+    //	}
 	
 	// 6. kCFStreamSSLCertificates
 	
@@ -6364,27 +6418,32 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 			
 			OSStatus status1 = noErr;
 			OSStatus status2 = noErr;
-			OSStatus status3 = noErr;
 			
 			if ([sslLevel isEqualToString:(NSString *)kCFStreamSocketSecurityLevelSSLv2])
 			{
 				// kCFStreamSocketSecurityLevelSSLv2:
 				// 
 				// Specifies that SSL version 2 be set as the security protocol.
-				
-				status1 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocolAll, NO);
-				status2 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocol2,   YES);
+                //
+                // kSSLProtocol2 is deprecated in iOS.
+            #if !TARGET_OS_IPHONE
+                
+                // Mac OS X
+                
+                status1 = SSLSetProtocolVersionMin(sslContext, kSSLProtocol2);
+                status2 = SSLSetProtocolVersionMax(sslContext, kSSLProtocol2);
+            #endif
 			}
 			else if ([sslLevel isEqualToString:(NSString *)kCFStreamSocketSecurityLevelSSLv3])
 			{
 				// kCFStreamSocketSecurityLevelSSLv3:
 				// 
 				// Specifies that SSL version 3 be set as the security protocol.
-				// If SSL version 3 is not available, specifies that SSL version 2 be set as the security protocol.
+                //
+				// If SSL version 3 is not available, do not allow SSL version 2 because kSSLProtocol2 is deprecated in iOS.
 				
-				status1 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocolAll, NO);
-				status2 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocol2,   YES);
-				status3 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocol3,   YES);
+                status1 = SSLSetProtocolVersionMin(sslContext, kSSLProtocol3);
+                status2 = SSLSetProtocolVersionMax(sslContext, kSSLProtocol3);
 			}
 			else if ([sslLevel isEqualToString:(NSString *)kCFStreamSocketSecurityLevelTLSv1])
 			{
@@ -6392,8 +6451,8 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 				// 
 				// Specifies that TLS version 1 be set as the security protocol.
 				
-				status1 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocolAll, NO);
-				status2 = SSLSetProtocolVersionEnabled(sslContext, kTLSProtocol1,   YES);
+                status1 = SSLSetProtocolVersionMin(sslContext, kTLSProtocol1);
+                status2 = SSLSetProtocolVersionMax(sslContext, kTLSProtocol1);
 			}
 			else if ([sslLevel isEqualToString:(NSString *)kCFStreamSocketSecurityLevelNegotiatedSSL])
 			{
@@ -6401,12 +6460,14 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 				// 
 				// Specifies that the highest level security protocol that can be negotiated be used.
 				
-				status1 = SSLSetProtocolVersionEnabled(sslContext, kSSLProtocolAll, YES);
+                status2 = SSLSetProtocolVersionMax(sslContext, kTLSProtocol12);
 			}
 			
-			if (status1 != noErr || status2 != noErr || status3 != noErr)
-			{
-				[self closeWithError:[self otherError:@"Error in SSLSetProtocolVersionEnabled"]];
+			if (status1 != noErr) {
+				[self closeWithError:[self otherError:@"Error in SSLSetProtocolVersionMin"]];
+				return;
+			} else if (status2 != noErr) {
+				[self closeWithError:[self otherError:@"Error in SSLSetProtocolVersionMax"]];
 				return;
 			}
 		}
@@ -6870,7 +6931,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	
 	
 	if (readStream || writeStream)
@@ -6932,7 +6993,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogVerbose(@"%@ %@", THIS_METHOD, (includeReadWrite ? @"YES" : @"NO"));
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	streamContext.version = 0;
@@ -6966,7 +7027,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	if (!(flags & kAddedStreamsToRunLoop))
@@ -6989,7 +7050,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	if (flags & kAddedStreamsToRunLoop)
@@ -7009,7 +7070,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert([self isOnSocketQueue], @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
@@ -7045,7 +7106,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (int)socketFD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7059,7 +7120,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (int)socket4FD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7070,7 +7131,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (int)socket6FD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7083,7 +7144,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (CFReadStreamRef)readStream
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;
@@ -7097,7 +7158,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (CFWriteStreamRef)writeStream
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;
@@ -7144,7 +7205,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NO;
@@ -7161,7 +7222,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	
 	LogTrace();
 	
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NO;
@@ -7174,7 +7235,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (SSLContextRef)sslContext
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (![self isOnSocketQueue])
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;

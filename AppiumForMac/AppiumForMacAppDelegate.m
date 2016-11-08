@@ -22,13 +22,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 -(void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    self.server = [[AfMHTTPServer alloc] init];
-    [self.server setType:@"_http._tcp."];
-    [self.server setPort:4622];
-    [self.server setName:[NSString stringWithFormat:@"Appium for Mac (%@)", [Utility bundleVersion]]];
-    [self.server setConnectionClass:[AfMHTTPConnection class]];
+    self.afmHTTPServer = [[AfMHTTPServer alloc] init];
+    [self.afmHTTPServer setType:@"_http._tcp."];
+    [self.afmHTTPServer setPort:4622];
+    [self.afmHTTPServer setName:[NSString stringWithFormat:@"Appium for Mac (%@)", [Utility bundleVersion]]];
+    [self.afmHTTPServer setConnectionClass:[AfMHTTPConnection class]];
 	NSError *error = nil;
-	if(![self.server start:&error])
+	if(![self.afmHTTPServer start:&error])
 	{
 		DDLogError(@"Error starting HTTP Server: %@", error);
 	}

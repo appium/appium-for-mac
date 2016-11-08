@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -62,6 +62,10 @@
 		36D203E217A5DE7000011A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D203E117A5DE7000011A3A /* Security.framework */; };
 		36D7968A17BF1A4B00D1B81E /* PFAssistive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; };
 		4F31407119662998009BDF33 /* PFAssistive.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C14EAB301DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */; };
+		C14EAB311DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */; };
+		C14EAB331DB453220010E210 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14EAB321DB453220010E210 /* Carbon.framework */; };
+		C14EAB341DB453220010E210 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14EAB321DB453220010E210 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,9 +94,7 @@
 /* Begin PBXFileReference section */
 		3610348517A4990E00DB79AA /* AppiumForMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppiumForMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3610348817A4990E00DB79AA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		3610348B17A4990E00DB79AA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		3610348C17A4990E00DB79AA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		3610348D17A4990E00DB79AA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3610349017A4990E00DB79AA /* AppiumForMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppiumForMac-Info.plist"; sourceTree = "<group>"; };
 		3610349217A4990E00DB79AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3610349417A4990E00DB79AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -191,6 +193,9 @@
 		36D203DE17A5D8B900011A3A /* AfMHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AfMHTTPConnection.m; sourceTree = "<group>"; };
 		36D203E117A5DE7000011A3A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		36D7968917BF1A4B00D1B81E /* PFAssistive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PFAssistive.framework; path = Frameworks/PFAssistive.framework; sourceTree = "<group>"; };
+		C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeystrokesAndKeyCodes.m; sourceTree = "<group>"; };
+		C14EAB2F1DB452630010E210 /* KeystrokesAndKeyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeystrokesAndKeyCodes.h; sourceTree = "<group>"; };
+		C14EAB321DB453220010E210 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				369A0FE817C12F6700D66163 /* libxml2.dylib in Frameworks */,
+				C14EAB331DB453220010E210 /* Carbon.framework in Frameworks */,
 				36D203E217A5DE7000011A3A /* Security.framework in Frameworks */,
 				361034BD17A4991C00DB79AA /* ScriptingBridge.framework in Frameworks */,
 				3610348917A4990E00DB79AA /* Cocoa.framework in Frameworks */,
@@ -211,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				361034A717A4990F00DB79AA /* SenTestingKit.framework in Frameworks */,
+				C14EAB341DB453220010E210 /* Carbon.framework in Frameworks */,
 				361034A817A4990F00DB79AA /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,24 +249,15 @@
 		3610348717A4990E00DB79AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C14EAB321DB453220010E210 /* Carbon.framework */,
 				3610348817A4990E00DB79AA /* Cocoa.framework */,
+				3610348C17A4990E00DB79AA /* CoreData.framework */,
 				36D7968917BF1A4B00D1B81E /* PFAssistive.framework */,
 				361034BC17A4991C00DB79AA /* ScriptingBridge.framework */,
 				36D203E117A5DE7000011A3A /* Security.framework */,
 				361034A617A4990F00DB79AA /* SenTestingKit.framework */,
-				3610348A17A4990E00DB79AA /* Other Frameworks */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3610348A17A4990E00DB79AA /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				3610348B17A4990E00DB79AA /* AppKit.framework */,
-				3610348C17A4990E00DB79AA /* CoreData.framework */,
-				3610348D17A4990E00DB79AA /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		3610348E17A4990E00DB79AA /* AppiumForMac */ = {
@@ -343,6 +341,8 @@
 		3614DE1517A58EF600853962 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				C14EAB2F1DB452630010E210 /* KeystrokesAndKeyCodes.h */,
+				C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */,
 				36B4E52817A5BC2B00185B1B /* NSData+Base64.h */,
 				36B4E52917A5BC2B00185B1B /* NSData+Base64.m */,
 				3621D0BC17AEC31100E97463 /* NSString+Extensions.h */,
@@ -566,12 +566,12 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = AfM;
-				LastTestingUpgradeCheck = 0700;
+				LastTestingUpgradeCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Appium;
 			};
 			buildConfigurationList = 3610348017A4990E00DB79AA /* Build configuration list for PBXProject "AppiumForMac" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -643,6 +643,7 @@
 				36D203C117A5D6B300011A3A /* DDData.m in Sources */,
 				36D203C217A5D6B300011A3A /* DDNumber.m in Sources */,
 				36D203C317A5D6B300011A3A /* DDRange.m in Sources */,
+				C14EAB301DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */,
 				36D203C417A5D6B300011A3A /* HTTPAuthenticationRequest.m in Sources */,
 				36D203C517A5D6B300011A3A /* HTTPConnection.m in Sources */,
 				36D203C617A5D6B300011A3A /* HTTPMessage.m in Sources */,
@@ -679,6 +680,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14EAB311DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */,
 				361034B317A4990F00DB79AA /* AppiumAppleScriptProxyTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

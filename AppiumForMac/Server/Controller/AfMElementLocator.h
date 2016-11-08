@@ -1,28 +1,32 @@
 //
-//  AppiumMacElementLocator.h
+//  AfMElementLocator.h
 //  AppiumForMac
 //
 //  Created by Dan Cuellar on 8/3/13.
-//  Copyright (c) 2013 Appium. All rights reserved.
+//  Improvements by Stuart Russell at Intuit, Inc.
+//  Copyright (c) 2013-2016 Appium. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 #import "AfMSessionController.h"
-#import <PFAssistive/PFUIElement.h>
 
 typedef enum appiumMacLocatoryStrategy
 {
+	AppiumMacLocatoryStrategyClassName,
+	AppiumMacLocatoryStrategyCSSSelector,
 	AppiumMacLocatoryStrategyID,
+    AppiumMacLocatoryStrategyLinkText,
 	AppiumMacLocatoryStrategyName,
+    AppiumMacLocatoryStrategyPartialLinkText,
 	AppiumMacLocatoryStrategyTagName,
 	AppiumMacLocatoryStrategyXPath
-
 } AppiumMacLocatoryStrategy;
+
+@class PFUIElement;
 
 @interface AfMElementLocator : NSObject
 
-@property AfMSessionController *session;
 @property AppiumMacLocatoryStrategy strategy;
 @property NSString *value;
 
@@ -30,8 +34,8 @@ typedef enum appiumMacLocatoryStrategy
 
 +(AfMElementLocator*) locatorWithSession:(AfMSessionController*)session using:(NSString*)using value:(NSString*)value;
 
--(PFUIElement*) findUsingBaseElement:(PFUIElement*)baseElement statusCode:(int*)statusCode;
+-(PFUIElement*) findUsingBaseUIElement:(PFUIElement*)baseUIElement statusCode:(int*)statusCode;
 
--(void) findAllUsingBaseElement:(PFUIElement*)baseElement results:(NSMutableArray*)results statusCode:(int*)statusCode;
+-(void) findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int*)statusCode;
 
 @end
