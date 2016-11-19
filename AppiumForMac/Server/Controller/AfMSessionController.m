@@ -15,10 +15,21 @@
 #import "KeystrokesAndKeyCodes.h"
 #import "Utility.h"
 
-NSString * const kPredicateRole = @"kPredicateRole";
+NSString * const kNodeRole = @"kNodeRole";
+NSString * const kNodePredicate = @"kNodePredicate";
+NSString * const kPredicateOperations = @"kPredicateOperations";
 NSString * const kPredicateAttributeName = @"kPredicateAttributeName";
 NSString * const kPredicateAttributeValue = @"kPredicateAttributeValue";
 NSString * const kPredicateIndex = @"kPredicateIndex";
+NSString * const kPredicateLogicalOperator = @"kPredicateLogicalOperator";
+NSString * const kPredicateAND = @"&&";
+NSString * const kPredicateOR = @"||";
+NSString * const kPredicateNone = @"None";
+NSString * const kPredicateComparisonOperation = @"kPredicateComparisonOperation";
+NSString * const kPredicateEQUALS = @"=";
+NSString * const kPredicateNOTEQUALS = @"!=";
+NSInteger const kPredicateLeftOperand = 0;
+NSInteger const kPredicateRightOperand = 1;
 
 @interface AfMSessionController()
 //@property NSString *_currentApplicationName;
@@ -79,7 +90,9 @@ NSString * const kPredicateIndex = @"kPredicateIndex";
         self.lastGlobalMouseLocation = CGPointMake(0.0, 0.0);
         
         self.nativeEventSupport = YES;
-        
+        self.implicitTimeout = kDefaultImplicitTimeout;
+        self.loopDelay = kDefaultLoopDelay;
+        self.commandDelay = kDefaultCommandDelay;
         self.isLeftMouseDown = NO;
         self.isRightMouseDown = NO;
         self.isOtherMouseDown = NO;
@@ -229,8 +242,13 @@ NSString * const kPredicateIndex = @"kPredicateIndex";
     }
 }
 
+// If applicationName is nil, this returns the front (key) application.
 -(PFApplicationUIElement *)applicationForName:(NSString*)applicationName
 {
+    if (!applicationName) {
+        NSRunningApplication *frontApp = [[NSWorkspace sharedWorkspace] frontmostApplication];
+        applicationName = [frontApp localizedName];
+    }
     NSArray *runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
     for (NSRunningApplication *runningApp in runningApps) {
         if ([runningApp.localizedName isEqualToString:applicationName]) {
@@ -789,6 +807,8 @@ const NSTimeInterval kModifierPause = 0.05;
 //      (predicate is not a simple string match, and specifies more than one node)
 - (NSArray *)findAllUsingAbsoluteAXPath:(NSString *)axPath
 {
+    NSLog(@"\n\n\n************* findAllUsingAbsoluteAXPath: %@\n", axPath);
+    
     if (axPath == nil || [axPath rangeOfString:@"/AXApplication"].location != 0 || [axPath rangeOfString:@"//"].location != NSNotFound) {
         return nil;
     }
@@ -806,42 +826,52 @@ const NSTimeInterval kModifierPause = 0.05;
     [axPathComponents removeObjectAtIndex:0];
     NSLog(@"axPathComponents:%@", axPathComponents);
     
-    // The 2nd component must exist and must be @"AXApplication". It may or may not have a predicate.
-    NSString *appPathComponent = axPathComponents[0];
-    NSDictionary *appPathParsed = [self parseRoleAndPredicateString:appPathComponent];
-    if (!appPathParsed || ![appPathParsed[kPredicateRole] isEqualTo:@"AXApplication"]) {
+    // This time, the first component must be @"AXApplication". It may or may not have a predicate.
+    NSString *appNodeString = axPathComponents[0];
+    NSDictionary *appNodeParsed = [self parseRoleAndPredicateString:appNodeString];
+    if (!appNodeParsed || ![appNodeParsed[kNodeRole] isEqualTo:@"AXApplication"]) {
+        NSLog(@"findAllUsingAXPath: PARSE APP NODE STRING FAILED");
         return @[];
     }
-    
-    NSString *appName = nil;
-    if (appPathParsed[kPredicateAttributeName]) {
-        // We have a predicate with string value. We need to change currentApplication.
-        appName = appPathParsed[kPredicateAttributeValue];
-        PFApplicationUIElement *uiApp = [self applicationForName:appName];
-        self.currentApplication = uiApp;
-        if ([[uiApp AXTitle] isEqualToString:@"Dock"]) {
-//            NSLog(@"Dock Attributes: %@", [uiApp attributes]);
-//            NSLog(@"Dock AXChildren %@", [uiApp AXChildren]);
-            NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
-            if ([uiApp AXFocusedUIElement]) {
-                NSArray *attributes = [[uiApp AXFocusedUIElement] attributes];
-                for (NSString *attribute in attributes) {
-                    NSLog(@"AXDock AXFocusedUIElement: %@:%@", attribute, [[uiApp AXFocusedUIElement] valueForKey:attribute]);
+    NSDictionary *appPredicate = appNodeParsed[kNodePredicate];
+    if (appPredicate) {
+        // Find the app by name in all running applications.
+        NSDictionary *operation = appPredicate[kPredicateOperations][0];
+        
+        NSString *appName = nil;
+        if (operation[kPredicateAttributeName]) {
+            // We have a predicate with string value. We need to set currentApplication.
+            appName = operation[kPredicateAttributeValue];
+            PFApplicationUIElement *uiApp = [self applicationForName:appName];
+            self.currentApplication = uiApp;
+            if ([[uiApp AXTitle] isEqualToString:@"Dock"]) {
+                //            NSLog(@"Dock Attributes: %@", [uiApp attributes]);
+                //            NSLog(@"Dock AXChildren %@", [uiApp AXChildren]);
+                NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
+                if ([uiApp AXFocusedUIElement]) {
+                    NSArray *attributes = [[uiApp AXFocusedUIElement] attributes];
+                    for (NSString *attribute in attributes) {
+                        NSLog(@"AXDock AXFocusedUIElement: %@:%@", attribute, [[uiApp AXFocusedUIElement] valueForKey:attribute]);
+                    }
                 }
+                //            NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
+                //            NSLog(@"Dock AXEnhancedUserInterface %@", [uiApp AXEnhancedUserInterface]);
             }
-//            NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
-//            NSLog(@"Dock AXEnhancedUserInterface %@", [uiApp AXEnhancedUserInterface]);
         }
+    } else {
+        // Use the front application.
+        PFApplicationUIElement *uiApp = [self applicationForName:nil];
+        self.currentApplication = uiApp;
     }
     
-    // Now remove it because we want to check its child elements.
+    // Now remove the application component because we want to check its child elements.
     // For example, if axPath == @"/AXApplication/AXMenuBar/AXMenuBarItems/AXMenuBarItem[@AXTitle='Window']",
-    // then axPathComponents will be [@"AXMenuBar", "AXMenuBarItems", @"AXMenuBarItem[@AXTitle='Window']"].
+    // then after this call, axPathComponents will be [@"AXMenuBar", "AXMenuBarItems", @"AXMenuBarItem[@AXTitle='Window']"].
     [axPathComponents removeObjectAtIndex:0];
     
     // Deep dive recursively.
     NSArray *matchedNodes = [self findAllUsingAXPathComponents:axPathComponents rootUIElement:self.currentApplication];
-    NSLog(@"matchedNodes:%@", matchedNodes);
+    NSLog(@"\n************* findAllUsingAbsoluteAXPath matchedNodes:%@\n\n\n", matchedNodes);
     for (PFUIElement *uiElement in matchedNodes) {
         if ([[uiElement AXRole] isEqualToString:@"AXDockItem"]) {
 //            NSArray *attributes = [uiElement attributes];
@@ -859,7 +889,7 @@ const NSTimeInterval kModifierPause = 0.05;
 // The first pathComponent specifies a child element of rootUIElement. 
 - (NSArray *)findAllUsingAXPathComponents:(NSArray *)axPathComponents rootUIElement:(PFUIElement *)rootUIElement
 {
-    NSLog(@"findAllUsingAXPathComponents:%@, rootUIElement:%@", axPathComponents, rootUIElement);
+    NSLog(@"findAllUsingAXPathComponents: %@, rootUIElement: %@", axPathComponents, rootUIElement);
     // If there aren't any child elements at all, we are done.
     NSArray *childUIElements = rootUIElement.AXChildren;
     if (!childUIElements || [childUIElements count] == 0) {
@@ -870,37 +900,25 @@ const NSTimeInterval kModifierPause = 0.05;
     NSString *firstPathComponent = [axPathComponents objectAtIndex:0];
     NSDictionary *parsedComponent = [self parseRoleAndPredicateString:firstPathComponent];
     if (!parsedComponent || [parsedComponent count] == 0) {
+        NSLog(@"findAllUsingAXPathComponents: PARSE FIRST PATH COMPONENT FAILED");
         return @[];
     }
-    NSLog(@"findAllUsingAXPathComponents: firstPathComponent:%@", firstPathComponent);
+    NSLog(@"findAllUsingAXPathComponents: firstPathComponent: %@", firstPathComponent);
     
     NSMutableArray *matchedChildren = [NSMutableArray array];
     
     // Scan the child elements to match the role and (if specified) predicate.
     // First make an array of similar child elements with the same AXRole.
     // Search the similar elements for predicate or index match.
-    NSArray *similarChildUIElements = [PFUIElement elementsWithRole:parsedComponent[kPredicateRole] inArray:childUIElements];
-    NSLog(@"findAllUsingAXPathComponents: similarChildUIElements:%@", similarChildUIElements);
+    NSArray *similarChildUIElements = [PFUIElement elementsWithRole:parsedComponent[kNodeRole] inArray:childUIElements];
+    NSLog(@"findAllUsingAXPathComponents: similarChildUIElements: %@", similarChildUIElements);
     if (similarChildUIElements.count > 0) {
         for (NSUInteger i = 0; i < similarChildUIElements.count; i++) {
             PFUIElement *element = [similarChildUIElements objectAtIndex:i];
-//            NSLog(@"findAllUsingAXPathComponents: similarChildUIElements[%lu]:%@", i, element);
-            if (parsedComponent[kPredicateAttributeName] != nil) {
-                // A string value is available. Try to match by string.
-                id value = [element valueForAttribute:parsedComponent[kPredicateAttributeName]];
-                if (value == nil || ![value isKindOfClass:[NSString class]] || ![value isEqualToString:parsedComponent[kPredicateAttributeValue]]) {
-                    // No match by a string value. Try the next child element.
-                    continue;
-                }
-            } else if (parsedComponent[kPredicateIndex] != nil) {
-                // A string value is available. Try to match by string.
-                NSNumber *index = parsedComponent[kPredicateIndex];
-                if ([index unsignedIntegerValue] != i) {
-                    // No match by index. Try the next child element.
-                    continue;
-                }
+            NSLog(@"findAllUsingAXPathComponents: similarChildUIElements[%lu]: %@", i, element);
+            if ([self element:element doesMatchPredicate:parsedComponent[kNodePredicate] atIndex:i]) {
+                [matchedChildren addObject:element];
             }
-            [matchedChildren addObject:element];
         }
     } else {
         // This can happen when an element has an attribute with child elements, 
@@ -913,7 +931,7 @@ const NSTimeInterval kModifierPause = 0.05;
         //      But the actual path from parent down to child is:
         //          /AXApplication[@AXTitle='Dock']/AXFocusedUIElement/AXMenuItem[@AXTitle='Hide']
         //          The AXFocusedUIElement is NOT in the AXChildren array.
-        PFUIElement *element = [rootUIElement valueForKey:parsedComponent[kPredicateRole]];
+        PFUIElement *element = [rootUIElement valueForKey:parsedComponent[kNodeRole]];
         if (element && [element isKindOfClass:[PFUIElement class]]) {
             [matchedChildren addObject:element];
         }
@@ -940,12 +958,91 @@ const NSTimeInterval kModifierPause = 0.05;
     for (int i = 0; i < matchedChildrenCount; i++) {
         NSArray *recursivelyMatchedChildren = [self findAllUsingAXPathComponents:childAXPathComponents rootUIElement:[matchedChildren objectAtIndex:i]];
         if ([recursivelyMatchedChildren count] > 0) {
+//            PFUIElement *rmc = recursivelyMatchedChildren[0];
+//            NSLog(@"recursivelyMatchedChildren: %@, mark:'%@'", rmc, [rmc AXMenuItemMarkChar]);
+            
             return recursivelyMatchedChildren;
         }
     }
     // By default there was no match.
     return @[];
 }
+
+- (BOOL)element:(PFUIElement *)uiElement doesMatchPredicate:(NSDictionary *)predicate atIndex:(NSUInteger)elementIndex
+{
+    BOOL doesMatch = NO;
+    
+    NSLog(@"element:doesMatchPredicate:atIndex:");
+    NSLog(@"element: %@ \ndoesMatchPredicate: %@ \natIndex:%lu", uiElement, predicate, elementIndex);
+    
+    if (!predicate) {
+        // A nil predicate matches everything.
+        NSLog(@"element:doesMatchPredicate:atIndex: RETURNS YES BY DEFAULT");
+        return YES;
+    }
+    
+    NSString *logicalOperator = predicate[kPredicateLogicalOperator];
+    NSArray *operations = predicate[kPredicateOperations];
+    
+    for (NSDictionary *operation in operations) {
+        NSLog(@"operation: %@", operation);
+        if (operation[kPredicateAttributeName] != nil) {
+            // A name-value pair is available. Try to match by string.
+            NSString *attributeName = operation[kPredicateAttributeName];
+            NSString *attributeValue = operation[kPredicateAttributeValue];
+            if ([uiElement existsAttribute:attributeName]) {
+                id elementAttributeValue = [uiElement valueForAttribute:attributeName];
+                NSLog(@"attributeName: %@ attributeValue: %@ elementAttributeValue: %@", attributeName, attributeValue, elementAttributeValue);
+                
+                // In our universe, an empty string is equal to a nil uiElement attribute value.
+                if ([operation[kPredicateComparisonOperation] isEqualToString:kPredicateEQUALS]) {
+                    doesMatch = (elementAttributeValue != nil && 
+                                 [elementAttributeValue isKindOfClass:[NSString class]] && 
+                                 [elementAttributeValue isEqualToString:attributeValue]) 
+                    || (elementAttributeValue == nil && [@"" isEqualToString:attributeValue]);
+                } else if ([operation[kPredicateComparisonOperation] isEqualToString:kPredicateNOTEQUALS]) {
+                    doesMatch = (elementAttributeValue != nil && 
+                                 [elementAttributeValue isKindOfClass:[NSString class]] && 
+                                 ![elementAttributeValue isEqualToString:attributeValue]) 
+                    || (elementAttributeValue == nil && ![@"" isEqualToString:attributeValue]);
+                }
+                
+            } else {
+                NSLog(@"attributeName: %@ DOES NOT EXIST on this element", attributeName);
+                doesMatch = NO;
+            }
+            
+            if (doesMatch) {
+                if ([logicalOperator isEqualToString:kPredicateOR] || [logicalOperator isEqualToString:kPredicateNone]) {
+                    // We only need one YES for || or None, and here it is.
+                    break;
+                } else {
+                    // Proceed through the rest of the operations.
+                    continue;
+                }
+            } else {
+                if ([logicalOperator isEqualToString:kPredicateAND] || [logicalOperator isEqualToString:kPredicateNone]) {
+                    // We only need one NO for && or None, and here it is.
+                    break;
+                } else {
+                    // Proceed through the rest of the operations.
+                    continue;
+                }
+            }
+        } else if (predicate[kPredicateIndex] != nil) {
+            // An index value is available. Try to match by index.
+            NSNumber *index = predicate[kPredicateIndex];
+            if (index && [index isKindOfClass:[NSNumber class]] && [index unsignedIntegerValue] == elementIndex) {
+                doesMatch = YES;
+            }
+            break;
+        }
+    }
+    
+    NSLog(@"element:doesMatchPredicate:atIndex: RETURNS %@", doesMatch?@"YES":@"NO");
+    return doesMatch;
+}
+
 
 // Given a string containing an XPath role and predicate, parse it.
 // This will handle simple absolute AXPath predicates defined above.
@@ -966,7 +1063,7 @@ const NSTimeInterval kModifierPause = 0.05;
 //  key:    @"AXRole"           value:  e.g. @"AXCloseButton"
 - (NSDictionary *)parseRoleAndPredicateString:(NSString *)rpString
 {
-    NSMutableDictionary *dictionary = [@{} mutableCopy];
+    NSMutableDictionary *pathNode = [@{} mutableCopy];
     
     // The first path component specifies a child of rootUIElement.
     // Is this a plain vanilla role, or does it contain a predicate?
@@ -975,69 +1072,148 @@ const NSTimeInterval kModifierPause = 0.05;
     switch ([roleAndPredicate count]) {
         case 1:
             // Does not contain "[" so it is plain vanilla AXRole.
-            dictionary[kPredicateRole] = [roleAndPredicate objectAtIndex:0];
+            pathNode[kNodeRole] = [roleAndPredicate objectAtIndex:0];
             break;
         case 2:
         {
             // This contains a role and a predicate, so parse the predicate.
-            dictionary[kPredicateRole] = [roleAndPredicate objectAtIndex:0];
+            // If parsing fails then it is an error.
+            pathNode[kNodeRole] = [roleAndPredicate objectAtIndex:0];
             NSString *predicate = [roleAndPredicate objectAtIndex:1];
             predicate = [predicate stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"]"]];
             NSDictionary *parsedPredicate = [self parsePredicate:predicate];
             if (parsedPredicate) {
-                [dictionary addEntriesFromDictionary:parsedPredicate];
+                pathNode[kNodePredicate] = parsedPredicate;
             } else {
-                dictionary = nil;
+                pathNode = nil;
             }
         }
             break;
             
         default:
-             dictionary = nil;
+             pathNode = nil;
     }
-    return dictionary;
+    return pathNode;
 }
 
+// Predicate can have 0 or more &&, or, 0 or more ||. Mixing && and || is not supported.
+/*
+ @"@AXTitle='Window'"
+ @"@AXTitle='Window'"&&@AXFullScreen='YES'
+ */
 // The predicate must be something like @"@AXTitle='Window'", always with an "=" sign.
 - (NSDictionary *)parsePredicate:(NSString *)predicate
 {
-    NSMutableDictionary *dictionary = [@{} mutableCopy];
-    NSArray *predicateParts = [predicate componentsSeparatedByString:@"="];
-    switch ([predicateParts count]) {
-        case 1: 
-        {
-            // This is one value that does not contain "=", so it could be an index.
-            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-            f.numberStyle = NSNumberFormatterDecimalStyle;
-            NSNumber *indexValue = [f numberFromString:predicate];
-            if (indexValue) {
-                dictionary[kPredicateIndex] = indexValue;
-            } else {
-                // It wasn't an index.
-                dictionary = nil;
+    NSLog(@"parsePredicate: %@", predicate);
+    
+    NSMutableDictionary *predicateDictionary = [@{} mutableCopy];
+    
+    // Check for && and ||. They are mutually exclusive.
+    predicateDictionary[kPredicateLogicalOperator] = kPredicateNone;
+    NSArray *operationStrings = [predicate componentsSeparatedByString:kPredicateAND];
+    if ([operationStrings count] == 1) {
+        //There was no AND operator. Try the OR operator. If neither, then there was only one operation.
+        operationStrings = [predicate componentsSeparatedByString:kPredicateOR];
+        if ([operationStrings count] > 1) {
+            predicateDictionary[kPredicateLogicalOperator] = kPredicateOR;
+        }
+    } else {
+        predicateDictionary[kPredicateLogicalOperator] = kPredicateAND;
+    }
+    
+    if (![operationStrings count]) {
+        return @{};
+    }
+    
+    // Parse an array of operation strings for this predicate.
+    // Each string must be one of:
+    //      1. an equality test, eg "@AXTitle='Calculator'"
+    //      2. an inequality test, eg "@AXMenuItemMarkChar!=''"
+    //      3. an index, e.g. 4.
+    // Our caller will evaluate the array using the specified logical operator. 
+    // Each operation string will be parsed into a dictionary with either one of these examples:
+    //  With 1 string in the array it can be either a numeric index or name-value pair:
+    //      { kPredicateIndex: 4 }
+    //      { kPredicateAttributeName: @"AXTitle", kPredicateAttributeValue: @"Calculator"}
+    //  With 2 or more strings, it must be a name-value pair:
+    //      { kPredicateAttributeName: @"AXTitle", kPredicateAttributeValue: @"Calculator"}
+    // If the operation is an index, then the predicate can not have only one operation.
+    NSMutableArray *predicateOperations = [@[] mutableCopy];
+    
+    for (NSString *operationString in operationStrings) {
+        NSLog(@"operationString: %@", operationString);
+        NSMutableDictionary *operationDict = [@{} mutableCopy];
+
+        operationDict[kPredicateComparisonOperation] = kPredicateNone;
+        NSArray *terms = [operationString componentsSeparatedByString:kPredicateNOTEQUALS];
+        if ([terms count] > 1) {
+            operationDict[kPredicateComparisonOperation] = kPredicateNOTEQUALS;
+        } else {
+            //There was no NOTEQUALS operator. Try the EQUALS operator. If neither, then it might be an index.
+            terms = [operationString componentsSeparatedByString:kPredicateEQUALS];
+            if ([terms count] > 1) {
+                operationDict[kPredicateComparisonOperation] = kPredicateEQUALS;
             }
         }
-            break;
-            
-        case 2:
-        {
-            // This is a key-value predicate without the enclosing braces, e.g. @"@AXTitle='My Window'".
-            // Remove leading "@" in the attribute name.
-            NSString *attributeName = [[predicateParts objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@"]];
-            dictionary[kPredicateAttributeName] = attributeName;
-            
-            // Remove the surrounding single quotes for the attribute value.
-            NSString *attributeValue = [[predicateParts objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'"]];
-            dictionary[kPredicateAttributeValue] = attributeValue;
+        switch ([terms count]) {
+            case 1: 
+            {
+                // This is an operation that does not contain an operator, so it could be an index.
+                // There must be only one operation in this predicate if it is an index value.
+                if ([operationStrings count] == 1) {
+                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                    f.numberStyle = NSNumberFormatterDecimalStyle;
+                    NSNumber *indexValue = [f numberFromString:predicate];
+                    if (indexValue) {
+                        // It is an index. The terms will not include a name-value pair. 
+                        operationDict[kPredicateIndex] = indexValue;
+                    } else {
+                        // It wasn't an index. Invalid comparison terms. 
+                        operationDict = nil;
+                    }
+                } else {
+                    // If more than one operation, all have to be a name-value pair.
+                    operationDict = nil;
+                }
+            }
+                break;
+                
+            case 2:
+            {
+                // This is a key-value pair without the enclosing braces, e.g. @"@AXTitle='My Window'".
+                // Remove leading "@" in the attribute name.
+                NSString *attributeName = [[terms objectAtIndex:kPredicateLeftOperand] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@"]];
+                operationDict[kPredicateAttributeName] = attributeName;
+                
+                // Remove the surrounding single quotes for the attribute value.
+                NSString *attributeValue = [[terms objectAtIndex:kPredicateRightOperand] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'"]];
+                operationDict[kPredicateAttributeValue] = attributeValue;
+            }
+                break;
+                
+            default:
+                // Operation can only have a left side a a right side.
+                operationDict = nil;
         }
+        if (operationDict) {
+            [predicateOperations addObject:operationDict];
+        } else {
+            [predicateOperations removeAllObjects];
             break;
-            
-        default:
-            // Invalid predicate structure.
-            dictionary = nil;
+        }
     }
-    return dictionary;
+    
+    if ([predicateOperations count] == 0) {
+        // A predicate must contain at least one comparison. If only one comparison, it can be a name-value pair, or an index.
+        NSLog(@"parsePredicate: RETURNS NIL BECAUSE NO PREDICATE OPERATIONS");
+        return nil;
+    }
+    
+    predicateDictionary[kPredicateOperations] = predicateOperations;
+    NSLog(@"parsePredicate: predicateDictionary: %@", predicateDictionary);
+    return predicateDictionary;
 }
+
 
 // Sublasses can override this method with more subtle logic.
 - (BOOL)isPageLoaded
@@ -1226,14 +1402,14 @@ const NSTimeInterval kModifierPause = 0.05;
 }
 
 
-// Utility method for postClick:, postButtonDown:, postButtonUp:, postDoubleClick:.
+// Utility method for post_click:, post_buttondown:, post_buttonup:, post_doubleclick:.
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionInsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode
 {
     // A sandboxed application can not press mouse buttons.
     return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeUnknownCommand session:self.sessionId];
 }
 
-// Utility method for postClick:, postButtonDown:, postButtonUp:, postDoubleClick:.
+// Utility method for post_click:, post_buttondown:, post_buttonup:, post_doubleclick:.
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionOutsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode
 {
     // An app running outside the sandbox can press and hold mouse buttons.

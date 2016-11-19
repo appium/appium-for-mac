@@ -32,6 +32,15 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
     elementPointUpperLeft   = 1
 };
 
+// If not specified by desiredCapability, use this value in milliseconds.
+#define kDefaultImplicitTimeout (NSTimeInterval)0.0f
+
+// If not specified by desiredCapability, use this value in milliseconds.
+#define kDefaultLoopDelay (NSTimeInterval)1.0f
+
+// If not specified by desiredCapability, use this value in milliseconds.
+#define kDefaultCommandDelay (NSTimeInterval)0.0f
+
 // How long to wait between changes in mouse up/down state.
 #define kMouseButtonEventDelay (NSTimeInterval)0.3f
 
@@ -73,12 +82,11 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 
 // Timeouts and delays can be changed using a DesiredCapabilities instance in the Selenium script.
 
-// Defaults to 1 second.
+// How long to wait between retry attempts, during an implicit timeout.
 @property NSTimeInterval loopDelay;
 
 // This slows down the script a small amount per command. Using this is sub-optimal for high-performance scripts.
 // Instead, use findElement and other commands that automatically wait for something to happen.
-//  NOTE:   For some reason, delaying inside executeWebDriverCommandWithPath: can take >10 seconds even if the delay time is  < 1.0sec.
 @property NSTimeInterval commandDelay;
 
 // The WebDriver implicit wait timeout in seconds.
@@ -134,13 +142,13 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 // Return YES if the current frame is ready according to the session pageLoadingStrategy.
 - (BOOL)isPageLoaded;
 
-// Utility methods for postMoveTo:
+// Utility methods for post_moveto:
 - (AppiumMacHTTPJSONResponse *)moveMouseInsideSandbox:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 - (AppiumMacHTTPJSONResponse *)moveMouseOutsideSandbox:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 - (CGPoint)getGlobalDisplayPointWithCommandParams:(NSDictionary *)commandParams;
 - (CGPoint)getGlobalDisplayPoint:(ElementPointLocation)whichPoint forElement:(id)element;
 
-// Utility methods for postClick:, postButtonDown:, postButtonUp:, postDoubleClick:.
+// Utility method for post_click:, post_buttondown:, post_buttonup:, post_doubleclick:.
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionInsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionOutsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 
