@@ -1,6 +1,6 @@
 //
-//  AppiumMacGCDServer.h
-//  AppiumAppleScriptProxy
+//  AfMHTTPServer.h
+//  AppiumForMac
 //
 //  Created by Dan Cuellar on 7/28/13.
 //  Copyright (c) 2013 Appium. All rights reserved.
@@ -11,6 +11,6 @@
 
 @interface AfMHTTPServer : HTTPServer
 
-@property AfMHandlers *handler;
+@property AfMHandlers *handlers;
 
 @end

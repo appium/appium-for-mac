@@ -1,13 +1,12 @@
 //
-//  AppiumMacGCDServer.m
-//  AppiumAppleScriptProxy
+//  AfMHTTPServer.m
+//  AppiumForMac
 //
 //  Created by Dan Cuellar on 7/28/13.
 //  Copyright (c) 2013 Appium. All rights reserved.
 //
 
 #import "AfMHTTPServer.h"
-#import "AppiumForMacAppDelegate.h"
 
 @implementation AfMHTTPServer
 
@@ -15,7 +14,7 @@
 {
     self = [super init];
     if (self) {
-        self.handler = [AfMHandlers new];
+        self.handlers = [AfMHandlers new];
     }
     return self;
 }

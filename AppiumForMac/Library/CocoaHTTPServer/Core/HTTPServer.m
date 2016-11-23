@@ -64,10 +64,18 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 		HTTPLogTrace();
 		
 		// Initialize underlying dispatch queue and GCD based tcp socket
+		// 10.9 deprecates dispatch_get_current_queue, so use a supported
+        // way to identify the queue. This is supported in 10.7 and later.
 		serverQueue = dispatch_queue_create("HTTPServer", NULL);
-		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
+		void *key = (__bridge void *)self;
+		void *nonNullValue = (__bridge void *)self;
+		dispatch_queue_set_specific(serverQueue, key, nonNullValue, NULL);
 		
-		// Use default connection class of HTTPConnection
+		// Create the socket after identifying the queue, in case the socket needs to know.
+        asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
+		
+        // Use default connection class of HTTPConnection.
+        // No need for dispatch_queue_set_specific, since no one uses dispatch_get_current_queue for this queue.
 		connectionQueue = dispatch_queue_create("HTTPConnection", NULL);
 		connectionClass = [HTTPConnection self];
 		
@@ -430,7 +438,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 			HTTPLogInfo(@"%@: Started HTTP server on port %hu", THIS_FILE, [asyncSocket localPort]);
 			
 			isRunning = YES;
-			[self publishBonjour];
+//			[self publishBonjour];
 		}
 		else
 		{
@@ -577,7 +585,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 {
 	HTTPLogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == serverQueue, @"Invalid queue");
+	NSAssert([self isOnServerQueue], @"Invalid queue");
 	
 	if (type)
 	{
@@ -612,7 +620,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 {
 	HTTPLogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == serverQueue, @"Invalid queue");
+	NSAssert([self isOnServerQueue], @"Invalid queue");
 	
 	if (netService)
 	{
@@ -779,6 +787,13 @@ static NSThread *bonjourThread;
 	             onThread:bonjourThread
 	           withObject:block
 	        waitUntilDone:YES];
+}
+
+#pragma mark Queue Thread Safety
+- (BOOL)isOnServerQueue
+{
+	void *key = (__bridge void *)self;
+	return (dispatch_get_specific(key) != NULL);
 }
 
 @end

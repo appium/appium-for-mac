@@ -1,6 +1,6 @@
 //
 //  Utility.m
-//  AppiumAppleScriptProxy
+//  AppiumForMac
 //
 //  Created by Dan Cuellar on 7/28/13.
 //  Copyright (c) 2013 Appium. All rights reserved.
@@ -52,7 +52,7 @@
         return nil;
     }
     components = [(NSString*)[components objectAtIndex:1] componentsSeparatedByString:@"/"];
-    return components.count > 1 ? (NSString*)[components objectAtIndex:0] : nil;
+    return components.count >= 1 ? (NSString*)[components objectAtIndex:0] : nil;
 }
 
 +(NSString*) getSessionIDFromPath:(NSString*)path
@@ -81,6 +81,34 @@
 {
     NSDictionary *systemVersionDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/System/Library/CoreServices/SystemVersion.plist"];
     return [systemVersionDictionary objectForKey:@"ProductVersion"];
+}
+
++(NSDictionary*) dictionaryFromPostData:(NSData*)postData
+{
+    if (!postData)
+    {
+        return [NSDictionary new];
+    }
+    
+    NSError *error = nil;
+    NSDictionary *postDict = [NSJSONSerialization JSONObjectWithData:postData options:NSJSONReadingMutableContainers error:&error];
+    
+    // TODO: error handling
+    return postDict;
+}
+
++ (BOOL)isRunningInSandbox
+{
+    // Are we running in a sandbox? This might be turned off for debugging or a special version of the app.
+    NSDictionary* environ = [[NSProcessInfo processInfo] environment];
+    BOOL inSandbox = (nil != [environ objectForKey:@"APP_SANDBOX_CONTAINER_ID"]);
+    return inSandbox;
+}
+
+// Returns a point guaranteed to be offscreen, to use as an invalid return value.
++ (HIPoint)invalidPoint
+{
+    return CGPointMake(MAXFLOAT, MAXFLOAT);
 }
 
 @end

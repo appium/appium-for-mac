@@ -244,7 +244,6 @@
 		3610348717A4990E00DB79AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3610348817A4990E00DB79AA /* Cocoa.framework */,
 				36D7968917BF1A4B00D1B81E /* PFAssistive.framework */,
 				361034BC17A4991C00DB79AA /* ScriptingBridge.framework */,
 				36D203E117A5DE7000011A3A /* Security.framework */,
@@ -257,6 +256,7 @@
 		3610348A17A4990E00DB79AA /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3610348817A4990E00DB79AA /* Cocoa.framework */,
 				3610348B17A4990E00DB79AA /* AppKit.framework */,
 				3610348C17A4990E00DB79AA /* CoreData.framework */,
 				3610348D17A4990E00DB79AA /* Foundation.framework */,
@@ -559,7 +559,7 @@
 			name = AppiumForMacTests;
 			productName = AppiumAppleScriptProxyTests;
 			productReference = 361034A517A4990F00DB79AA /* AppiumForMacTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 

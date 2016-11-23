@@ -1,5 +1,5 @@
 //
-//  AfMString.h
+//  NSString+Extensions.h
 //  AppiumForMac
 //
 //  Created by Dan Cuellar on 8/4/13.

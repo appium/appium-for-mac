@@ -1,183 +1,212 @@
 //
-//  AppiumMacController.h
-//  AppiumAppleScriptProxy
+//  AfMHandlers.h
+//  AppiumForMac
 //
 //  Created by Dan Cuellar on 7/28/13.
-//  Copyright (c) 2013 Appium. All rights reserved.
+//  Improvements by Stuart Russell at Intuit.
+//  Copyright (c) 2013-2016 Appium. All rights reserved.
 //
-#import <Cocoa/Cocoa.h>
+
 #import <Foundation/Foundation.h>
-#import "AppiumMacHTTPJSONResponse.h"
-#import "AfMSessionController.h"
+
+@class AppiumMacHTTPJSONResponse;
 
 @interface AfMHandlers : NSObject
 
 @property NSMutableDictionary *sessions;
 
 // GET /status
--(AppiumMacHTTPJSONResponse*) getStatus:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_status:(NSString*)path;
 
 // POST /session
--(AppiumMacHTTPJSONResponse*) postSession:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_session:(NSString*)path data:(NSData*)postData;
 
 // GET /sessions
--(HTTPDataResponse*) getSessions:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_sessions:(NSString*)path;
 
 // GET /session/:sessionId
--(AppiumMacHTTPJSONResponse*) getSession:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_session:(NSString*)path;
 
 // DELETE /session/:sessionId
--(AppiumMacHTTPJSONResponse*) deleteSession:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)delete_session:(NSString*)path;
 
-// /session/:sessionId/timeouts
-// /session/:sessionId/timeouts/async_script
-// /session/:sessionId/timeouts/implicit_wait
+// POST /session/:sessionId/timeouts
+- (AppiumMacHTTPJSONResponse *)post_timeouts:(NSString*)path data:(NSData*)postData;
+
+// POST /session/:sessionId/timeouts/async_script
+- (AppiumMacHTTPJSONResponse *)post_timeouts_async_script:(NSString*)path data:(NSData*)postData;
+
+// POST /session/:sessionId/timeouts/implicit_wait
+- (AppiumMacHTTPJSONResponse *)post_timeouts_implicit_wait:(NSString*)path data:(NSData*)postData;
 
 // GET /session/:sessionId/window_handle
--(AppiumMacHTTPJSONResponse*) getWindowHandle:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_window_handle:(NSString*)path;
 
 // GET /session/:sessionId/window_handles
--(AppiumMacHTTPJSONResponse*) getWindowHandles:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_window_handles:(NSString*)path;
 
 // GET /session/:sessionId/url
--(AppiumMacHTTPJSONResponse*) getUrl:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_url:(NSString*)path;
 
 // POST /session/:sessionId/url
--(AppiumMacHTTPJSONResponse*) postUrl:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_url:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/forward
-// /session/:sessionId/back
-// /session/:sessionId/refresh
+// POST /session/:sessionId/forward
+// POST /session/:sessionId/back
+// POST /session/:sessionId/refresh
 
 // POST /session/:sessionId/execute
--(HTTPDataResponse*) postExecute:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/execute_async
+// POST /session/:sessionId/execute_async
 
 // GET /session/:sessionId/screenshot
--(AppiumMacHTTPJSONResponse*) getScreenshot:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_screenshot:(NSString*)path;
 
-// /session/:sessionId/ime/available_engines
-// /session/:sessionId/ime/active_engine
-// /session/:sessionId/ime/activated
-// /session/:sessionId/ime/deactivate
-// /session/:sessionId/ime/activate
-// /session/:sessionId/frame
+// GET /session/:sessionId/ime/available_engines
+// GET /session/:sessionId/ime/active_engine
+// GET /session/:sessionId/ime/activated
+// POST /session/:sessionId/ime/deactivate
+// POST /session/:sessionId/ime/activate
 
-// GET /session/:sessionId/window
--(AppiumMacHTTPJSONResponse*) postWindow:(NSString*)path data:(NSData*)postData;
+// POST /session/:sessionId/window
+- (AppiumMacHTTPJSONResponse *)post_window:(NSString*)path data:(NSData*)postData;
 
 // DELETE /session/:sessionId/window
--(AppiumMacHTTPJSONResponse*) deleteWindow:(NSString *)path;
+- (AppiumMacHTTPJSONResponse *)delete_window:(NSString *)path;
 
 // POST /session/:sessionId/window/:windowHandle/size
--(AppiumMacHTTPJSONResponse*) postWindowSize:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_window_size:(NSString*)path data:(NSData*)postData;
 
 // GET /session/:sessionId/window/:windowHandle/size
--(AppiumMacHTTPJSONResponse*) getWindowSize:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_window_size:(NSString*)path;
 
 // POST /session/:sessionId/window/:windowHandle/position
--(AppiumMacHTTPJSONResponse*) postWindowPosition:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_window_position:(NSString*)path data:(NSData*)postData;
 
 // GET /session/:sessionId/window/:windowHandle/position
--(AppiumMacHTTPJSONResponse*) getWindowPosition:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_window_position:(NSString*)path;
 
-// /session/:sessionId/window/:windowHandle/maximize
-// /session/:sessionId/cookie
-// /session/:sessionId/cookie/:name
+// POST /session/:sessionId/window/:windowHandle/maximize
+// GET /session/:sessionId/cookie
+// POST /session/:sessionId/cookie
+// DELETE /session/:sessionId/cookie
+// DELETE /session/:sessionId/cookie/:name
 
 // GET /session/:sessionId/source
--(AppiumMacHTTPJSONResponse*) getSource:(NSString*)path;
-
-// /session/:sessionId/title
+- (AppiumMacHTTPJSONResponse *)get_source:(NSString*)path;
 
 // POST /session/:sessionId/element
--(AppiumMacHTTPJSONResponse*) postElement:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_element:(NSString*)path data:(NSData*)postData;
 
 // POST /session/:sessionId/elements
--(AppiumMacHTTPJSONResponse*) postElements:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_elements:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/element/active
-// /session/:sessionId/element/:id
+// POST /session/:sessionId/element/active
+// GET /session/:sessionId/element/:id
 
 // POST /session/:sessionId/element/:id/element
--(AppiumMacHTTPJSONResponse*) postElementInElement:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_element_element:(NSString*)path data:(NSData*)postData;
 
 // POST /session/:sessionId/element/:id/elements
--(AppiumMacHTTPJSONResponse*) postElementsInElement:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_element_elements:(NSString*)path data:(NSData*)postData;
 
 // POST /session/:sessionId/element/:id/click
--(AppiumMacHTTPJSONResponse*) postElementClick:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)post_element_click:(NSString*)path data:(NSData*)postData;
 
-// /session/:sessionId/element/:id/submit
+// POST /session/:sessionId/element/:id/submit
 
 // GET /session/:sessionId/element/:id/text
--(AppiumMacHTTPJSONResponse*) getElementText:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_text:(NSString*)path;
 
 // POST /session/:sessionId/element/:id/value
--(AppiumMacHTTPJSONResponse*) postElementValue:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_element_value:(NSString*)path data:(NSData*)postData;
 
 // POST /session/:sessionId/keys
--(AppiumMacHTTPJSONResponse*) postKeys:(NSString*)path data:(NSData*)postData;
+- (AppiumMacHTTPJSONResponse *)post_keys:(NSString*)path data:(NSData*)postData;
 
 // GET /session/:sessionId/element/:id/name
--(AppiumMacHTTPJSONResponse*) getElementName:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_name:(NSString*)path;
 
 // POST /session/:sessionId/element/:id/clear
--(AppiumMacHTTPJSONResponse*) postElementClear:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)post_element_clear:(NSString*)path data:(NSData*)postData;
 
 // GET /session/:sessionId/element/:id/selected
--(AppiumMacHTTPJSONResponse*) getElementIsSelected:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_selected:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/enabled
--(AppiumMacHTTPJSONResponse*) getElementIsEnabled:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_enabled:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/attribute/:name
--(AppiumMacHTTPJSONResponse*) getElementAttribute:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_attribute:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/equals/:other
--(AppiumMacHTTPJSONResponse*) getElementIsEqual:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_equals:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/displayed
--(AppiumMacHTTPJSONResponse*) getElementDisplayed:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_displayed:(NSString*)path;
 
 // GET /session/:sessionId/element/:id/location
--(AppiumMacHTTPJSONResponse*) getElementLocation:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_location:(NSString*)path;
 
-// /session/:sessionId/element/:id/location_in_view
+// GET /session/:sessionId/element/:id/location_in_view
 
 // GET /session/:sessionId/element/:id/size
--(AppiumMacHTTPJSONResponse*) getElementSize:(NSString*)path;
+- (AppiumMacHTTPJSONResponse *)get_element_size:(NSString*)path;
 
-// /session/:sessionId/element/:id/css/:propertyName
-// /session/:sessionId/orientation
-// /session/:sessionId/alert_text
-// /session/:sessionId/accept_alert
-// /session/:sessionId/dismiss_alert
-// /session/:sessionId/moveto
-// /session/:sessionId/click
-// /session/:sessionId/buttondown
-// /session/:sessionId/buttonup
-// /session/:sessionId/doubleclick
-// /session/:sessionId/touch/click
-// /session/:sessionId/touch/down
-// /session/:sessionId/touch/up
-// /session/:sessionId/touch/move
-// /session/:sessionId/touch/scroll
-// /session/:sessionId/touch/scroll
-// /session/:sessionId/touch/doubleclick
-// /session/:sessionId/touch/longclick
-// /session/:sessionId/touch/flick
-// /session/:sessionId/touch/flick
-// /session/:sessionId/location
-// /session/:sessionId/local_storage
-// /session/:sessionId/local_storage/key/:key
-// /session/:sessionId/local_storage/size
-// /session/:sessionId/session_storage
-// /session/:sessionId/session_storage/key/:key
-// /session/:sessionId/session_storage/size
-// /session/:sessionId/log
-// /session/:sessionId/log/types
-// /session/:sessionId/application_cache/status
+// GET /session/:sessionId/element/:id/css/:propertyName
+// GET /session/:sessionId/orientation
+// POST /session/:sessionId/orientation
+// GET /session/:sessionId/alert_text
+// POST /session/:sessionId/alert_text
+// POST /session/:sessionId/accept_alert
+// POST /session/:sessionId/dismiss_alert
+
+// POST /session/:sessionId/moveto
+-(AppiumMacHTTPJSONResponse *)post_moveto:(NSString*)path data:(NSData *)postData;
+
+// POST /session/:sessionId/click
+- (AppiumMacHTTPJSONResponse *)post_click:(NSString*)path data:(NSData *)postData;
+
+// POST /session/:sessionId/buttondown
+- (AppiumMacHTTPJSONResponse *)post_buttondown:(NSString*)path data:(NSData *)postData;
+
+// POST /session/:sessionId/buttonup
+- (AppiumMacHTTPJSONResponse *)post_buttonup:(NSString*)path data:(NSData *)postData;
+
+// POST /session/:sessionId/doubleclick
+- (AppiumMacHTTPJSONResponse *)post_doubleclick:(NSString*)path data:(NSData *)postData;
+
+// POST /session/:sessionId/touch/click
+// POST /session/:sessionId/touch/down
+// POST /session/:sessionId/touch/up
+// POST /session/:sessionId/touch/move
+// POST /session/:sessionId/touch/scroll
+// POST /session/:sessionId/touch/scroll
+// POST /session/:sessionId/touch/doubleclick
+// POST /session/:sessionId/touch/longclick
+// POST /session/:sessionId/touch/flick
+// POST /session/:sessionId/touch/flick
+// GET /session/:sessionId/location
+// POST /session/:sessionId/location
+// GET /session/:sessionId/local_storage
+// POST /session/:sessionId/local_storage
+// DELETE /session/:sessionId/local_storage
+// GET /session/:sessionId/local_storage/key/:key
+// DELETE /session/:sessionId/local_storage/key/:key
+// GET /session/:sessionId/local_storage/size
+// GET /session/:sessionId/session_storage
+// POST /session/:sessionId/session_storage
+// DELETE /session/:sessionId/session_storage
+// GET /session/:sessionId/session_storage/key/:key
+// DELETE /session/:sessionId/session_storage/key/:key
+// GET /session/:sessionId/session_storage/size
+// POST /session/:sessionId/log
+// GET /session/:sessionId/log/types
+// GET /session/:sessionId/application_cache/status
+
+- (AppiumMacHTTPJSONResponse *)httpResponseForMethod:(NSString *)method URI:(NSString *)path data:(NSData*)postData;
+- (SEL)selectorForMethod:(NSString *)method andPathComponents:(NSArray *)pathComponents;
 
 @end
+
