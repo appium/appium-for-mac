@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 
-defaultImplicitTimeout_sec = 60
+defaultImplicitTimeout_sec = 20
+
 
 #   Convenience method that catches exceptions.
 #   returns: found element, or None
@@ -14,6 +15,7 @@ def findElementByXPath(driver, xPath):
         print "findElementByXPath returnedElement: " + str(returnedElement)
         return returnedElement
 
+
 def menuBarAXPath(applicationTitle):
     return "/AXApplication[@AXTitle='" + applicationTitle + "']/AXMenuBar"
 
@@ -23,16 +25,18 @@ def menuBarAXPath(applicationTitle):
 # menuItemTitles: an array of strings
 #   minimum (to click in the menu bar):     [menuBarItemTitle]
 #   other (to select menu bar menu items):  [menuBarItemTitle, menuItemTitle, subMenuItemTitle, ...]
-# lastItemOperation: optional string to match one additional attribute of the last menu item in the list
+# lastItemOperation: optional string and boolean operator to match one additional attribute of the final menu item
+#   If unwanted, use an empty string.
 #   for example:
-#       selectMenuItem(driver, "Calculator", ["View", "Show Thousands Separators"], "&&@AXMenuItemMarkChar!=''")
+#       selectMenuItem(driver, "Calculator", ["View", "Show Thousands Separators"], " and @AXMenuItemMarkChar!=''")
 #   for example:
-#       selectMenuItem(driver, "Calculator", ["File", "Quit Calculator"], "||@AXTitle='Quit and Close All Windows'")
+#       selectMenuItem(driver, "Calculator", ["File", "Quit Calculator"], " or @AXTitle='Quit and Close All Windows'")
 # returns: absolute AXPath string of the selected item
 def selectMenuItem(driver, applicationTitle, menuItemTitles, lastItemOperation):
     if len(menuItemTitles) < 1:
         return ""
     
+    # When selecting menu items, we don't need to wait. 
     driver.implicitly_wait(1)
     
     elementAXPath = ""
@@ -47,7 +51,7 @@ def selectMenuItem(driver, applicationTitle, menuItemTitles, lastItemOperation):
     actions.click().perform()
 
     # The menu is now showing. If we don't find and click the last menu item, the menu will remain open.
-    # In that case we will have to click the menu again to hide it before returning.
+    # In that case we will have to click the menu bar item again, to hide the menu before returning.
 
     # Now iterate through the menuItems and subMenuItems.
     parentAXPath = menuBarItemAXPath

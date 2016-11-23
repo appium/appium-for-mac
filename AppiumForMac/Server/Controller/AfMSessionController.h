@@ -98,6 +98,9 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 // The WebDriver asynchronous script timeout in seconds.
 @property NSTimeInterval scriptTimeout;
 
+// Take a screen shot when an element is not found. Save in the diagnosticsDirectory.
+@property BOOL shouldTakeScreenShot;
+
 // Set this to YES to cancel a timeout loop. This is only a flag. The timeout loop has to check the value.
 @property (assign) BOOL isCanceled;
 

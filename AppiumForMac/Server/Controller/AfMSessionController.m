@@ -21,9 +21,9 @@ NSString * const kPredicateOperations = @"kPredicateOperations";
 NSString * const kPredicateAttributeName = @"kPredicateAttributeName";
 NSString * const kPredicateAttributeValue = @"kPredicateAttributeValue";
 NSString * const kPredicateIndex = @"kPredicateIndex";
-NSString * const kPredicateLogicalOperator = @"kPredicateLogicalOperator";
-NSString * const kPredicateAND = @"&&";
-NSString * const kPredicateOR = @"||";
+NSString * const kPredicateBooleanOperator = @"kPredicateBooleanOperator";
+NSString * const kPredicateAND = @" and @";
+NSString * const kPredicateOR = @" or @";
 NSString * const kPredicateNone = @"None";
 NSString * const kPredicateComparisonOperation = @"kPredicateComparisonOperation";
 NSString * const kPredicateEQUALS = @"=";
@@ -80,12 +80,6 @@ NSInteger const kPredicateRightOperand = 1;
         
         [self setPageLoadingStrategy:pageLoadStrategyNormal];
         
-        // Set the top level directory containing diagnostic files for _all_ sessions.
-        // This can be changed or removed when the session is created, using desiredCapabilities.
-        // Non-sandboxed app: "/Users/myname/Documents/".
-        // Sandboxed app    : "/Users/myUserName/Library/Containers/com.myCompanyName.myAppName/Data/Documents/".
-        [self setGlobalDiagnosticsDirectory:[[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil]];
-        
         // Non-element offsets start from the last location, or {0, 0}.
         self.lastGlobalMouseLocation = CGPointMake(0.0, 0.0);
         
@@ -99,6 +93,7 @@ NSInteger const kPredicateRightOperand = 1;
         self.mouseMoveSpeed = kDefaultMouseMoveSpeed;
         self.timedEvents = [NSMutableArray array];
         self.timedEventIndex = 0;
+        self.shouldTakeScreenShot = NO;
         
         // Make sure all modifiers are up.
         [self releaseAllModifiers];
@@ -215,28 +210,35 @@ NSInteger const kPredicateRightOperand = 1;
             self.scriptTimeout = commandTimeout;
         }
         
-        // Set the top level directory containing diagnostic files for _all_ sessions.
-        // The init method sets a default value in case this value is not supplied.
-        // To disable all diagnostic files, pass an empty string for this value.
-        NSString *gDDPath = [desiredCapabilities objectForKey:@"globalDiagnosticsDirectory"];
-        if (gDDPath) {
-            if ([gDDPath isKindOfClass:[NSString class]] && gDDPath.length > 0) {
-                // Capability was requested and a non-empty string. Use this value.
-                [self setGlobalDiagnosticsDirectory:[NSURL fileURLWithPath:gDDPath]];
-            } else {
-                // Capability was requested but empty. Disable all diagnostic files.
-                [self setGlobalDiagnosticsDirectory:nil];
-            }
-        } else {
-            // Capability was not requested, so use the default. 
-        }
-        
         id speed = [desiredCapabilities objectForKey:@"mouseMoveSpeed"];
         if (speed) {
             if ([speed isKindOfClass:[NSString class]]) {
                 self.mouseMoveSpeed = [speed floatValue];
             } else if ([speed isKindOfClass:[NSNumber class]]) {
                 self.mouseMoveSpeed = [(NSNumber *)speed floatValue];
+            }
+        }
+        
+        // Set the top level directory containing diagnostic files for _all_ sessions.
+        NSString *path = [desiredCapabilities objectForKey:@"diagnosticsDirectoryLocation"];
+        path = [path stringByExpandingTildeInPath];
+        if (path && [path isKindOfClass:[NSString class]] && path.length > 0) {
+            if ([path rangeOfString:@"/" options:NSBackwardsSearch].location < path.length - 1) {
+                path = [path stringByAppendingString:@"/"];
+            }
+            if ([path rangeOfString:@"AppiumDiagnostics"].location == NSNotFound) {
+                path = [path stringByAppendingString:@"AppiumDiagnostics/"];
+            }
+            // Capability was requested and a non-empty string. Use this value.
+            [self setGlobalDiagnosticsDirectory:[NSURL fileURLWithPath:path]];
+        }
+        
+        id shouldTakeScreenShot = [desiredCapabilities objectForKey:@"screenShotOnError"];
+        if (shouldTakeScreenShot) {
+            if ([shouldTakeScreenShot isKindOfClass:[NSString class]]) {
+                self.shouldTakeScreenShot = [shouldTakeScreenShot boolValue];
+            } else if ([shouldTakeScreenShot isKindOfClass:[NSNumber class]]) {
+                self.shouldTakeScreenShot = [(NSNumber *)shouldTakeScreenShot boolValue];
             }
         }
     }
@@ -350,7 +352,13 @@ NSInteger const kPredicateRightOperand = 1;
         }
         
         if ([handlerReturnValue afmStatusCode] == kAfMStatusCodeNoSuchElement) {
-            [NSThread sleepForTimeInterval:self.loopDelay];
+            // Element not found. Wait for the loop delay, before trying again.
+            // Regardless of loop delay, don't wait past the timeout date.
+            if ([timeoutDate timeIntervalSinceNow] >= self.loopDelay) {
+                [NSThread sleepForTimeInterval:self.loopDelay];
+            } else if ([timeoutDate timeIntervalSinceNow] > 0) {
+                [NSThread sleepForTimeInterval:[timeoutDate timeIntervalSinceNow]];
+            }
             NSLog(@"Session %@ waiting for commandParams: %@ time remaining: %f", sessionId, commandParams, [timeoutDate timeIntervalSinceNow]);
             continue;
         } else {
@@ -361,7 +369,21 @@ NSInteger const kPredicateRightOperand = 1;
         NSLog(@"Session isCanceled: %@", self.sessionId);
         return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeNoSuchDriver session:self.sessionId];
     }
-    
+    if ([handlerReturnValue afmStatusCode] == kAfMStatusCodeNoSuchElement
+        ) {
+        // Implicit timeout reached!
+        // Take a screenshot.
+        if (self.shouldTakeScreenShot) {
+            // The file name starts with the selenium path, and will end with a date stamp.
+            // E.g. session_hqAc1lh8_element__2016-02-23_01_34_22_+0000
+            
+            NSMutableArray *seleniumPathComponents = [[path componentsSeparatedByString:@"/"] mutableCopy];
+            [seleniumPathComponents removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+            NSString *fileName = [seleniumPathComponents componentsJoinedByString:@"_"];
+            
+            [self screenCaptureToFile:fileName withDateStamp:YES];
+        }
+    }    
     return [AppiumMacHTTPJSONResponse responseWithJsonError:statusCode session:sessionId];
 }
 
@@ -889,7 +911,7 @@ const NSTimeInterval kModifierPause = 0.05;
 // The first pathComponent specifies a child element of rootUIElement. 
 - (NSArray *)findAllUsingAXPathComponents:(NSArray *)axPathComponents rootUIElement:(PFUIElement *)rootUIElement
 {
-    NSLog(@"findAllUsingAXPathComponents: %@, rootUIElement: %@", axPathComponents, rootUIElement);
+//    NSLog(@"findAllUsingAXPathComponents: %@, rootUIElement: %@", axPathComponents, rootUIElement);
     // If there aren't any child elements at all, we are done.
     NSArray *childUIElements = rootUIElement.AXChildren;
     if (!childUIElements || [childUIElements count] == 0) {
@@ -903,7 +925,7 @@ const NSTimeInterval kModifierPause = 0.05;
         NSLog(@"findAllUsingAXPathComponents: PARSE FIRST PATH COMPONENT FAILED");
         return @[];
     }
-    NSLog(@"findAllUsingAXPathComponents: firstPathComponent: %@", firstPathComponent);
+//    NSLog(@"findAllUsingAXPathComponents: firstPathComponent: %@", firstPathComponent);
     
     NSMutableArray *matchedChildren = [NSMutableArray array];
     
@@ -911,11 +933,11 @@ const NSTimeInterval kModifierPause = 0.05;
     // First make an array of similar child elements with the same AXRole.
     // Search the similar elements for predicate or index match.
     NSArray *similarChildUIElements = [PFUIElement elementsWithRole:parsedComponent[kNodeRole] inArray:childUIElements];
-    NSLog(@"findAllUsingAXPathComponents: similarChildUIElements: %@", similarChildUIElements);
+//    NSLog(@"findAllUsingAXPathComponents: similarChildUIElements: %@", similarChildUIElements);
     if (similarChildUIElements.count > 0) {
         for (NSUInteger i = 0; i < similarChildUIElements.count; i++) {
             PFUIElement *element = [similarChildUIElements objectAtIndex:i];
-            NSLog(@"findAllUsingAXPathComponents: similarChildUIElements[%lu]: %@", i, element);
+//            NSLog(@"findAllUsingAXPathComponents: similarChildUIElements[%lu]: %@", i, element);
             if ([self element:element doesMatchPredicate:parsedComponent[kNodePredicate] atIndex:i]) {
                 [matchedChildren addObject:element];
             }
@@ -981,7 +1003,7 @@ const NSTimeInterval kModifierPause = 0.05;
         return YES;
     }
     
-    NSString *logicalOperator = predicate[kPredicateLogicalOperator];
+    NSString *booleanOperator = predicate[kPredicateBooleanOperator];
     NSArray *operations = predicate[kPredicateOperations];
     
     for (NSDictionary *operation in operations) {
@@ -1013,7 +1035,7 @@ const NSTimeInterval kModifierPause = 0.05;
             }
             
             if (doesMatch) {
-                if ([logicalOperator isEqualToString:kPredicateOR] || [logicalOperator isEqualToString:kPredicateNone]) {
+                if ([booleanOperator isEqualToString:kPredicateOR] || [booleanOperator isEqualToString:kPredicateNone]) {
                     // We only need one YES for || or None, and here it is.
                     break;
                 } else {
@@ -1021,7 +1043,7 @@ const NSTimeInterval kModifierPause = 0.05;
                     continue;
                 }
             } else {
-                if ([logicalOperator isEqualToString:kPredicateAND] || [logicalOperator isEqualToString:kPredicateNone]) {
+                if ([booleanOperator isEqualToString:kPredicateAND] || [booleanOperator isEqualToString:kPredicateNone]) {
                     // We only need one NO for && or None, and here it is.
                     break;
                 } else {
@@ -1029,9 +1051,9 @@ const NSTimeInterval kModifierPause = 0.05;
                     continue;
                 }
             }
-        } else if (predicate[kPredicateIndex] != nil) {
+        } else if (operation[kPredicateIndex] != nil) {
             // An index value is available. Try to match by index.
-            NSNumber *index = predicate[kPredicateIndex];
+            NSNumber *index = operation[kPredicateIndex];
             if (index && [index isKindOfClass:[NSNumber class]] && [index unsignedIntegerValue] == elementIndex) {
                 doesMatch = YES;
             }
@@ -1109,16 +1131,16 @@ const NSTimeInterval kModifierPause = 0.05;
     NSMutableDictionary *predicateDictionary = [@{} mutableCopy];
     
     // Check for && and ||. They are mutually exclusive.
-    predicateDictionary[kPredicateLogicalOperator] = kPredicateNone;
+    predicateDictionary[kPredicateBooleanOperator] = kPredicateNone;
     NSArray *operationStrings = [predicate componentsSeparatedByString:kPredicateAND];
     if ([operationStrings count] == 1) {
         //There was no AND operator. Try the OR operator. If neither, then there was only one operation.
         operationStrings = [predicate componentsSeparatedByString:kPredicateOR];
         if ([operationStrings count] > 1) {
-            predicateDictionary[kPredicateLogicalOperator] = kPredicateOR;
+            predicateDictionary[kPredicateBooleanOperator] = kPredicateOR;
         }
     } else {
-        predicateDictionary[kPredicateLogicalOperator] = kPredicateAND;
+        predicateDictionary[kPredicateBooleanOperator] = kPredicateAND;
     }
     
     if (![operationStrings count]) {
@@ -1130,7 +1152,7 @@ const NSTimeInterval kModifierPause = 0.05;
     //      1. an equality test, eg "@AXTitle='Calculator'"
     //      2. an inequality test, eg "@AXMenuItemMarkChar!=''"
     //      3. an index, e.g. 4.
-    // Our caller will evaluate the array using the specified logical operator. 
+    // Our caller will evaluate the array using the specified boolean operator. 
     // Each operation string will be parsed into a dictionary with either one of these examples:
     //  With 1 string in the array it can be either a numeric index or name-value pair:
     //      { kPredicateIndex: 4 }
@@ -1182,6 +1204,7 @@ const NSTimeInterval kModifierPause = 0.05;
             {
                 // This is a key-value pair without the enclosing braces, e.g. @"@AXTitle='My Window'".
                 // Remove leading "@" in the attribute name.
+                // Note: this character is removed as a side effect of using a boolean operator. 
                 NSString *attributeName = [[terms objectAtIndex:kPredicateLeftOperand] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@"]];
                 operationDict[kPredicateAttributeName] = attributeName;
                 
@@ -1618,6 +1641,7 @@ const NSTimeInterval kModifierPause = 0.05;
         
         NSString *filePath = [NSString stringWithFormat:@"%@/%@.png", [self.diagnosticsDirectory path], fileName];
         
+        NSLog(@"Creating screenshot: %@", filePath);
         system([[NSString stringWithFormat:@"/usr/sbin/screencapture -mx %@", filePath] cStringUsingEncoding:NSASCIIStringEncoding]);
     }
 }

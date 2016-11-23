@@ -1,27 +1,32 @@
+# This script is not a demo or example. Use it when trying out AppiumForMac features, python algorithms, and debugging.
+
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from random import randint
 import utilities
 
 print 'Starting the WebDriver session'
-desiredCapabilities = {'platform':'Mac', 'commandDelay':50, 'loopDelay':1000, 'implicitTimeout':utilities.defaultImplicitTimeout_sec * 1000, 'mouseMoveSpeed':75}
+desiredCapabilities = {'platform':'Mac', 'commandDelay':50, 'loopDelay':1000, 'implicitTimeout':utilities.defaultImplicitTimeout_sec * 1000, 'mouseMoveSpeed':75, 'diagnosticsDirectoryLocation':'~/Desktop/', 'screenShotOnError':1}
 driver = webdriver.Remote( command_executor='http://localhost:4622/wd/hub', desired_capabilities=desiredCapabilities)
 
-#print 'Opening the "Calculator" app'
-#driver.get("Calculator")
+print 'Opening the "Calculator" app'
+driver.get("Calculator")
 ##'\xe2'
 #
 ##print driver.desired_capabilities
+
+utilities.selectMenuItem(driver, "Calculator", ["Calculator", "About Calculator"], "and @AXMenuItemMarkChar!=''")
+
 ##utilities.selectMenuItem(driver, "Calculator", ["Calculator", "About Calculator"])
 ##utilities.selectMenuItem(driver, "Calculator", ["View", "Show Thousands Separators"], "")
-#utilities.selectMenuItem(driver, "Calculator", ["View", "Show Thousands Separators"], "&&@AXMenuItemMarkChar!=''")
-#utilities.selectMenuItem(driver, "Calculator", ["File", "Quit Calculator"], "||@AXTitle='Quit and Close All Windows'")
+#utilities.selectMenuItem(driver, "Calculator", ["View", "Show Thousands Separators"], " and @AXMenuItemMarkChar!=''")
+# utilities.selectMenuItem(driver, "Calculator", ["File", "Quit Calculator"], " or @AXTitle='Quit and Close All Windows'")
 
-driver.get("QuickBooks")
-utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "Configuration", "Do Not Load Remote Config File"], "&&@AXMenuItemMarkChar=''")
-utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "Configuration", "Do Not Load Remote Config File"], "&&@AXMenuItemMarkChar!=''")
-utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "QuickView", "Services", "Use Mock Email Feed"], "&&@AXMenuItemMarkChar=''")
-utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "QuickView", "Services", "Use Mock Email Feed"], "&&@AXMenuItemMarkChar!=''")
+# driver.get("QuickBooks")
+# utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "Configuration", "Do Not Load Remote Config File"], " and @AXMenuItemMarkChar=''")
+# utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "Configuration", "Do Not Load Remote Config File"], " and @AXMenuItemMarkChar!=''")
+# utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "QuickView", "Services", "Use Mock Email Feed"], " and @AXMenuItemMarkChar=''")
+# utilities.selectMenuItem(driver, "QuickBooks", ["Debug", "QuickView", "Services", "Use Mock Email Feed"], " and @AXMenuItemMarkChar!=''")
 
 #selectedPath = utilities.selectMenuItem(driver, "Calculator", ["View", "Decimal Places", "15"], "@AXMenuItemMark='(null)'")
 #print selectedPath
