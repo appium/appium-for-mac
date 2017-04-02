@@ -12,8 +12,19 @@
 #import <PFAssistive/PFAssistive.h>
 
 #import "AfMSessionController.h"
+#import "AppiumForMacAppDelegate.h"
 #import "KeystrokesAndKeyCodes.h"
 #import "Utility.h"
+
+NSString * const kCookieLoopDelay = @"loop_delay";
+NSString * const kCookieImplicitTimeout = @"implicit_timeout";
+NSString * const kCookieCommandDelay = @"command_delay";
+NSString * const kCookiePageLoadTimeout = @"page_load_timeout";
+NSString * const kCookieScriptTimeout = @"script_timeout";
+NSString * const kCookieMouseSpeed = @"mouse_speed";
+NSString * const kCookieScreenShotOnError = @"screen_shot_on_error";
+NSString * const kCookieGlobalDiagnosticsDirectory = @"global_diagnostics_directory";
+NSString * const kCookieDiagnosticsDirectory = @"diagnostics_directory";
 
 NSString * const kNodeRole = @"kNodeRole";
 NSString * const kNodePredicate = @"kNodePredicate";
@@ -32,7 +43,7 @@ NSInteger const kPredicateLeftOperand = 0;
 NSInteger const kPredicateRightOperand = 1;
 
 @interface AfMSessionController()
-//@property NSString *_currentApplicationName;
+@property NSString *_currentApplicationName;
 
 @property BOOL isLeftMouseDown;
 @property BOOL isRightMouseDown;
@@ -49,6 +60,11 @@ NSInteger const kPredicateRightOperand = 1;
 @property NSTimer *timedEventTimer;
 @property dispatch_semaphore_t timedEventsCompleted;
 
+// Our cookies array. Each cookie is a mutable dictionary with minimum keys "name" and "value".
+// Even though we don't support web views, this is a sneaky 
+// workaround for a scripter to get and set webdriver properties like mouse_speed. 
+@property (readwrite) NSMutableArray *afmCookies;
+
 @property id processActivity; // to avoid App Nap
 @end
 
@@ -59,7 +75,7 @@ NSInteger const kPredicateRightOperand = 1;
     self = [super init];
     if (self) {
         // Generate a unique opaque session Id.
-        self.sessionId = [Utility randomStringOfLength:8];    
+        self.sessionId = [Utility randomStringOfLength:8];
         
         [self setElementIndex:0];
         [self setElements:[NSMutableDictionary new]];
@@ -84,17 +100,25 @@ NSInteger const kPredicateRightOperand = 1;
         self.lastGlobalMouseLocation = CGPointMake(0.0, 0.0);
         
         self.nativeEventSupport = YES;
-        self.implicitTimeout = kDefaultImplicitTimeout;
-        self.loopDelay = kDefaultLoopDelay;
-        self.commandDelay = kDefaultCommandDelay;
+        
         self.isLeftMouseDown = NO;
         self.isRightMouseDown = NO;
         self.isOtherMouseDown = NO;
-        self.mouseMoveSpeed = kDefaultMouseMoveSpeed;
         self.timedEvents = [NSMutableArray array];
         self.timedEventIndex = 0;
-        self.shouldTakeScreenShot = NO;
         
+        self.afmCookies = [NSMutableArray array];
+
+        [self setCookie:@{@"name": kCookieLoopDelay, @"value": [NSNumber numberWithFloat:kDefaultLoopDelay]}];
+        [self setCookie:@{@"name": kCookieCommandDelay, @"value": [NSNumber numberWithFloat:kDefaultCommandDelay]}];
+        [self setCookie:@{@"name": kCookieImplicitTimeout, @"value": [NSNumber numberWithFloat:kDefaultImplicitTimeout]}];
+        [self setCookie:@{@"name": kCookiePageLoadTimeout, @"value": [NSNumber numberWithFloat:kDefaultPageLoadTimeout]}];
+        [self setCookie:@{@"name": kCookieScriptTimeout, @"value": [NSNumber numberWithFloat:kDefaultScriptTimeout]}];
+        [self setCookie:@{@"name": kCookieMouseSpeed, @"value": [NSNumber numberWithFloat:kDefaultMouseMoveSpeed]}];
+        [self setCookie:@{@"name": kCookieScreenShotOnError, @"value": [NSNumber numberWithFloat:NO]}];
+        [self setCookie:@{@"name": kCookieGlobalDiagnosticsDirectory, @"value": @""}];
+        [self setCookie:@{@"name": kCookieDiagnosticsDirectory, @"value": @""}];
+
         // Make sure all modifiers are up.
         [self releaseAllModifiers];
 
@@ -103,6 +127,12 @@ NSInteger const kPredicateRightOperand = 1;
         // https://developer.apple.com/library/mac/documentation/Performance/Conceptual/power_efficiency_guidelines_osx/AppNap.html
         // https://developer.apple.com/library/mac/documentation/Performance/Conceptual/power_efficiency_guidelines_osx/PrioritizeWorkAtTheAppLevel.html#//apple_ref/doc/uid/TP40013929-CH36-SW3
         self.processActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated reason:activityDescription];
+        
+        self.isLeftMouseDown = NO;
+        self.isRightMouseDown = NO;
+        self.isOtherMouseDown = NO;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fnKeyTrigger:) name:AFMFnKeyTriggerNotification object:nil];
     }
     return self;
 }
@@ -127,6 +157,166 @@ NSInteger const kPredicateRightOperand = 1;
     return YES;
 }
 
+#pragma mark - Getters and Setters
+- (NSTimeInterval)loopDelay
+{
+    NSNumber *value = [self getCookieWithName:kCookieLoopDelay][@"value"];
+//    NSLog(@"loopDelay: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (NSTimeInterval)commandDelay
+{
+    NSNumber *value = [self getCookieWithName:kCookieCommandDelay][@"value"];
+//    NSLog(@"commandDelay: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (NSTimeInterval)implicitTimeout
+{
+    NSNumber *value = [self getCookieWithName:kCookieImplicitTimeout][@"value"];
+//    NSLog(@"implicitTimeout: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (NSTimeInterval)pageLoadTimeout
+{
+    NSNumber *value = [self getCookieWithName:kCookiePageLoadTimeout][@"value"];
+//    NSLog(@"pageLoadTimeout: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (NSTimeInterval)scriptTimeout
+{
+    NSNumber *value = [self getCookieWithName:kCookieScriptTimeout][@"value"];
+//    NSLog(@"scriptTimeout: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (float)mouseMoveSpeed
+{
+    NSNumber *value = [self getCookieWithName:kCookieMouseSpeed][@"value"];
+//    NSLog(@"mouseMoveSpeed: %f", [value floatValue]);
+    return [value floatValue];
+}
+
+- (BOOL)shouldTakeScreenShot
+{
+    NSNumber *value = [self getCookieWithName:kCookieScreenShotOnError][@"value"];
+//    NSLog(@"shouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
+    return [value boolValue];
+}
+
+- (NSString *)globalDiagnosticsDirectory
+{
+    NSString *value = [self getCookieWithName:kCookieGlobalDiagnosticsDirectory][@"value"];
+//    NSLog(@"globalDiagnosticsDirectory: %@", value);
+    return value;
+}
+
+- (NSString *)diagnosticsDirectory
+{
+    NSString *value = [self getCookieWithName:kCookieDiagnosticsDirectory][@"value"];
+//    NSLog(@"diagnosticsDirectory: %@", value);
+    return value;
+}
+
+- (void)setLoopDelay:(NSTimeInterval)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setLoopDelay: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookieLoopDelay, @"value": value}];
+}
+
+- (void)setCommandDelay:(NSTimeInterval)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setCommandDelay: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookieCommandDelay, @"value": value}];
+}
+
+- (void)setImplicitTimeout:(NSTimeInterval)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setImplicitTimeout: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookieImplicitTimeout, @"value": value}];
+}
+
+- (void)setPageLoadTimeout:(NSTimeInterval)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setPageLoadTimeout: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookiePageLoadTimeout, @"value": value}];
+}
+
+- (void)setScriptTimeout:(NSTimeInterval)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setScriptTimeout: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookieScriptTimeout, @"value": value}];
+}
+
+- (void)setMouseMoveSpeed:(float)interval
+{
+    NSNumber *value = [NSNumber numberWithFloat:interval];
+//    NSLog(@"setMouseMoveSpeed: %f", [value floatValue]);
+    [self setCookie:@{@"name": kCookieMouseSpeed, @"value": value}];
+}
+
+- (void)setShouldTakeScreenShot:(BOOL)yesNo
+{
+    NSNumber *value = [NSNumber numberWithBool:yesNo];
+//    NSLog(@"setShouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
+    [self setCookie:@{@"name": kCookieScreenShotOnError, @"value": value}];
+}
+
+//- (void)setGlobalDiagnosticsDirectory:(NSString *)value
+//{
+//    NSLog(@"setGlobalDiagnosticsDirectory: %@", value);
+//    [self setCookie:@{@"name": kCookieGlobalDiagnosticsDirectory, @"value": value}];
+//}
+
+- (void)setDiagnosticsDirectory:(NSString *)value
+{
+//    NSLog(@"setDiagnosticsDirectory: %@", value);
+    [self setCookie:@{@"name": kCookieDiagnosticsDirectory, @"value": value}];
+}
+
+#pragma mark - Cookies
+- (NSArray *)getAllCookies
+{
+    return self.afmCookies;
+}
+
+- (NSMutableDictionary *)getCookieWithName:(NSString *)name
+{
+    for (NSMutableDictionary *cookie in self.afmCookies) {
+        if (cookie && [cookie isKindOfClass:[NSMutableDictionary class]] && [cookie[@"name"] isEqualToString:name]) {
+            return cookie;
+        }
+    }
+    return nil;
+}
+
+// If the cookie with this name exists, replace it (do not merge).
+- (void)setCookie:(NSDictionary *)cookie
+{
+//    NSLog(@"setCookie:%@", cookie);
+    id existingCookie = [self getCookieWithName:cookie[@"name"]];
+    if (existingCookie) {
+//        (@"existingCookie:%@", existingCookie);
+        [self.afmCookies removeObject:existingCookie];
+    }
+    NSMutableDictionary *mutableCookie = [cookie mutableCopy];
+    if ([mutableCookie[@"name"] isEqualToString:kCookieGlobalDiagnosticsDirectory]) {
+        [self setGlobalDiagnosticsDirectoryCookie:mutableCookie];
+    } else {
+        [self.afmCookies addObject:mutableCookie];
+    }
+    
+}
+
+#pragma mark
 -(NSArray*) allProcessNames
 {
     NSMutableArray *processes = [NSMutableArray new];
@@ -139,7 +329,8 @@ NSInteger const kPredicateRightOperand = 1;
 
 -(NSArray*) allWindows
 {
-    return [[NSArray arrayWithObject:self.currentApplication] arrayByAddingObjectsFromArray:[self.currentApplication AXWindows]];
+    //return [[NSArray arrayWithObject:self.currentApplication] arrayByAddingObjectsFromArray:[self.currentApplication AXWindows]];
+    return [self.currentApplication AXWindows];
 }
 
 -(NSArray*) allWindowHandles
@@ -168,77 +359,20 @@ NSInteger const kPredicateRightOperand = 1;
 	return [self.currentWindow performAction:(NSString*)kAXRaiseAction];
 }
 
+// Script can send a list of cookies to add wholesale.
+// Each cookie is a dictionary: {@"name": nameString, @"value": value}.
+// NON-STANDARD
 - (void)setDesiredCapabilities:(NSDictionary *)desiredCapabilities
 {
     if (desiredCapabilities) {
-        NSLog(@"desiredCapabilities %@", desiredCapabilities);
+//        NSLog(@"desiredCapabilities %@", desiredCapabilities);
         
-        // All time values are in milliseconds.
-        id timeValue = nil;
-        
-        timeValue = [desiredCapabilities objectForKey:@"commandDelay"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            self.commandDelay = [timeValue integerValue] / 1000.0;
-        }
-        
-        timeValue = [desiredCapabilities objectForKey:@"loopDelay"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            self.loopDelay = [timeValue integerValue] / 1000.0;
-        }
-        
-        timeValue = [desiredCapabilities objectForKey:@"implicitTimeout"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            self.implicitTimeout = [timeValue integerValue] / 1000.0;
-        }
-        
-        timeValue = [desiredCapabilities objectForKey:@"pageLoadTimeout"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            self.pageLoadTimeout = [timeValue integerValue] / 1000.0;
-        }
-        
-        timeValue = [desiredCapabilities objectForKey:@"scriptTimeout"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            self.scriptTimeout = [timeValue integerValue] / 1000.0;
-        }
-        
-        // Convenience capability: set all the timeouts at once.
-        timeValue = [desiredCapabilities objectForKey:@"allTimeouts"];
-        if (timeValue && [timeValue respondsToSelector:@selector(integerValue)]) {
-            NSTimeInterval commandTimeout = [timeValue integerValue] / 1000.0;
-            self.implicitTimeout = commandTimeout;
-            self.pageLoadTimeout = commandTimeout;
-            self.scriptTimeout = commandTimeout;
-        }
-        
-        id speed = [desiredCapabilities objectForKey:@"mouseMoveSpeed"];
-        if (speed) {
-            if ([speed isKindOfClass:[NSString class]]) {
-                self.mouseMoveSpeed = [speed floatValue];
-            } else if ([speed isKindOfClass:[NSNumber class]]) {
-                self.mouseMoveSpeed = [(NSNumber *)speed floatValue];
-            }
-        }
-        
-        // Set the top level directory containing diagnostic files for _all_ sessions.
-        NSString *path = [desiredCapabilities objectForKey:@"diagnosticsDirectoryLocation"];
-        path = [path stringByExpandingTildeInPath];
-        if (path && [path isKindOfClass:[NSString class]] && path.length > 0) {
-            if ([path rangeOfString:@"/" options:NSBackwardsSearch].location < path.length - 1) {
-                path = [path stringByAppendingString:@"/"];
-            }
-            if ([path rangeOfString:@"AppiumDiagnostics"].location == NSNotFound) {
-                path = [path stringByAppendingString:@"AppiumDiagnostics/"];
-            }
-            // Capability was requested and a non-empty string. Use this value.
-            [self setGlobalDiagnosticsDirectory:[NSURL fileURLWithPath:path]];
-        }
-        
-        id shouldTakeScreenShot = [desiredCapabilities objectForKey:@"screenShotOnError"];
-        if (shouldTakeScreenShot) {
-            if ([shouldTakeScreenShot isKindOfClass:[NSString class]]) {
-                self.shouldTakeScreenShot = [shouldTakeScreenShot boolValue];
-            } else if ([shouldTakeScreenShot isKindOfClass:[NSNumber class]]) {
-                self.shouldTakeScreenShot = [(NSNumber *)shouldTakeScreenShot boolValue];
+        NSArray *cookies = desiredCapabilities[@"cookies"];
+        if (cookies && [cookies isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *cookie in cookies) {
+                if ([cookie isKindOfClass:[NSDictionary class]]) {
+                    [self setCookie:cookie];
+                }
             }
         }
     }
@@ -296,8 +430,7 @@ NSInteger const kPredicateRightOperand = 1;
         NSError *error = nil;
         NSDictionary *jsonParams = [NSJSONSerialization JSONObjectWithData:postData options:0 error:&error];
         if (!jsonParams || ![jsonParams isKindOfClass:[NSDictionary class]]) {
-//            NSLog(@"POST data was %@, expected an NSDictionary.", [jsonParams className]);
-            return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeUnknownError session:sessionId];
+            return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeInvalidArgument session:sessionId];
         }
         [commandParams addEntriesFromDictionary:jsonParams];
     }
@@ -359,14 +492,14 @@ NSInteger const kPredicateRightOperand = 1;
             } else if ([timeoutDate timeIntervalSinceNow] > 0) {
                 [NSThread sleepForTimeInterval:[timeoutDate timeIntervalSinceNow]];
             }
-            NSLog(@"Session %@ waiting for commandParams: %@ time remaining: %f", sessionId, commandParams, [timeoutDate timeIntervalSinceNow]);
+            //NSLog(@"Session %@ waiting for commandParams: %@ time remaining: %f", sessionId, commandParams, [timeoutDate timeIntervalSinceNow]);
             continue;
         } else {
             return handlerReturnValue;
         }
     }
     if (self.isCanceled) {
-        NSLog(@"Session isCanceled: %@", self.sessionId);
+        NSLog(@"executeWebDriverCommandWithPath:: session isCanceled after waiting: %@", self.sessionId);
         return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeNoSuchDriver session:self.sessionId];
     }
     if ([handlerReturnValue afmStatusCode] == kAfMStatusCodeNoSuchElement
@@ -441,18 +574,18 @@ NSInteger const kPredicateRightOperand = 1;
     [self.currentWindow performAction:@"AXCancel"];
 }
 
-//-(NSString*) currentApplicationName
-//{
-//	return self._currentApplicationName;
-//}
-//
-//-(void) setCurrentApplicationName:(NSString *)currentApplicationName
-//{
-//	self._currentApplicationName = currentApplicationName;
-//	[self setCurrentApplication:[self applicationForName:currentApplicationName]];
-//	[self setCurrentProcessName:[self processNameForApplicationName:currentApplicationName]];
-//	[self setCurrentWindowHandle:@"0"];
-//}
+-(NSString*) currentApplicationName
+{
+	return self._currentApplicationName;
+}
+
+-(void) setCurrentApplicationName:(NSString *)currentApplicationName
+{
+	self._currentApplicationName = currentApplicationName;
+	[self setCurrentApplication:[self applicationForName:currentApplicationName]];
+	[self setCurrentProcessName:[self processNameForApplicationName:currentApplicationName]];
+	[self setCurrentWindowHandle:@"0"];
+}
 
 -(SystemEventsProcess*) currentProcess
 {
@@ -522,6 +655,63 @@ NSInteger const kPredicateRightOperand = 1;
     return errorDict.count > 0 ? nil : statusString;
 }
 
+// Call this from a non-main thread.
+- (AppiumMacHTTPJSONResponse *)postURL:(NSString *)url
+{    
+    // For better performance, use the system to launch the app.
+    if (!url || !url.length) {
+        return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeInvalidArgument session:self.sessionId];
+    }
+    
+    // Check if it is already in front.
+    NSRunningApplication *frontApp = [[NSWorkspace sharedWorkspace] frontmostApplication];
+    if ([[frontApp localizedName] isEqualToString:url] || [[[frontApp executableURL] path] isEqualToString:url]) {
+        return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:self.sessionId];
+    }
+    // It may take some time to launch. Wait for the frontmost application to change before continuing.
+    self.timedEventsCompleted = dispatch_semaphore_create(0);
+    
+    NSTimeInterval launchTimeout = 10.0;  // 10 seconds or bust!
+    uint64_t interval = launchTimeout * NSEC_PER_SEC;
+    dispatch_time_t waitInterval = dispatch_time(DISPATCH_TIME_NOW, interval);
+    
+    // Register to observe when the front app changes.
+    [[NSWorkspace sharedWorkspace] addObserver:self
+                                    forKeyPath:@"frontmostApplication"
+                                       options:NSKeyValueObservingOptionNew
+                                       context:nil];
+    
+    //NSLog(@"Launching app with url: %@", url);
+    [[NSWorkspace sharedWorkspace] performSelectorOnMainThread:@selector(launchApplication:) withObject:url waitUntilDone:NO];
+    
+    long errorCode = dispatch_semaphore_wait(self.timedEventsCompleted, waitInterval);    
+    
+    if (errorCode == noErr) {
+        //NSLog(@"Application launched with url: %@ (%@)", [[NSWorkspace sharedWorkspace] frontmostApplication], url);
+        // Now use AppleScript and Accessibility to connect to the running app.
+        [self performSelectorOnMainThread:@selector(setCurrentApplicationName:) withObject:url waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(activateApplication) withObject:nil waitUntilDone:YES];
+        
+        return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:self.sessionId];
+    }
+    
+    //NSLog(@"Failed to launch app with url: %@", url);
+    return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeUnknownError session:self.sessionId];
+}
+
+// Since we called NSWorkspace on the main thread, this should execute on the main thread.
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    if ([object isEqual:[NSWorkspace sharedWorkspace]] && [keyPath isEqualToString:@"frontmostApplication"]) {
+        
+        [[NSWorkspace sharedWorkspace] removeObserver:self forKeyPath:@"frontmostApplication"];
+        
+        // Allow the observing thread to continue.
+        dispatch_semaphore_signal(self.timedEventsCompleted);
+    }
+    
+}
+
 - (void)sendKeys:(NSArray*)keys toElement:(id)element
 {
     if (element && [element isKindOfClass:[PFUIElement class]]) {
@@ -547,21 +737,21 @@ NSInteger const kPredicateRightOperand = 1;
             continue;
         }
         
-        // Perform each character.
+        // Give the OS time to press and release keys. Going too fast will skip keystrokes.
+        const NSTimeInterval kMinimumKeyStrokeInterval = 0.05;
         for (NSString *thisChar in chars) {
             UniChar thisUnichar = [thisChar characterAtIndex:0];
             [self performWebDriverKeystroke:thisUnichar];
+            [NSThread sleepForTimeInterval:kMinimumKeyStrokeInterval];
         }
     }
 }
 
 // WebDriver keystrokes are a hybrid of pressing and releasing:
 //  A modifier character will toggle the modifier from up to down and vice versa.
-//  A non-modifier character will generate a key down followed by key up. 
+//  A non-modifier character will generate a key down followed by key up.
 - (void)performWebDriverKeystroke:(UniChar)keyStroke
 {
-    NSLog(@"performWebDriverKeystroke:%C (%X)", keyStroke, (unsigned int)keyStroke);
-    
     UniChar character = keyStroke; // We can use this for pointer arguments.
     
     // Is this a modifier? Modifiers we look for are shift, control, option/alt, command/meta.
@@ -580,7 +770,7 @@ NSInteger const kPredicateRightOperand = 1;
     if (requiresShiftModifier) {
         if (!self.isShiftKeyDown) {
             unToggleShiftModifier = YES;
-            [self performToggleModifier:0xE008];
+            [self performToggleModifier:wdShiftKey];
         }
     }
     
@@ -599,7 +789,7 @@ NSInteger const kPredicateRightOperand = 1;
     }
     
     if (unToggleShiftModifier) {
-        [self performToggleModifier:0xE008];
+        [self performToggleModifier:wdShiftKey];
     }
 }
 
@@ -614,19 +804,19 @@ const NSTimeInterval kModifierPause = 0.05;
     bool isKeyDownEvent;
     CGKeyCode virtualKeyCode;
     switch (character) {
-        case 0xE008:
+        case wdShiftKey:
             isKeyDownEvent = !self.isShiftKeyDown;
             virtualKeyCode = [KeystrokesAndKeyCodes keyCodeWithWebDriverKeystroke:character isShifted:nil];
             break;
-        case 0xE009:
+        case wdControlKey:
             isKeyDownEvent = !self.isControlKeyDown;
             virtualKeyCode = [KeystrokesAndKeyCodes keyCodeWithWebDriverKeystroke:character isShifted:nil];
             break;
-        case 0xE00A:
+        case wdAltKey:
             isKeyDownEvent = !self.isAltKeyDown;
             virtualKeyCode = [KeystrokesAndKeyCodes keyCodeWithWebDriverKeystroke:character isShifted:nil];
             break;
-        case 0xE03D:
+        case wdCommandKey:
             isKeyDownEvent = !self.isCommandKeyDown;
             virtualKeyCode = [KeystrokesAndKeyCodes keyCodeWithWebDriverKeystroke:character isShifted:nil];
             break;
@@ -645,16 +835,16 @@ const NSTimeInterval kModifierPause = 0.05;
             
             // On success, toggle the modifier state variable.
             switch (character) {
-                case 0xE008:
+                case wdShiftKey:
                     self.isShiftKeyDown = !self.isShiftKeyDown;
                     break;
-                case 0xE009:
+                case wdControlKey:
                     self.isControlKeyDown = !self.isControlKeyDown;
                     break;
-                case 0xE00A:
+                case wdAltKey:
                     self.isAltKeyDown = !self.isAltKeyDown;
                     break;
-                case 0xE03D:
+                case wdCommandKey:
                     self.isCommandKeyDown = !self.isCommandKeyDown;
                     break;
             }
@@ -665,7 +855,12 @@ const NSTimeInterval kModifierPause = 0.05;
 // When ending a session (or quitting), be sure to release all modifiers. 
 - (void)releaseAllModifiers
 {
-    NSArray *webDriverModifiers = @[@(0xE008), @(0xE009), @(0xE00A), @(0xE00B)];
+    // FIXME: skip all code for debugging
+    return;
+    
+    
+    // Mac keyboard: shift, control, option, command
+    NSArray *webDriverModifiers = @[@(wdShiftKey), @(wdControlKey), @(wdAltKey), @(wdCommandKey)];
     for (NSNumber *number in webDriverModifiers) {
         unichar character = [number unsignedShortValue];
         CGKeyCode virtualKeyCode = [KeystrokesAndKeyCodes keyCodeWithWebDriverKeystroke:character isShifted:nil];
@@ -703,7 +898,7 @@ const NSTimeInterval kModifierPause = 0.05;
 
 -(GDataXMLDocument*)xmlPageSourceFromRootUIElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap xPath:(NSString *)xPath
 {
-    NSLog(@"xmlPageSourceFromRootUIElement:%@ pathMap:%@ xPath:%@", [rootUIElement debugDescription], pathMap, xPath);
+    //NSLog(@"xmlPageSourceFromRootUIElement:%@ pathMap:%@ xPath:%@", [rootUIElement debugDescription], pathMap, xPath);
 
 	if (rootUIElement == nil) {
 		// self.allWindows includes the application uiElement as item 0, and self.currentWindow usually returns the item 0.
@@ -827,9 +1022,10 @@ const NSTimeInterval kModifierPause = 0.05;
 //
 //    @"/AXApplication/AXMenuBar/AXMenuBarItems/AXMenuBarItem[position()>3]/AXMenu/AXMenuItem[@Title='Customers']"
 //      (predicate is not a simple string match, and specifies more than one node)
+#define axPathDebugLog NSLog
 - (NSArray *)findAllUsingAbsoluteAXPath:(NSString *)axPath
 {
-    NSLog(@"\n\n\n************* findAllUsingAbsoluteAXPath: %@\n", axPath);
+    axPathDebugLog(@"\n\n\n************* findAllUsingAbsoluteAXPath: %@\n", axPath);
     
     if (axPath == nil || [axPath rangeOfString:@"/AXApplication"].location != 0 || [axPath rangeOfString:@"//"].location != NSNotFound) {
         return nil;
@@ -846,13 +1042,13 @@ const NSTimeInterval kModifierPause = 0.05;
     
     // The first component is @"" because an absolute path must begin with @"/". Remove it.
     [axPathComponents removeObjectAtIndex:0];
-    NSLog(@"axPathComponents:%@", axPathComponents);
+    axPathDebugLog(@"axPathComponents:%@", axPathComponents);
     
     // This time, the first component must be @"AXApplication". It may or may not have a predicate.
     NSString *appNodeString = axPathComponents[0];
     NSDictionary *appNodeParsed = [self parseRoleAndPredicateString:appNodeString];
     if (!appNodeParsed || ![appNodeParsed[kNodeRole] isEqualTo:@"AXApplication"]) {
-        NSLog(@"findAllUsingAXPath: PARSE APP NODE STRING FAILED");
+        axPathDebugLog(@"findAllUsingAXPath: PARSE APP NODE STRING FAILED");
         return @[];
     }
     NSDictionary *appPredicate = appNodeParsed[kNodePredicate];
@@ -867,17 +1063,16 @@ const NSTimeInterval kModifierPause = 0.05;
             PFApplicationUIElement *uiApp = [self applicationForName:appName];
             self.currentApplication = uiApp;
             if ([[uiApp AXTitle] isEqualToString:@"Dock"]) {
-                //            NSLog(@"Dock Attributes: %@", [uiApp attributes]);
-                //            NSLog(@"Dock AXChildren %@", [uiApp AXChildren]);
-                NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
-                if ([uiApp AXFocusedUIElement]) {
-                    NSArray *attributes = [[uiApp AXFocusedUIElement] attributes];
-                    for (NSString *attribute in attributes) {
-                        NSLog(@"AXDock AXFocusedUIElement: %@:%@", attribute, [[uiApp AXFocusedUIElement] valueForKey:attribute]);
-                    }
-                }
-                //            NSLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
-                //            NSLog(@"Dock AXEnhancedUserInterface %@", [uiApp AXEnhancedUserInterface]);
+                axPathDebugLog(@"Dock Attributes: %@", [uiApp attributes]);
+                axPathDebugLog(@"Dock AXChildren %@", [uiApp AXChildren]);
+                axPathDebugLog(@"Dock AXFocusedUIElement %@", [uiApp AXFocusedUIElement]);
+                axPathDebugLog(@"Dock AXEnhancedUserInterface %@", [uiApp AXEnhancedUserInterface]);
+                //if ([uiApp AXFocusedUIElement]) {
+                //    NSArray *attributes = [[uiApp AXFocusedUIElement] attributes];
+                //    for (NSString *attribute in attributes) {
+                //        NSLog(@"AXDock AXFocusedUIElement: %@:%@", attribute, [[uiApp AXFocusedUIElement] valueForKey:attribute]);
+                //    }
+                //}
             }
         }
     } else {
@@ -893,13 +1088,13 @@ const NSTimeInterval kModifierPause = 0.05;
     
     // Deep dive recursively.
     NSArray *matchedNodes = [self findAllUsingAXPathComponents:axPathComponents rootUIElement:self.currentApplication];
-    NSLog(@"\n************* findAllUsingAbsoluteAXPath matchedNodes:%@\n\n\n", matchedNodes);
+    axPathDebugLog(@"\n************* findAllUsingAbsoluteAXPath matchedNodes:%@\n\n\n", matchedNodes);
     for (PFUIElement *uiElement in matchedNodes) {
         if ([[uiElement AXRole] isEqualToString:@"AXDockItem"]) {
-//            NSArray *attributes = [uiElement attributes];
-//            for (NSString *attribute in attributes) {
-//                NSLog(@"AXDockItem: %@:%@", attribute, [uiElement valueForKey:attribute]);
-//            }
+            NSArray *attributes = [uiElement attributes];
+            for (NSString *attribute in attributes) {
+                axPathDebugLog(@"AXDockItem: %@:%@", attribute, [uiElement valueForKey:attribute]);
+            }
         }
     }
     
@@ -911,33 +1106,26 @@ const NSTimeInterval kModifierPause = 0.05;
 // The first pathComponent specifies a child element of rootUIElement. 
 - (NSArray *)findAllUsingAXPathComponents:(NSArray *)axPathComponents rootUIElement:(PFUIElement *)rootUIElement
 {
-//    NSLog(@"findAllUsingAXPathComponents: %@, rootUIElement: %@", axPathComponents, rootUIElement);
     // If there aren't any child elements at all, we are done.
     NSArray *childUIElements = rootUIElement.AXChildren;
     if (!childUIElements || [childUIElements count] == 0) {
-        NSLog(@"findAllUsingAXPathComponents:NO CHILDREN");
         return @[];
     }
     
     NSString *firstPathComponent = [axPathComponents objectAtIndex:0];
     NSDictionary *parsedComponent = [self parseRoleAndPredicateString:firstPathComponent];
     if (!parsedComponent || [parsedComponent count] == 0) {
-        NSLog(@"findAllUsingAXPathComponents: PARSE FIRST PATH COMPONENT FAILED");
         return @[];
     }
-//    NSLog(@"findAllUsingAXPathComponents: firstPathComponent: %@", firstPathComponent);
-    
     NSMutableArray *matchedChildren = [NSMutableArray array];
     
     // Scan the child elements to match the role and (if specified) predicate.
     // First make an array of similar child elements with the same AXRole.
     // Search the similar elements for predicate or index match.
     NSArray *similarChildUIElements = [PFUIElement elementsWithRole:parsedComponent[kNodeRole] inArray:childUIElements];
-//    NSLog(@"findAllUsingAXPathComponents: similarChildUIElements: %@", similarChildUIElements);
     if (similarChildUIElements.count > 0) {
         for (NSUInteger i = 0; i < similarChildUIElements.count; i++) {
             PFUIElement *element = [similarChildUIElements objectAtIndex:i];
-//            NSLog(@"findAllUsingAXPathComponents: similarChildUIElements[%lu]: %@", i, element);
             if ([self element:element doesMatchPredicate:parsedComponent[kNodePredicate] atIndex:i]) {
                 [matchedChildren addObject:element];
             }
@@ -966,7 +1154,6 @@ const NSTimeInterval kModifierPause = 0.05;
     // Therefore, the algorithm must scan each matched child.
     NSUInteger matchedChildrenCount = [matchedChildren count];
     if (matchedChildrenCount == 0) {
-        NSLog(@"findAllUsingAXPathComponents:matchedChildrenCount == 0");
         return @[];
     } else if ([axPathComponents count] <= 1) {
         // We have one or more matched child nodes and no more path components. Success!
@@ -980,9 +1167,6 @@ const NSTimeInterval kModifierPause = 0.05;
     for (int i = 0; i < matchedChildrenCount; i++) {
         NSArray *recursivelyMatchedChildren = [self findAllUsingAXPathComponents:childAXPathComponents rootUIElement:[matchedChildren objectAtIndex:i]];
         if ([recursivelyMatchedChildren count] > 0) {
-//            PFUIElement *rmc = recursivelyMatchedChildren[0];
-//            NSLog(@"recursivelyMatchedChildren: %@, mark:'%@'", rmc, [rmc AXMenuItemMarkChar]);
-            
             return recursivelyMatchedChildren;
         }
     }
@@ -994,12 +1178,12 @@ const NSTimeInterval kModifierPause = 0.05;
 {
     BOOL doesMatch = NO;
     
-    NSLog(@"element:doesMatchPredicate:atIndex:");
-    NSLog(@"element: %@ \ndoesMatchPredicate: %@ \natIndex:%lu", uiElement, predicate, elementIndex);
+    //NSLog(@"element:doesMatchPredicate:atIndex:");
+    //NSLog(@"element: %@ \ndoesMatchPredicate: %@ \natIndex:%lu", uiElement, predicate, elementIndex);
     
     if (!predicate) {
         // A nil predicate matches everything.
-        NSLog(@"element:doesMatchPredicate:atIndex: RETURNS YES BY DEFAULT");
+        //NSLog(@"element:doesMatchPredicate:atIndex: RETURNS YES BY DEFAULT");
         return YES;
     }
     
@@ -1007,14 +1191,14 @@ const NSTimeInterval kModifierPause = 0.05;
     NSArray *operations = predicate[kPredicateOperations];
     
     for (NSDictionary *operation in operations) {
-        NSLog(@"operation: %@", operation);
+        //NSLog(@"operation: %@", operation);
         if (operation[kPredicateAttributeName] != nil) {
             // A name-value pair is available. Try to match by string.
             NSString *attributeName = operation[kPredicateAttributeName];
             NSString *attributeValue = operation[kPredicateAttributeValue];
             if ([uiElement existsAttribute:attributeName]) {
                 id elementAttributeValue = [uiElement valueForAttribute:attributeName];
-                NSLog(@"attributeName: %@ attributeValue: %@ elementAttributeValue: %@", attributeName, attributeValue, elementAttributeValue);
+                //NSLog(@"attributeName: %@ attributeValue: %@ elementAttributeValue: %@", attributeName, attributeValue, elementAttributeValue);
                 
                 // In our universe, an empty string is equal to a nil uiElement attribute value.
                 if ([operation[kPredicateComparisonOperation] isEqualToString:kPredicateEQUALS]) {
@@ -1030,7 +1214,7 @@ const NSTimeInterval kModifierPause = 0.05;
                 }
                 
             } else {
-                NSLog(@"attributeName: %@ DOES NOT EXIST on this element", attributeName);
+                //NSLog(@"attributeName: %@ DOES NOT EXIST on this element", attributeName);
                 doesMatch = NO;
             }
             
@@ -1061,7 +1245,7 @@ const NSTimeInterval kModifierPause = 0.05;
         }
     }
     
-    NSLog(@"element:doesMatchPredicate:atIndex: RETURNS %@", doesMatch?@"YES":@"NO");
+    //NSLog(@"element:doesMatchPredicate:atIndex: RETURNS %@", doesMatch?@"YES":@"NO");
     return doesMatch;
 }
 
@@ -1126,7 +1310,7 @@ const NSTimeInterval kModifierPause = 0.05;
 // The predicate must be something like @"@AXTitle='Window'", always with an "=" sign.
 - (NSDictionary *)parsePredicate:(NSString *)predicate
 {
-    NSLog(@"parsePredicate: %@", predicate);
+    //NSLog(@"parsePredicate: %@", predicate);
     
     NSMutableDictionary *predicateDictionary = [@{} mutableCopy];
     
@@ -1163,7 +1347,7 @@ const NSTimeInterval kModifierPause = 0.05;
     NSMutableArray *predicateOperations = [@[] mutableCopy];
     
     for (NSString *operationString in operationStrings) {
-        NSLog(@"operationString: %@", operationString);
+        //NSLog(@"operationString: %@", operationString);
         NSMutableDictionary *operationDict = [@{} mutableCopy];
 
         operationDict[kPredicateComparisonOperation] = kPredicateNone;
@@ -1228,12 +1412,12 @@ const NSTimeInterval kModifierPause = 0.05;
     
     if ([predicateOperations count] == 0) {
         // A predicate must contain at least one comparison. If only one comparison, it can be a name-value pair, or an index.
-        NSLog(@"parsePredicate: RETURNS NIL BECAUSE NO PREDICATE OPERATIONS");
+        //NSLog(@"parsePredicate: RETURNS NIL BECAUSE NO PREDICATE OPERATIONS");
         return nil;
     }
     
     predicateDictionary[kPredicateOperations] = predicateOperations;
-    NSLog(@"parsePredicate: predicateDictionary: %@", predicateDictionary);
+    //NSLog(@"parsePredicate: predicateDictionary: %@", predicateDictionary);
     return predicateDictionary;
 }
 
@@ -1272,7 +1456,7 @@ const NSTimeInterval kModifierPause = 0.05;
  */
 - (AppiumMacHTTPJSONResponse *)moveMouseOutsideSandbox:(NSDictionary *)commandParams statusCode:(int *)statusCode
 {
-//    NSLog(@"moveMouseOutsideSandbox:%@", commandParams);
+    //NSLog(@"moveMouseOutsideSandbox:%@", commandParams);
     // An app running outside the sandbox can move the mouse.
     // However, there may be some other reason not to support native events.
     if (!self.nativeEventSupport) {
@@ -1299,7 +1483,7 @@ const NSTimeInterval kModifierPause = 0.05;
 // Returns the screen global position of the mouse after moving.
 - (CGPoint)moveMouseToScreenGlobalPoint:(CGPoint)endingPoint;
 {
-    NSLog(@"moveMouseToScreenGlobalPoint begin:{%f, %f}", endingPoint.x, endingPoint.y);
+    //NSLog(@"moveMouseToScreenGlobalPoint begin:{%f, %f}", endingPoint.x, endingPoint.y);
     if (CGPointEqualToPoint(endingPoint, [Utility invalidPoint])) {
         return [Utility invalidPoint];
     }
@@ -1359,7 +1543,7 @@ const NSTimeInterval kModifierPause = 0.05;
     NSValue *eventValue = [NSValue valueWithPointer:mouseEvent];
     [self.timedEvents addObject:eventValue];
     
-//    NSLog(@"moveMouseToScreenGlobalPoint self.timedEvents.count:%li", self.timedEvents.count);
+    //NSLog(@"moveMouseToScreenGlobalPoint self.timedEvents.count:%li", self.timedEvents.count);
 
     self.timedEventsCompleted = dispatch_semaphore_create(0);
     
@@ -1372,7 +1556,7 @@ const NSTimeInterval kModifierPause = 0.05;
     CGPoint globalFinalLocation = CGEventGetLocation(nullEvent);
     CFRelease(nullEvent);
     
-    NSLog(@"moveMouseToScreenGlobalPoint ended:{%f, %f}", globalFinalLocation.x, globalFinalLocation.y);
+    //NSLog(@"moveMouseToScreenGlobalPoint ended:{%f, %f}", globalFinalLocation.x, globalFinalLocation.y);
     return globalFinalLocation;
 }
 
@@ -1536,7 +1720,7 @@ const NSTimeInterval kModifierPause = 0.05;
  */
 - (HIPoint)getGlobalDisplayPointWithCommandParams:(NSDictionary *)commandParams
 {
-//    NSLog(@"getGlobalDisplayPointWithCommandParams:%@", commandParams);
+    // NSLog(@"getGlobalDisplayPointWithCommandParams:%@", commandParams);
     
     // The moveMouse methods use a global point, whereas moveto commandParams contain an element and/or offset.
     HIPoint globalDisplayPoint = [Utility invalidPoint];
@@ -1546,7 +1730,7 @@ const NSTimeInterval kModifierPause = 0.05;
     
     HIPoint elementPoint = [Utility invalidPoint];
     id elementObject = [commandParams objectForKey:@"elementObject"];
-//    NSLog(@"getGlobalDisplayPointWithCommandParams elementObject:%@", elementObject);
+    //NSLog(@"getGlobalDisplayPointWithCommandParams elementObject:%@", elementObject);
     
     // The JsonWireProtocol defines 'xoffset' and 'yoffset' from the current mouse location, or (0, 0).
     // However, for flexibility a custom client can send 'xabsolute' and 'yabsolute'.
@@ -1560,8 +1744,8 @@ const NSTimeInterval kModifierPause = 0.05;
         // Offset coordinates in Selenium are either element-based, where , so {0,0} is the upper left corner of the main screen.
         float xOffsetValue = [[commandParams objectForKey:@"xoffset"] floatValue];
         float yOffsetValue = [[commandParams objectForKey:@"yoffset"] floatValue];
-//        NSLog(@"getGlobalDisplayPointWithCommandParams xOffsetValue:%f", xOffsetValue);
-//        NSLog(@"getGlobalDisplayPointWithCommandParams yOffsetValue:%f", yOffsetValue);
+        //NSLog(@"getGlobalDisplayPointWithCommandParams xOffsetValue:%f", xOffsetValue);
+        //NSLog(@"getGlobalDisplayPointWithCommandParams yOffsetValue:%f", yOffsetValue);
         
         if (elementObject) {
             elementPoint = [self getGlobalDisplayPoint:elementPointUpperLeft forElement:elementObject];
@@ -1570,7 +1754,7 @@ const NSTimeInterval kModifierPause = 0.05;
                 globalStartingLocation = elementPoint;
             }
         } else {
-            NSLog(@"getGlobalDisplayPointWithCommandParams NO ELEMENT OBJECT!");
+            //NSLog(@"getGlobalDisplayPointWithCommandParams NO ELEMENT OBJECT!");
         }
         globalDisplayPoint = CGPointMake(globalStartingLocation.x + xOffsetValue, globalStartingLocation.y + yOffsetValue);
     } else {
@@ -1581,7 +1765,7 @@ const NSTimeInterval kModifierPause = 0.05;
                 globalDisplayPoint = elementPoint;
             }
         } else {
-            NSLog(@"getGlobalDisplayPointWithCommandParams NO OFFSET AND NO ELEMENT OBJECT!");
+            //NSLog(@"getGlobalDisplayPointWithCommandParams NO OFFSET AND NO ELEMENT OBJECT!");
         }
     }
     
@@ -1595,10 +1779,10 @@ const NSTimeInterval kModifierPause = 0.05;
     HIPoint returnedPoint = [Utility invalidPoint];
     
     if ([element isKindOfClass:[PFUIElement class]]) {
-//        NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint element: %@", [element debugDescription]);
+        //NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint element: %@", [element debugDescription]);
         // Special case: the AXApplication represents a global display point of {0,0}, so any "element offset" will equal a global display point. 
         if ([[element AXRole] isEqualToString:@"AXApplication"]) {
-            NSLog(@"getGlobalDisplayPoint:forElement: AXApplication");
+            //NSLog(@"getGlobalDisplayPoint:forElement: AXApplication");
             return CGPointMake(0.0, 0.0);
         }
         
@@ -1616,10 +1800,10 @@ const NSTimeInterval kModifierPause = 0.05;
             default:
                 break;
         }
-//        NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint before convert %@", NSStringFromPoint(returnedPoint));
+        //NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint before convert %@", NSStringFromPoint(returnedPoint));
         
         returnedPoint = [self convertCartisionPointToGlobal:returnedPoint];
-//        NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint after  convert %@", NSStringFromPoint(returnedPoint));
+        //NSLog(@"getGlobalDisplayPoint:forElement: returnedPoint after  convert %@", NSStringFromPoint(returnedPoint));
     }
     
     return returnedPoint;
@@ -1639,7 +1823,7 @@ const NSTimeInterval kModifierPause = 0.05;
             fileName = [NSString stringWithFormat:@"%@__%@", fileName, dateString];
         }
         
-        NSString *filePath = [NSString stringWithFormat:@"%@/%@.png", [self.diagnosticsDirectory path], fileName];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@.png", self.diagnosticsDirectory, fileName];
         
         NSLog(@"Creating screenshot: %@", filePath);
         system([[NSString stringWithFormat:@"/usr/sbin/screencapture -mx %@", filePath] cStringUsingEncoding:NSASCIIStringEncoding]);
@@ -1656,46 +1840,70 @@ const NSTimeInterval kModifierPause = 0.05;
     return [pasteboard canReadObjectForClasses:@[[NSImage class]] options:@{}];
 }
 
+#pragma mark - Notifications
+- (void)fnKeyTrigger:(NSNotification *)notification
+{
+    NSLog(@"fnKeyTrigger: session isCanceled set YES: %@", self.sessionId);
+    self.isCanceled = YES;
+}
+
 #pragma mark - Diagnostics
 
 // This method validates the directory, and creates a per-session directory.
 // If globalDirectory is nil, or there are errors creating directories, then diagnostic file saving is disabled.
-- (void)setGlobalDiagnosticsDirectory:(NSURL *)globalDirectory
+- (void)setGlobalDiagnosticsDirectory:(NSString *)globalDirectoryPath
 {
-    _globalDiagnosticsDirectory = nil;
+    [self setCookie: @{@"name": kCookieGlobalDiagnosticsDirectory, @"value": @""}];
     
-    if (!globalDirectory) {
+    if (!globalDirectoryPath) {
         // Disable all diagnostic files. This is not the default, but the Selenium client can request this.
-        NSLog(@"Diagnostic files are disabled because globalDirectory was nil.");
+        NSLog(@"Diagnostic files are disabled because globalDirectoryPath was nil.");
         self.diagnosticsDirectory = nil;
         return;
     }
         
     // Validate the global directory by trying to create the per-session directory.
-    if ([self createDiagnosticsDirectoryRelativeTo:globalDirectory]) {
-        _globalDiagnosticsDirectory = globalDirectory;
-    } else {
+    if (![self createDiagnosticsDirectoryRelativeTo:globalDirectoryPath]) {
         NSLog(@"Diagnostic files are disabled because could not create per-session directory.");
     }
 }
 
 // Create a directory for _this_ session's diagnostic files, inside a given directory.
-- (BOOL)createDiagnosticsDirectoryRelativeTo:(NSURL *)directory
+- (BOOL)createDiagnosticsDirectoryRelativeTo:(NSString *)directoryPath
 {
     BOOL success = NO;
     
     NSString *sessionDirectoryName = [NSString stringWithFormat:@"session-%@", self.sessionId];
-    NSURL *sessionURL = [NSURL URLWithString:sessionDirectoryName relativeToURL:directory];
+    NSString *sessionPath = [directoryPath stringByAppendingString:sessionDirectoryName];
     
     NSError *error = nil;
-    [[NSFileManager defaultManager] createDirectoryAtURL:sessionURL withIntermediateDirectories:YES attributes:nil error:&error];
+    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:&error];
     if (error) {
-        NSLog(@"createDirectoryAtURL:%@ error:%@", sessionURL, error);
+        NSLog(@"createDirectoryAtPath:%@ error:%@", sessionPath, error);
     } else {
-        self.diagnosticsDirectory = sessionURL;
+        self.diagnosticsDirectory = sessionPath;
         success = YES;
     }
     return success;
+}
+
+- (void)setGlobalDiagnosticsDirectoryCookie:(NSDictionary *)cookie
+{
+    if ([cookie[@"name"] isEqualToString:kCookieGlobalDiagnosticsDirectory]) {
+        // Set the top level directory containing diagnostic files for _all_ sessions.
+        NSString *path = cookie[@"value"];
+        path = [path stringByExpandingTildeInPath];
+        if (path && [path isKindOfClass:[NSString class]] && path.length > 0) {
+            if ([path rangeOfString:@"/" options:NSBackwardsSearch].location < path.length - 1) {
+                path = [path stringByAppendingString:@"/"];
+            }
+            if ([path rangeOfString:@"AppiumDiagnostics"].location == NSNotFound) {
+                path = [path stringByAppendingString:@"AppiumDiagnostics/"];
+            }
+            // Capability was requested and a non-empty string. Use this value.
+            [self setGlobalDiagnosticsDirectory:path];
+        }
+    }
 }
 
 @end

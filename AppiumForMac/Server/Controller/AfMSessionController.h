@@ -32,13 +32,19 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
     elementPointUpperLeft   = 1
 };
 
-// If not specified by desiredCapability, use this value in milliseconds.
+// If not specified by desiredCapability, use this value in seconds.
 #define kDefaultImplicitTimeout (NSTimeInterval)0.0f
 
-// If not specified by desiredCapability, use this value in milliseconds.
+// If not specified by desiredCapability, use this value in seconds.
+#define kDefaultPageLoadTimeout (NSTimeInterval)30.0f
+
+// If not specified by desiredCapability, use this value in seconds.
+#define kDefaultScriptTimeout (NSTimeInterval)0.0f
+
+// If not specified by desiredCapability, use this value in seconds.
 #define kDefaultLoopDelay (NSTimeInterval)1.0f
 
-// If not specified by desiredCapability, use this value in milliseconds.
+// If not specified by desiredCapability, use this value in seconds.
 #define kDefaultCommandDelay (NSTimeInterval)0.0f
 
 // How long to wait between changes in mouse up/down state.
@@ -57,6 +63,16 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 // --- Therefore, allow multiple sessions.
 #define kMaximumActiveSessions 1000
 
+extern NSString * const kCookieLoopDelay;
+extern NSString * const kCookieImplicitTimeout;
+extern NSString * const kCookieCommandDelay;
+extern NSString * const kCookiePageLoadTimeout;
+extern NSString * const kCookieScriptTimeout;
+extern NSString * const kCookieMouseSpeed;
+extern NSString * const kCookieScreenShotOnError;
+extern NSString * const kCookieGlobalDiagnosticsDirectory;
+extern NSString * const kCookieDiagnosticsDirectory;
+
 @class PFApplicationUIElement;
 @class PFUIElement;
 
@@ -71,7 +87,7 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 @property (readonly) NSArray* allWindowHandles;
 @property NSDictionary *capabilities;
 @property PFApplicationUIElement *currentApplication;
-//@property NSString *currentApplicationName;
+@property NSString *currentApplicationName;
 @property NSString *currentProcessName;
 @property (readonly) PFUIElement *currentWindow;
 @property NSString *currentWindowHandle;
@@ -83,38 +99,38 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 // Timeouts and delays can be changed using a DesiredCapabilities instance in the Selenium script.
 
 // How long to wait between retry attempts, during an implicit timeout.
-@property NSTimeInterval loopDelay;
+@property (nonatomic) NSTimeInterval loopDelay;
 
 // This slows down the script a small amount per command. Using this is sub-optimal for high-performance scripts.
 // Instead, use findElement and other commands that automatically wait for something to happen.
-@property NSTimeInterval commandDelay;
+@property (nonatomic) NSTimeInterval commandDelay;
 
 // The WebDriver implicit wait timeout in seconds.
-@property NSTimeInterval implicitTimeout;
+@property (nonatomic) NSTimeInterval implicitTimeout;
 
 // The WebDriver page load timeout in seconds.
-@property NSTimeInterval pageLoadTimeout;
+@property (nonatomic) NSTimeInterval pageLoadTimeout;
 
 // The WebDriver asynchronous script timeout in seconds.
-@property NSTimeInterval scriptTimeout;
+@property (nonatomic) NSTimeInterval scriptTimeout;
 
 // Take a screen shot when an element is not found. Save in the diagnosticsDirectory.
-@property BOOL shouldTakeScreenShot;
+@property (nonatomic) BOOL shouldTakeScreenShot;
+
+// The top level directory containing diagnostic directories for _all_ sessions.
+@property (nonatomic, readwrite, strong) NSString *globalDiagnosticsDirectory;
+
+// The directory for _this_ session's diagnostic information, e.g. screen shots, logs.
+@property (nonatomic, readwrite, strong) NSString *diagnosticsDirectory;
+
+// The mouse speed in points per second.
+@property (nonatomic, assign) float mouseMoveSpeed;
+
 
 // Set this to YES to cancel a timeout loop. This is only a flag. The timeout loop has to check the value.
 @property (assign) BOOL isCanceled;
-
-// The top level directory containing diagnostic files for _all_ sessions.
-@property (nonatomic, readwrite, strong) NSURL *globalDiagnosticsDirectory;
-
-// The directory for _this_ session's diagnostic information, e.g. screen shots, logs.
-@property (readwrite, strong) NSURL *diagnosticsDirectory;
-
 // The last known global screen mouse location, for calculating offsets.
 @property (assign) CGPoint lastGlobalMouseLocation;
-
-// The mouse speed in points per second. Set with a desiredCapability.
-@property (assign) float mouseMoveSpeed;
 
 // Does this session support nativeEvents?
 @property (assign) BOOL nativeEventSupport;
@@ -131,6 +147,7 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 -(NSInteger) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;
 -(NSString*) processNameForApplicationName:(NSString*) applicationName;
+- (AppiumMacHTTPJSONResponse *)postURL:(NSString *)url;
 - (void)sendKeys:(NSArray*)keys toElement:(id)element;
 - (void)sendKeys:(NSArray*)keys;
 -(PFUIElement*) windowForHandle:(NSString*)windowHandle;
@@ -155,11 +172,18 @@ typedef NS_ENUM(NSUInteger, ElementPointLocation) {
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionInsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 - (AppiumMacHTTPJSONResponse *)mouseButtonActionOutsideSandbox:(NSString *)commandName commandParams:(NSDictionary *)commandParams statusCode:(int *)statusCode;
 
-// If imageDirectory is nil, the image is saved in a subdirectory of diagnosticDirectory.
+// If imageDirectory is nil, the image is saved in a subdirectory of diagnosticsDirectory.
 - (void)screenCaptureToFile:(NSString *)fileName withDateStamp:(BOOL)appendDateStamp;
 
 // Utility methods for get_screenshot, and for generic screen shots outside of a WebDriver command handler.
 // Each method returns YES if the screen capture succeeded, else NO.
 - (BOOL)screenCaptureToClipboard;
+
+// Utilities to get and set a cookie. This examines the cookie name and determines
+// if the value needs any special handling. If so it calls the special methods.
+// If not, then just add the key/value dictionary.
+- (NSArray *)getAllCookies;
+- (NSMutableDictionary *)getCookieWithName:(NSString *)name;
+- (void)setCookie:(NSDictionary *)cookie;
 
 @end

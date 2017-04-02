@@ -34,6 +34,7 @@ typedef NS_ENUM(NSUInteger, AFMStatusCode) {
     kAfMStatusCodeInvalidSelector = 32,
     kAfMStatusCodeSessionNotCreatedException = 33,
     kAfMStatusCodeMoveTargetOutOfBounds = 34,
+    kAfMStatusCodeInvalidArgument = 35,
 };
 
 FOUNDATION_EXPORT NSString * const kAfMStatusCodeMessages[];

@@ -54,10 +54,7 @@
 // POST /session/:sessionId/forward
 // POST /session/:sessionId/back
 // POST /session/:sessionId/refresh
-
 // POST /session/:sessionId/execute
-- (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData;
-
 // POST /session/:sessionId/execute_async
 
 // GET /session/:sessionId/screenshot
@@ -88,8 +85,13 @@
 - (AppiumMacHTTPJSONResponse *)get_window_position:(NSString*)path;
 
 // POST /session/:sessionId/window/:windowHandle/maximize
+
 // GET /session/:sessionId/cookie
+- (AppiumMacHTTPJSONResponse *)get_cookie:(NSString*)path;
+
 // POST /session/:sessionId/cookie
+- (AppiumMacHTTPJSONResponse *)post_cookie:(NSString*)path data:(NSData*)postData;
+
 // DELETE /session/:sessionId/cookie
 // DELETE /session/:sessionId/cookie/:name
 

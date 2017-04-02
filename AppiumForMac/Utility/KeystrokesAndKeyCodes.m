@@ -46,28 +46,28 @@
         case 0xE00C:
             returnedCode = kVK_Escape;         // 0x35
             break;
-        case 0xE03D:
+        case wdCommandKey:
             returnedCode = kVK_Command;        // 0x37
             break;
-        case 0xE008:
+        case wdShiftKey:
             returnedCode = kVK_Shift;         // 0x38
             break;
 //        case 0xFFFF:
 //            returnedCode = kVK_CapsLock;       // 0x39
 //            break;
-        case 0xE00A:
+        case wdAltKey:
             returnedCode = kVK_Option;         // 0x3A
             break;
-        case 0xE009:
+        case wdControlKey:
             returnedCode = kVK_Control;        // 0x3B
             break;
-//        case 0xE008:
+//        case wdShiftKey:
 //            returnedCode = kVK_RightShift;     // 0x3C      // WD does not define 'right...' keystrokes, so map to non-right
 //            break;
-//        case 0xE00A:
+//        case wdAltKey:
 //            returnedCode = kVK_RightOption;    // 0x3D      // WD does not define 'right...' keystrokes, so map to non-right
 //            break;
-//        case 0xE009:
+//        case wdControlKey:
 //            returnedCode = kVK_RightControl;   // 0x3E      // WD does not define 'right...' keystrokes, so map to non-right
 //            break;
 //        case 0xFFFF:
