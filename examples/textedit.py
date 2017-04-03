@@ -25,3 +25,4 @@ else:
 # quit the webdriver instance
 print 'Quitting webdriver\n'
 driver.quit()
+
