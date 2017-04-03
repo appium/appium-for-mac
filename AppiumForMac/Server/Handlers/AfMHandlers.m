@@ -8,15 +8,16 @@
 //
 
 #import "AfMHandlers.h"
+#import <PFAssistive/PFAssistive.h>
 
 #import "AfMElementLocator.h"
+#import "AfMSessionController.h"
 #import "AfMStatusCodes.h"
 #import "AppiumMacHTTP303JSONResponse.h"
 #import "AppiumMacHTTPJSONResponse.h"
 #import "HTTPMessage.h"
 #import "NSData+Base64.h"
 #import "Utility.h"
-#import <PFAssistive/PFAssistive.h>
 
 @implementation AfMHandlers
 - (id)init
@@ -219,22 +220,11 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
-        // activate supplied application
+        // In AppiumForMac, a "url" is an application name or url string, not a hypertext link.
+        // e.g. url == "Calculator" will launch Calculator.app.
         NSString *url = (NSString*)[commandParams objectForKey:@"url"];
         
-        // For better performance, use the system to launch the app.
-        [[NSWorkspace sharedWorkspace] launchApplication:url];
-        
-        // Give it a short time to get settled, so AppleScript and Accessibility can see it.
-        NSTimeInterval sleepInterval = 2.0;
-        [NSThread sleepForTimeInterval:sleepInterval];
-        
-        // Now use AppleScript and Accessibility to connect to the running app.
-        //[session performSelectorOnMainThread:@selector(setCurrentApplicationName:) withObject:url waitUntilDone:YES];
-        [session performSelectorOnMainThread:@selector(activateApplication) withObject:nil waitUntilDone:YES];
-        
-        // TODO: error handling
-        return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId];
+        return [session postURL:url];
     }];
 }
 
@@ -249,14 +239,6 @@
 
 // POST /session/:sessionId/execute
 // Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. The executed script is assumed to be synchronous and the result of evaluating the script is returned to the client.
-- (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData
-{
-    return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
-    {
-        // Subclasses can optionally override for a web view.
-        return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeUnknownCommand session:session.sessionId];
-    }];
-}
 
 // POST /session/:sessionId/execute_async
 // Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. The executed script is assumed to be asynchronous and must signal that is done by invoking the provided callback, which is always provided as the final argument to the function. 
@@ -455,9 +437,30 @@
 
 // GET /session/:sessionId/cookie
 // Retrieve all cookies visible to the current page.
+- (AppiumMacHTTPJSONResponse *)get_cookie:(NSString*)path
+{
+    return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
+    {
+        NSArray *allCookies = [session getAllCookies];
+        NSLog(@"get_cookie allCookies:%@", allCookies);
+        
+        return [AppiumMacHTTPJSONResponse responseWithJson:allCookies status:kAfMStatusCodeSuccess session:session.sessionId];
+    }];
+}
 
 // POST /session/:sessionId/cookie
 // Set a cookie. If the cookie path is not specified, it should be set to "/". Likewise, if the domain is omitted, it should default to the current page's domain.
+- (AppiumMacHTTPJSONResponse *)post_cookie:(NSString*)path data:(NSData*)postData
+{
+    return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
+    {
+        NSLog(@"post_cookie commandParams:%@", commandParams);
+        NSDictionary *cookie = commandParams[@"cookie"];
+        [session setCookie:cookie];
+        
+        return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId];
+    }];
+}
 
 // DELETE /session/:sessionId/cookie
 // Delete all cookies visible to the current page.
@@ -1048,12 +1051,12 @@
     path = [path stringByReplacingOccurrencesOfString:@"/wd/hub/" withString:@"/"];
     NSArray *pathComponents = [[path substringFromIndex:1] componentsSeparatedByString:@"/"];
     
-    NSLog(@"method: %@", method);
-    NSLog(@"path: %@", path);
-    if ([method isEqualToString:@"POST"]) {
-        NSDictionary *postParams = [Utility dictionaryFromPostData:postData];
-        NSLog(@"postParams: %@", postParams);
-    }
+//    NSLog(@"method: %@", method);
+//    NSLog(@"path: %@", path);
+//    if ([method isEqualToString:@"POST"]) {
+//        NSDictionary *postParams = [Utility dictionaryFromPostData:postData];
+//        NSLog(@"postParams: %@", postParams);
+//    }
     
     NSString *errorString = nil;
     
@@ -1084,7 +1087,7 @@
     }
     
     // We didn't find a method to handle this request. Report the bad news.
-    NSLog(@"%@", errorString);
+//    NSLog(@"%@", errorString);
     NSString *sessionId = nil;
     if (pathComponents.count >= 2 ) {
         sessionId = pathComponents[1];

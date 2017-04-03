@@ -62,10 +62,20 @@
 		36D203E217A5DE7000011A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D203E117A5DE7000011A3A /* Security.framework */; };
 		36D7968A17BF1A4B00D1B81E /* PFAssistive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; };
 		4F31407119662998009BDF33 /* PFAssistive.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36D7968917BF1A4B00D1B81E /* PFAssistive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C14989BC1E917BF5007D3500 /* NotesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C14989B91E917BF5007D3500 /* NotesWindow.xib */; };
+		C14989BD1E917BF5007D3500 /* NotesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14989BB1E917BF5007D3500 /* NotesWindowController.m */; };
 		C14EAB301DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */; };
 		C14EAB311DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */; };
 		C14EAB331DB453220010E210 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14EAB321DB453220010E210 /* Carbon.framework */; };
 		C14EAB341DB453220010E210 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14EAB321DB453220010E210 /* Carbon.framework */; };
+		C1A391551DE93AD300B96CAC /* AXPathUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A391541DE93AD300B96CAC /* AXPathUtility.m */; };
+		C1C3A60B1E91A774002246DB /* calculator.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6041E91A774002246DB /* calculator.py */; };
+		C1C3A60C1E91A774002246DB /* dock_demo.pyc in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6051E91A774002246DB /* dock_demo.pyc */; };
+		C1C3A60D1E91A774002246DB /* ios-sim.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6061E91A774002246DB /* ios-sim.py */; };
+		C1C3A60E1E91A774002246DB /* safari.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6071E91A774002246DB /* safari.py */; };
+		C1C3A60F1E91A774002246DB /* textedit.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6081E91A774002246DB /* textedit.py */; };
+		C1C3A6101E91A774002246DB /* utilities.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6091E91A774002246DB /* utilities.py */; };
+		C1C3A6111E91A774002246DB /* utilities.pyc in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A60A1E91A774002246DB /* utilities.pyc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,9 +203,22 @@
 		36D203DE17A5D8B900011A3A /* AfMHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AfMHTTPConnection.m; sourceTree = "<group>"; };
 		36D203E117A5DE7000011A3A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		36D7968917BF1A4B00D1B81E /* PFAssistive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PFAssistive.framework; path = Frameworks/PFAssistive.framework; sourceTree = "<group>"; };
+		C14989B91E917BF5007D3500 /* NotesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotesWindow.xib; sourceTree = "<group>"; };
+		C14989BA1E917BF5007D3500 /* NotesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesWindowController.h; sourceTree = "<group>"; };
+		C14989BB1E917BF5007D3500 /* NotesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesWindowController.m; sourceTree = "<group>"; };
 		C14EAB2E1DB452630010E210 /* KeystrokesAndKeyCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeystrokesAndKeyCodes.m; sourceTree = "<group>"; };
 		C14EAB2F1DB452630010E210 /* KeystrokesAndKeyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeystrokesAndKeyCodes.h; sourceTree = "<group>"; };
 		C14EAB321DB453220010E210 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		C1A391531DE93AD300B96CAC /* AXPathUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXPathUtility.h; sourceTree = "<group>"; };
+		C1A391541DE93AD300B96CAC /* AXPathUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXPathUtility.m; sourceTree = "<group>"; };
+		C1C3A6041E91A774002246DB /* calculator.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = calculator.py; sourceTree = "<group>"; };
+		C1C3A6051E91A774002246DB /* dock_demo.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = dock_demo.pyc; sourceTree = "<group>"; };
+		C1C3A6061E91A774002246DB /* ios-sim.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "ios-sim.py"; sourceTree = "<group>"; };
+		C1C3A6071E91A774002246DB /* safari.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = safari.py; sourceTree = "<group>"; };
+		C1C3A6081E91A774002246DB /* textedit.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = textedit.py; sourceTree = "<group>"; };
+		C1C3A6091E91A774002246DB /* utilities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = utilities.py; sourceTree = "<group>"; };
+		C1C3A60A1E91A774002246DB /* utilities.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = utilities.pyc; sourceTree = "<group>"; };
+		C1C3A6121E91A7CB002246DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +257,8 @@
 				361034AB17A4990F00DB79AA /* AppiumForMacTests */,
 				3610348717A4990E00DB79AA /* Frameworks */,
 				3610348617A4990E00DB79AA /* Products */,
+				C1C3A6031E91A774002246DB /* examples */,
+				C1C3A6121E91A7CB002246DB /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -349,6 +374,11 @@
 				3621D0BD17AEC31100E97463 /* NSString+Extensions.m */,
 				3614DE1617A58F2600853962 /* Utility.h */,
 				3614DE1717A58F2600853962 /* Utility.m */,
+				C1A391531DE93AD300B96CAC /* AXPathUtility.h */,
+				C1A391541DE93AD300B96CAC /* AXPathUtility.m */,
+				C14989B91E917BF5007D3500 /* NotesWindow.xib */,
+				C14989BA1E917BF5007D3500 /* NotesWindowController.h */,
+				C14989BB1E917BF5007D3500 /* NotesWindowController.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -519,6 +549,20 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		C1C3A6031E91A774002246DB /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				C1C3A6041E91A774002246DB /* calculator.py */,
+				C1C3A6051E91A774002246DB /* dock_demo.pyc */,
+				C1C3A6061E91A774002246DB /* ios-sim.py */,
+				C1C3A6071E91A774002246DB /* safari.py */,
+				C1C3A6081E91A774002246DB /* textedit.py */,
+				C1C3A6091E91A774002246DB /* utilities.py */,
+				C1C3A60A1E91A774002246DB /* utilities.pyc */,
+			);
+			path = examples;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -593,12 +637,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1C3A60C1E91A774002246DB /* dock_demo.pyc in Resources */,
+				C1C3A60D1E91A774002246DB /* ios-sim.py in Resources */,
+				C1C3A60E1E91A774002246DB /* safari.py in Resources */,
 				3610349317A4990E00DB79AA /* InfoPlist.strings in Resources */,
 				3610349917A4990E00DB79AA /* Credits.rtf in Resources */,
 				3610349F17A4990F00DB79AA /* MainMenu.xib in Resources */,
+				C1C3A6111E91A774002246DB /* utilities.pyc in Resources */,
+				C1C3A60F1E91A774002246DB /* textedit.py in Resources */,
 				36D203D117A5D6B300011A3A /* AboutCocoaAsyncSocket.txt in Resources */,
 				36D203D317A5D6B300011A3A /* AboutCocoaLumberjack.txt in Resources */,
+				C1C3A6101E91A774002246DB /* utilities.py in Resources */,
+				C1C3A60B1E91A774002246DB /* calculator.py in Resources */,
 				36D203DB17A5D6B300011A3A /* README.txt in Resources */,
+				C14989BC1E917BF5007D3500 /* NotesWindow.xib in Resources */,
 				3623981317AFF9C700DE5719 /* appium-for-mac.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -634,6 +686,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14989BD1E917BF5007D3500 /* NotesWindowController.m in Sources */,
 				3610349517A4990E00DB79AA /* main.m in Sources */,
 				3610349C17A4990E00DB79AA /* AppiumForMacAppDelegate.m in Sources */,
 				3614DE1017A5887700853962 /* AfMHTTPServer.m in Sources */,
@@ -645,6 +698,7 @@
 				36D203C317A5D6B300011A3A /* DDRange.m in Sources */,
 				C14EAB301DB452630010E210 /* KeystrokesAndKeyCodes.m in Sources */,
 				36D203C417A5D6B300011A3A /* HTTPAuthenticationRequest.m in Sources */,
+				C1A391551DE93AD300B96CAC /* AXPathUtility.m in Sources */,
 				36D203C517A5D6B300011A3A /* HTTPConnection.m in Sources */,
 				36D203C617A5D6B300011A3A /* HTTPMessage.m in Sources */,
 				36D203C717A5D6B300011A3A /* HTTPServer.m in Sources */,

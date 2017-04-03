@@ -25,8 +25,8 @@
 		self.session = session;
 		self.strategy = strategy;
 		self.value = value;
-        if ([self.value rangeOfString:@"/AXApplication"].location != 0) {
-            NSLog(@"AfMElementLocator initWithSession self.value is not AbsoluteAXPath: %@", self.value);
+        if (strategy == AppiumMacLocatoryStrategyXPath && [self.value rangeOfString:@"/AXApplication"].location != 0) {
+            NSLog(@"AfMElementLocator initWithSession (AppiumMacLocatoryStrategyXPath) self.value is not AbsoluteAXPath: %@", self.value);
         }
     }
     return self;
@@ -100,7 +100,8 @@
         }
         
         // VERY RESTRICTIVE - Remove me to handle partial XPaths (which can be very, very slow).
-        if (YES) {
+        BOOL const requireAbsoluteAXPath = YES;
+        if (requireAbsoluteAXPath) {
             NSLog(@"findUsingBaseUIElement XPath was not AbsoluteAXPath: %@", self.value);
             return nil;
         }
