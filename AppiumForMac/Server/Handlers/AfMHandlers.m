@@ -475,7 +475,9 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         // xml page source
-        return [AppiumMacHTTPJSONResponse responseWithJson:[[NSString alloc]initWithData:[session xmlPageSource].XMLData encoding:NSUTF8StringEncoding] status:kAfMStatusCodeSuccess session:session.sessionId];
+        NSString *pageSource = [[NSString alloc]initWithData:[session xmlPageSource].XMLData encoding:NSUTF8StringEncoding];
+        //NSLog(@"%@", pageSource);
+        return [AppiumMacHTTPJSONResponse responseWithJson:pageSource status:kAfMStatusCodeSuccess session:session.sessionId];
         
         // json page source
         //return [AppiumMacHTTPJSONResponse responseWithJson:[session pageSource] status:0 session:session.sessionId];

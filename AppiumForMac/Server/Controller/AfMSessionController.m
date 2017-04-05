@@ -79,8 +79,8 @@ NSInteger const kPredicateRightOperand = 1;
         
         [self setElementIndex:0];
         [self setElements:[NSMutableDictionary new]];
-//        [self setCurrentApplicationName:@"Finder"];
-//        [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
+        [self setCurrentApplicationName:@"Finder"];
+        [self setFinder:[SBApplication applicationWithBundleIdentifier:@"com.apple.finder"]];
         [self setSystemEvents:[SBApplication applicationWithBundleIdentifier:@"com.apple.systemevents"]];
 		[self setCapabilities:[NSDictionary dictionaryWithObjectsAndKeys:
 								[Utility version], @"version",
@@ -329,8 +329,8 @@ NSInteger const kPredicateRightOperand = 1;
 
 -(NSArray*) allWindows
 {
-    //return [[NSArray arrayWithObject:self.currentApplication] arrayByAddingObjectsFromArray:[self.currentApplication AXWindows]];
-    return [self.currentApplication AXWindows];
+    return [[NSArray arrayWithObject:self.currentApplication] arrayByAddingObjectsFromArray:[self.currentApplication AXWindows]];
+//    return [self.currentApplication AXWindows];
 }
 
 -(NSArray*) allWindowHandles
@@ -903,7 +903,8 @@ const NSTimeInterval kModifierPause = 0.05;
 	if (rootUIElement == nil) {
 		// self.allWindows includes the application uiElement as item 0, and self.currentWindow usually returns the item 0.
         // So, rootUIElement is usually the application element here.
-        rootUIElement = self.currentWindow; 
+        rootUIElement = self.currentApplication;
+//        rootUIElement = self.currentWindow; 
 
         if ([xPath rangeOfString:@"AXMenuBar"].length > 0 || [xPath rangeOfString:@"AXMenuItem"].length > 0) {
             // Make sure to search the whole application if looking for a menu item
@@ -980,12 +981,14 @@ const NSTimeInterval kModifierPause = 0.05;
 		[rootXMLElement addChild:childXMLElement];
 
 		// Cheap and dirty performance improvement by checking more often if we are done.
-        NSError *error;
-        GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithRootElement:rootXMLElement];
-        NSArray *matches = [doc nodesForXPath:xPath error:&error];
-        if ([matches count] > 0 && error == nil) {
-            return;
-        }        
+        // 20170404 For some reason this crashes during pageSource. Maybe it's a little too dirty!
+        // Commenting out for now. It's a little slower, but no crash.
+//        NSError *error;
+//        GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithRootElement:rootXMLElement];
+//        NSArray *matches = [doc nodesForXPath:xPath error:&error];
+//        if ([matches count] > 0 && error == nil) {
+//            return;
+//        }        
     } 
 }
 
