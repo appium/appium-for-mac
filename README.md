@@ -27,7 +27,7 @@ Mac OS X does not allow an application to use the Accessibility API without perm
 1. If you do not see AppiumForMac.app in the list of apps, then drag it to the list from Finder.
 1. Check the checkmark next to AppiumForMac.app.
 
-## New Features For Scripters (as of November 2016)
+## New Features For Scripters (as of April 2017)
 
 You can see the new features in the calculator.py example script.
 
@@ -160,7 +160,7 @@ AppiumForMac can take a screen shot automatically whenever an element is not fou
     For example, to enable the feature, use driver.add_cookie({'name': 'screen_shot_on_error', 'value': False}).
 
 
-## New Features for Developers (as of November 2016)
+## New Features for Developers (as of April 2017)
 
 ### Greatly Simplified Code Pattern for Command Handlers.
 The code pattern for handler methods has changed substantially. A new method in AfMSessionController, executeWebDriverCommandWithPath:data:onMainThread:commandBlock:, performs the common tasks, such as looking up the session based on the path id, extracting json parameters, validating elements, and observing timeouts and delays. Your handler becomes a simple code block containing only the unique functional code for that handler.

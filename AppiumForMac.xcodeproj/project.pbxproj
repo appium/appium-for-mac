@@ -70,12 +70,10 @@
 		C14EAB341DB453220010E210 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14EAB321DB453220010E210 /* Carbon.framework */; };
 		C1A391551DE93AD300B96CAC /* AXPathUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A391541DE93AD300B96CAC /* AXPathUtility.m */; };
 		C1C3A60B1E91A774002246DB /* calculator.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6041E91A774002246DB /* calculator.py */; };
-		C1C3A60C1E91A774002246DB /* dock_demo.pyc in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6051E91A774002246DB /* dock_demo.pyc */; };
 		C1C3A60D1E91A774002246DB /* ios-sim.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6061E91A774002246DB /* ios-sim.py */; };
 		C1C3A60E1E91A774002246DB /* safari.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6071E91A774002246DB /* safari.py */; };
 		C1C3A60F1E91A774002246DB /* textedit.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6081E91A774002246DB /* textedit.py */; };
 		C1C3A6101E91A774002246DB /* utilities.py in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A6091E91A774002246DB /* utilities.py */; };
-		C1C3A6111E91A774002246DB /* utilities.pyc in Resources */ = {isa = PBXBuildFile; fileRef = C1C3A60A1E91A774002246DB /* utilities.pyc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,12 +210,10 @@
 		C1A391531DE93AD300B96CAC /* AXPathUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXPathUtility.h; sourceTree = "<group>"; };
 		C1A391541DE93AD300B96CAC /* AXPathUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXPathUtility.m; sourceTree = "<group>"; };
 		C1C3A6041E91A774002246DB /* calculator.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = calculator.py; sourceTree = "<group>"; };
-		C1C3A6051E91A774002246DB /* dock_demo.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = dock_demo.pyc; sourceTree = "<group>"; };
 		C1C3A6061E91A774002246DB /* ios-sim.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "ios-sim.py"; sourceTree = "<group>"; };
 		C1C3A6071E91A774002246DB /* safari.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = safari.py; sourceTree = "<group>"; };
 		C1C3A6081E91A774002246DB /* textedit.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = textedit.py; sourceTree = "<group>"; };
 		C1C3A6091E91A774002246DB /* utilities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = utilities.py; sourceTree = "<group>"; };
-		C1C3A60A1E91A774002246DB /* utilities.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = utilities.pyc; sourceTree = "<group>"; };
 		C1C3A6121E91A7CB002246DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -553,12 +549,10 @@
 			isa = PBXGroup;
 			children = (
 				C1C3A6041E91A774002246DB /* calculator.py */,
-				C1C3A6051E91A774002246DB /* dock_demo.pyc */,
 				C1C3A6061E91A774002246DB /* ios-sim.py */,
 				C1C3A6071E91A774002246DB /* safari.py */,
 				C1C3A6081E91A774002246DB /* textedit.py */,
 				C1C3A6091E91A774002246DB /* utilities.py */,
-				C1C3A60A1E91A774002246DB /* utilities.pyc */,
 			);
 			path = examples;
 			sourceTree = "<group>";
@@ -637,13 +631,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1C3A60C1E91A774002246DB /* dock_demo.pyc in Resources */,
 				C1C3A60D1E91A774002246DB /* ios-sim.py in Resources */,
 				C1C3A60E1E91A774002246DB /* safari.py in Resources */,
 				3610349317A4990E00DB79AA /* InfoPlist.strings in Resources */,
 				3610349917A4990E00DB79AA /* Credits.rtf in Resources */,
 				3610349F17A4990F00DB79AA /* MainMenu.xib in Resources */,
-				C1C3A6111E91A774002246DB /* utilities.pyc in Resources */,
 				C1C3A60F1E91A774002246DB /* textedit.py in Resources */,
 				36D203D117A5D6B300011A3A /* AboutCocoaAsyncSocket.txt in Resources */,
 				36D203D317A5D6B300011A3A /* AboutCocoaLumberjack.txt in Resources */,
