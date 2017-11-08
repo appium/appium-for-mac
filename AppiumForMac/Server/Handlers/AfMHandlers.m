@@ -543,7 +543,7 @@
                     [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
                 }
                 
-                return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeNoSuchElement session:session.sessionId];
+                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:kAfMStatusCodeSuccess session:session.sessionId];
             }
         }
         
