@@ -240,6 +240,19 @@
 // POST /session/:sessionId/execute
 // Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. The executed script is assumed to be synchronous and the result of evaluating the script is returned to the client.
 
+- (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData
+{
+    return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
+            {
+                // The bash command to run
+                NSString *command = (NSString*)[commandParams objectForKey:@"script"];
+                
+                NSString *commandResult = [session runCommand:command];
+                
+                return [AppiumMacHTTPJSONResponse responseWithJson:commandResult status:kAfMStatusCodeSuccess session:session.sessionId];
+            }];
+}
+
 // POST /session/:sessionId/execute_async
 // Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. The executed script is assumed to be asynchronous and must signal that is done by invoking the provided callback, which is always provided as the final argument to the function. 
 
