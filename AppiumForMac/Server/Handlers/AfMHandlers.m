@@ -243,14 +243,12 @@
 - (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
-            {
-                // The bash command to run
-                NSString *command = (NSString*)[commandParams objectForKey:@"script"];
-                
-                NSString *commandResult = [session runCommand:command];
-                
-                return [AppiumMacHTTPJSONResponse responseWithJson:commandResult status:kAfMStatusCodeSuccess session:session.sessionId];
-            }];
+    {
+        // The bash script to run
+        NSString *script = (NSString*)[commandParams objectForKey:@"script"];
+        NSString *scriptResult = [session executeShellScript: script];
+        return [AppiumMacHTTPJSONResponse responseWithJson:scriptResult status:kAfMStatusCodeSuccess session:session.sessionId];
+    }];
 }
 
 // POST /session/:sessionId/execute_async

@@ -574,16 +574,17 @@ NSInteger const kPredicateRightOperand = 1;
     [self.currentWindow performAction:@"AXCancel"];
 }
 
-- (NSString *)runCommand:(NSString *)commandToRun
+- (NSString *)executeShellScript:(NSString *)script
 {
     NSTask *task = [[NSTask alloc] init];
-    [task setLaunchPath:@"/bin/sh"];
+    [task setLaunchPath:@"/bin/bash"];
     
     NSArray *arguments = [NSArray arrayWithObjects:
                           @"-c" ,
-                          [NSString stringWithFormat:@"%@", commandToRun],
+                          [NSString stringWithFormat:@"%@", script],
                           nil];
-    NSLog(@"run command:%@", commandToRun);
+    
+    NSLog(@"running bash script:'%@'", script);
     [task setArguments:arguments];
     
     NSPipe *pipe = [NSPipe pipe];
