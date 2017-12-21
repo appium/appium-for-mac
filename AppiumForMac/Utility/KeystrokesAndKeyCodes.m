@@ -348,7 +348,15 @@ CFStringRef createStringForKeyCode(CGKeyCode keyCode)
     TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
     CFDataRef layoutData =
     TISGetInputSourceProperty(currentKeyboard,
+                              kTISPropertyUnicodeKeyLayoutData);  // This may return NULL.
+
+    if (!layoutData) {
+        currentKeyboard = TISCopyCurrentKeyboardLayoutInputSource();
+        layoutData =
+        TISGetInputSourceProperty(currentKeyboard,
                               kTISPropertyUnicodeKeyLayoutData);
+    }
+
     const UCKeyboardLayout *keyboardLayout =
     (const UCKeyboardLayout *)CFDataGetBytePtr(layoutData);
     
