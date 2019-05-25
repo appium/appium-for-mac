@@ -15,6 +15,9 @@
 #import "AppiumForMacAppDelegate.h"
 #import "KeystrokesAndKeyCodes.h"
 #import "Utility.h"
+#import "DDLog.h"
+
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 NSString * const kCookieLoopDelay = @"loop_delay";
 NSString * const kCookieImplicitTimeout = @"implicit_timeout";
@@ -161,112 +164,112 @@ NSInteger const kPredicateRightOperand = 1;
 - (NSTimeInterval)loopDelay
 {
     NSNumber *value = [self getCookieWithName:kCookieLoopDelay][@"value"];
-//    NSLog(@"loopDelay: %f", [value floatValue]);
+    DDLogCInfo(@"loopDelay: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (NSTimeInterval)commandDelay
 {
     NSNumber *value = [self getCookieWithName:kCookieCommandDelay][@"value"];
-//    NSLog(@"commandDelay: %f", [value floatValue]);
+    DDLogCInfo(@"commandDelay: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (NSTimeInterval)implicitTimeout
 {
     NSNumber *value = [self getCookieWithName:kCookieImplicitTimeout][@"value"];
-//    NSLog(@"implicitTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"implicitTimeout: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (NSTimeInterval)pageLoadTimeout
 {
     NSNumber *value = [self getCookieWithName:kCookiePageLoadTimeout][@"value"];
-//    NSLog(@"pageLoadTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"pageLoadTimeout: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (NSTimeInterval)scriptTimeout
 {
     NSNumber *value = [self getCookieWithName:kCookieScriptTimeout][@"value"];
-//    NSLog(@"scriptTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"scriptTimeout: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (float)mouseMoveSpeed
 {
     NSNumber *value = [self getCookieWithName:kCookieMouseSpeed][@"value"];
-//    NSLog(@"mouseMoveSpeed: %f", [value floatValue]);
+    DDLogCInfo(@"mouseMoveSpeed: %f", [value floatValue]);
     return [value floatValue];
 }
 
 - (BOOL)shouldTakeScreenShot
 {
     NSNumber *value = [self getCookieWithName:kCookieScreenShotOnError][@"value"];
-//    NSLog(@"shouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
+    DDLogCInfo(@"shouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
     return [value boolValue];
 }
 
 - (NSString *)globalDiagnosticsDirectory
 {
     NSString *value = [self getCookieWithName:kCookieGlobalDiagnosticsDirectory][@"value"];
-//    NSLog(@"globalDiagnosticsDirectory: %@", value);
+    DDLogCInfo(@"globalDiagnosticsDirectory: %@", value);
     return value;
 }
 
 - (NSString *)diagnosticsDirectory
 {
     NSString *value = [self getCookieWithName:kCookieDiagnosticsDirectory][@"value"];
-//    NSLog(@"diagnosticsDirectory: %@", value);
+    DDLogCInfo(@"diagnosticsDirectory: %@", value);
     return value;
 }
 
 - (void)setLoopDelay:(NSTimeInterval)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setLoopDelay: %f", [value floatValue]);
+    DDLogCInfo(@"setLoopDelay: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookieLoopDelay, @"value": value}];
 }
 
 - (void)setCommandDelay:(NSTimeInterval)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setCommandDelay: %f", [value floatValue]);
+    DDLogCInfo(@"setCommandDelay: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookieCommandDelay, @"value": value}];
 }
 
 - (void)setImplicitTimeout:(NSTimeInterval)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setImplicitTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"setImplicitTimeout: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookieImplicitTimeout, @"value": value}];
 }
 
 - (void)setPageLoadTimeout:(NSTimeInterval)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setPageLoadTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"setPageLoadTimeout: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookiePageLoadTimeout, @"value": value}];
 }
 
 - (void)setScriptTimeout:(NSTimeInterval)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setScriptTimeout: %f", [value floatValue]);
+    DDLogCInfo(@"setScriptTimeout: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookieScriptTimeout, @"value": value}];
 }
 
 - (void)setMouseMoveSpeed:(float)interval
 {
     NSNumber *value = [NSNumber numberWithFloat:interval];
-//    NSLog(@"setMouseMoveSpeed: %f", [value floatValue]);
+    DDLogCInfo(@"setMouseMoveSpeed: %f", [value floatValue]);
     [self setCookie:@{@"name": kCookieMouseSpeed, @"value": value}];
 }
 
 - (void)setShouldTakeScreenShot:(BOOL)yesNo
 {
     NSNumber *value = [NSNumber numberWithBool:yesNo];
-//    NSLog(@"setShouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
+    DDLogCInfo(@"setShouldTakeScreenShot: %@", [value boolValue] ? @"YES":@"NO");
     [self setCookie:@{@"name": kCookieScreenShotOnError, @"value": value}];
 }
 
@@ -278,7 +281,7 @@ NSInteger const kPredicateRightOperand = 1;
 
 - (void)setDiagnosticsDirectory:(NSString *)value
 {
-//    NSLog(@"setDiagnosticsDirectory: %@", value);
+    DDLogCInfo(@"setDiagnosticsDirectory: %@", value);
     [self setCookie:@{@"name": kCookieDiagnosticsDirectory, @"value": value}];
 }
 
@@ -468,7 +471,7 @@ NSInteger const kPredicateRightOperand = 1;
                 handlerReturnValue = commandBlock(self, commandParams, &statusCode);
             }
             @catch (NSException *e) {
-                NSLog(@"Exception in dispatch_sync(dispatch_get_main_queue()): %@", e);
+                DDLogCInfo(@"Exception in dispatch_sync(dispatch_get_main_queue()): %@", e);
             }
         };
         
@@ -492,14 +495,14 @@ NSInteger const kPredicateRightOperand = 1;
             } else if ([timeoutDate timeIntervalSinceNow] > 0) {
                 [NSThread sleepForTimeInterval:[timeoutDate timeIntervalSinceNow]];
             }
-            //NSLog(@"Session %@ waiting for commandParams: %@ time remaining: %f", sessionId, commandParams, [timeoutDate timeIntervalSinceNow]);
+            DDLogCInfo(@"Session %@ waiting for commandParams: %@ time remaining: %f", sessionId, commandParams, [timeoutDate timeIntervalSinceNow]);
             continue;
         } else {
             return handlerReturnValue;
         }
     }
     if (self.isCanceled) {
-        NSLog(@"executeWebDriverCommandWithPath:: session isCanceled after waiting: %@", self.sessionId);
+        DDLogCInfo(@"executeWebDriverCommandWithPath:: session isCanceled after waiting: %@", self.sessionId);
         return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeNoSuchDriver session:self.sessionId];
     }
     if ([handlerReturnValue afmStatusCode] == kAfMStatusCodeNoSuchElement

@@ -416,7 +416,7 @@
 	NSString *logsDirectory = [self logsDirectory];
 	do
 	{
-		NSString *fileName = [NSString stringWithFormat:@"log-%@.txt", [self generateShortUUID]];
+		NSString *fileName = [NSString stringWithFormat:@"AFMlog.txt"];
 		
 		NSString *filePath = [logsDirectory stringByAppendingPathComponent:fileName];
 		

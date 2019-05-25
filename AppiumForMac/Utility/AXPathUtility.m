@@ -11,9 +11,11 @@
 
 #import "AXPathUtility.h"
 #import "AppiumForMacAppDelegate.h"
+#import "DDLog.h"
 
 NSUInteger const kMaximumTitleLength = 256;
 NSString * const kNewTextPostedNotification = @"NewTextPosted";
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation AXPathUtility
 
@@ -36,7 +38,7 @@ NSString * const kNewTextPostedNotification = @"NewTextPosted";
     HIPoint currentMousePosition = [self getMousePosition];
     NSSize offset;
     NSString *axPath = [self axPathAtMousePosition:currentMousePosition offsetPercent:&offset];
-    NSLog(@"axPath:\n%@", axPath);
+    DDLogCInfo(@"axPath:\n%@", axPath);
     if (axPath && axPath.length) {
         // Add surrounding double quotes to the path string.
         NSString *quotedAXPath = [NSString stringWithFormat:@"\"%@\"", axPath];
@@ -62,7 +64,7 @@ NSString * const kNewTextPostedNotification = @"NewTextPosted";
     PFUIElement *hitElement = [PFUIElement elementAtPoint:mousePosition withDelegate:nil error:&error];
     if (!hitElement) {
         // No element under the mouse? How odd.
-        NSLog(@"axPathAtMousePosition ERROR no hitElement at mousePosition: %@ NSError:%@", NSStringFromPoint(mousePosition), error);
+        DDLogCInfo(@"axPathAtMousePosition ERROR no hitElement at mousePosition: %@ NSError:%@", NSStringFromPoint(mousePosition), error);
         return nil;
     }
     
@@ -121,7 +123,7 @@ NSString * const kNewTextPostedNotification = @"NewTextPosted";
         if (role) {
             [axPath appendString:role];
         } else {
-            NSLog(@"axPathAtMousePosition ERROR role is nil for element:%@ partialAXPath:%@", hitElement, axPath);
+            DDLogCInfo(@"axPathAtMousePosition ERROR role is nil for element:%@ partialAXPath:%@", hitElement, axPath);
         }
         
         // Add a predicate to the role.
@@ -176,7 +178,7 @@ NSString * const kNewTextPostedNotification = @"NewTextPosted";
 // (indexes can vary per application and per application state e.g. running or not, active/non-active/hidden)
 - (NSString *)axPathForDockAXMenuItem:(PFUIElement *)element
 {
-    NSLog(@"axPathForDockAXMenuItem element:%@", element); 
+    DDLogCInfo(@"axPathForDockAXMenuItem element:%@", element);
     
     if (!element || ![element isRole:@"AXMenuItem"]) {
         return nil;
@@ -198,8 +200,8 @@ NSString * const kNewTextPostedNotification = @"NewTextPosted";
         dockApp = (PFApplicationUIElement *)[[grandParent AXParent] AXParent];
     }
     
-    NSLog(@"dockApp AXChildren:\n%@", [dockApp AXChildren]);
-    NSLog(@"dockApp AXFocusedUIElement:\n%@", [dockApp AXFocusedUIElement]);
+    DDLogCInfo(@"dockApp AXChildren:\n%@", [dockApp AXChildren]);
+    DDLogCInfo(@"dockApp AXFocusedUIElement:\n%@", [dockApp AXFocusedUIElement]);
     // Big assumption: the Dock will always be named "Dock".
     [axPath appendString:@"/AXApplication[@AXTitle='Dock']"];
     

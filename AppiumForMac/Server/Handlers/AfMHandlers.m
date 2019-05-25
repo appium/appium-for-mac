@@ -18,6 +18,8 @@
 #import "HTTPMessage.h"
 #import "NSData+Base64.h"
 #import "Utility.h"
+#import "DDLog.h"
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation AfMHandlers
 - (id)init
@@ -57,7 +59,8 @@
     NSDictionary *buildJson = [NSDictionary dictionaryWithObjectsAndKeys:[Utility bundleVersion], @"version", [Utility bundleRevision], @"revision", [NSString stringWithFormat:@"%d", [Utility unixTimestamp]], @"time", nil];
     NSDictionary *osJson = [NSDictionary dictionaryWithObjectsAndKeys:[Utility arch], @"arch", @"Mac OS X", @"name", [Utility version], @"version", nil];
     NSDictionary *json = [NSDictionary dictionaryWithObjectsAndKeys:buildJson, @"build", osJson, @"os", nil];
-    
+    DDLogCInfo(@"Request:GET /status");
+    DDLogCInfo(@"Response:%@,status:%lu", osJson,kAfMStatusCodeSuccess);
     return [AppiumMacHTTPJSONResponse responseWithJson:json status:kAfMStatusCodeSuccess session:nil];
 }
 
@@ -67,12 +70,13 @@
 - (AppiumMacHTTPJSONResponse *)post_session:(NSString*)path data:(NSData*)postData
 {
     // This can not use executeWebDriverCommandWithPath because that method requires a sessionId in the path.
-    
+    DDLogCInfo(@"Request:POST /session");
     NSDictionary *postParams = [Utility dictionaryFromPostData:postData];
     NSDictionary *desiredCapabilities = [postParams objectForKey:@"desiredCapabilities"];
-    
+    DDLogCInfo(@"create Session with desiredCapabilities:%@", desiredCapabilities);
     // We can only have so many sessions, and no more.
     if ([self.sessions count] >= kMaximumActiveSessions) {
+        DDLogCInfo(@"The limit for Maximum Active session is Reached now:%d", kMaximumActiveSessions);
         return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeSessionNotCreatedException session:nil];
     }
     
@@ -80,7 +84,10 @@
     AfMSessionController *newSession = [[AfMSessionController alloc] init];
     [newSession setDesiredCapabilities:desiredCapabilities];
     [self.sessions setValue:newSession forKey:newSession.sessionId];
-        
+    DDLogCInfo(@"Response:");
+    DDLogCInfo(@"Capabilities:%@",newSession.capabilities);
+    DDLogCInfo(@"session:%@",newSession.sessionId);
+    DDLogCInfo(@"status:%lu",kAfMStatusCodeSuccess);
     return [AppiumMacHTTPJSONResponse responseWithJson:newSession.capabilities status:kAfMStatusCodeSuccess session:newSession.sessionId];
 }
 
@@ -89,13 +96,14 @@
 - (AppiumMacHTTPJSONResponse *)get_sessions:(NSString*)path
 {
     // This can not use executeWebDriverCommandWithPath because that method requires a sessionId in the path.
-    
+    DDLogCInfo(@"Request:GET /sessions");
     NSMutableArray *json = [NSMutableArray new];
     for (id key in self.sessions) {
         AfMSessionController *session = [self.sessions objectForKey:key];
         [json addObject:@{@"id":key, @"capabilities":session.capabilities}];
     }
-    
+    DDLogCInfo(@"Response: %@",json);
+    DDLogCInfo(@"status:%lu",kAfMStatusCodeSuccess);
     return [AppiumMacHTTPJSONResponse responseWithJson:json status:kAfMStatusCodeSuccess session: nil];
 }
 
@@ -105,6 +113,8 @@
 {
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:GET /session/: %@",session.sessionId);
+        DDLogCInfo(@"Response: %@",session.capabilities);
         return [AppiumMacHTTPJSONResponse responseWithJson:session.capabilities status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
 }
@@ -118,6 +128,9 @@
         if (session != nil) {
             [self.sessions removeObjectForKey:session.sessionId];
         }
+        DDLogCInfo(@"Request:DELETE /session/: %@",session.sessionId);
+        DDLogCInfo(@"Response: %@",session.capabilities);
+        DDLogCInfo(@"status: %lu",kAfMStatusCodeSuccess);
         return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
 }
@@ -128,6 +141,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/timeouts",session.sessionId);
         NSTimeInterval seconds = 0;
         NSNumber *msValue = [commandParams objectForKey:@"ms"];
         if (msValue && [msValue isKindOfClass:[NSNumber class]]) {
@@ -138,10 +152,13 @@
         if (type && [type isKindOfClass:[NSString class]]) {
             if ([type isEqualToString:@"implicit"]) {
                 session.implicitTimeout = seconds;
+                DDLogCInfo(@"implicitTimeout :%f",seconds);
             } else if ([type isEqualToString:@"page load"]) {
                 session.pageLoadTimeout = seconds;
+                DDLogCInfo(@"pageLoadTimeout :%f",seconds);
             } else if ([type isEqualToString:@"script"]) {
                 session.scriptTimeout = seconds;
+                DDLogCInfo(@"scriptTimeout :%f",seconds);
             } else {
                 return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeUnknownCommand session:session.sessionId];
             }
@@ -155,8 +172,10 @@
 // Set the amount of time, in milliseconds, that asynchronous scripts executed by /session/:sessionId/execute_async are permitted to run before they are aborted and a |Timeout| error is returned to the client.
 - (AppiumMacHTTPJSONResponse *)post_timeouts_async_script:(NSString*)path data:(NSData*)postData;
 {
+    
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/timeouts/async_script",session.sessionId);
         NSNumber *msValue = [commandParams objectForKey:@"ms"];
         if (msValue && [msValue isKindOfClass:[NSNumber class]]) {
             session.scriptTimeout = [msValue unsignedIntegerValue] / 1000;
@@ -171,6 +190,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/timeouts/implicit_wait",session.sessionId);
         NSNumber *msValue = [commandParams objectForKey:@"ms"];
         if (msValue && [msValue isKindOfClass:[NSNumber class]]) {
             session.implicitTimeout = [msValue unsignedIntegerValue] / 1000;
@@ -185,6 +205,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/timeouts/async_script",session.sessionId);
         if ([session.currentWindowHandle intValue] >= session.allWindows.count)
         {
             return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeNoSuchWindow session:session.sessionId];
@@ -442,7 +463,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         NSArray *allCookies = [session getAllCookies];
-        NSLog(@"get_cookie allCookies:%@", allCookies);
+        DDLogCInfo(@"get_cookie allCookies:%@", allCookies);
         
         return [AppiumMacHTTPJSONResponse responseWithJson:allCookies status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
@@ -454,7 +475,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
-        NSLog(@"post_cookie commandParams:%@", commandParams);
+        DDLogInfo(@"post_cookie commandParams:%@", commandParams);
         NSDictionary *cookie = commandParams[@"cookie"];
         [session setCookie:cookie];
         
@@ -632,8 +653,9 @@
 {
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
-        id element = [commandParams objectForKey:@"elementObject"];
         
+        id element = [commandParams objectForKey:@"elementObject"];
+        DDLogCInfo(@"Request:POST /session/:%@//element/:%@/click",session.sessionId,element);
         if (![session isElementDisplayed:element]) {
             return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeElementNotVisible session:session.sessionId];
         }
@@ -655,7 +677,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
-        
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/text",session.sessionId,element);
         id valueAttribute = element.AXValue;
         if (valueAttribute != nil)
         {
@@ -675,7 +697,7 @@
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
         NSArray *value = [commandParams objectForKey:@"value"];
-        
+        DDLogCInfo(@"Request:POST /session/:%@/element/:%@/value",session.sessionId,element);
         // For some reason Selenium is sending element.setValue() when a sendKeys() command was requested.
         // If element is a field that must receive keystrokes to trigger other behaviors, then type the value.
         if ([element.AXRole isEqualToString:@"AXTextField"]) {
@@ -695,7 +717,7 @@
 - (AppiumMacHTTPJSONResponse *)post_keys:(NSString*)path data:(NSData*)postData
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
-    {
+    {   DDLogCInfo(@"Request:POST /session/:%@/keys",session.sessionId);
         NSArray *value = [commandParams objectForKey:@"value"];
         [session sendKeys:value];
         
@@ -710,6 +732,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/name",session.sessionId,element.AXIdentifier);
         
         return [AppiumMacHTTPJSONResponse responseWithJson:element.AXTitle status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
@@ -722,7 +745,7 @@
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
-        
+        DDLogCInfo(@"Request:POST /session/:%@/element/:%@/clear",session.sessionId,element.AXIdentifier);
         if (![session isElementDisplayed:element]) {
             return [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeElementNotVisible session:session.sessionId];
         }
@@ -746,6 +769,8 @@
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
         
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/selected",session.sessionId,element.AXIdentifier);
+        
         return [AppiumMacHTTPJSONResponse responseWithJson:element.AXFocused status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
 }
@@ -757,6 +782,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/enabled",session.sessionId,element.AXIdentifier);
         
         return [AppiumMacHTTPJSONResponse responseWithJson:element.AXEnabled status:kAfMStatusCodeSuccess session:session.sessionId];
     }];
@@ -772,6 +798,7 @@
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
         
         NSString *attributeName = [Utility getItemFromPath:path withSeparator:@"/attribute/"];
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/attribute/:%@",session.sessionId,element.AXIdentifier,attributeName);
         id attributeValue = [element valueForAttribute:attributeName];
         
         // The original AfM returned "(null)" for a nil (non-existent) attribute.
@@ -796,7 +823,7 @@
         // get the second element
         NSString *otherElementId = [Utility getItemFromPath:path withSeparator:@"/equals/"];
         PFUIElement *otherElement = [session.elements objectForKey:otherElementId];
-        
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/equals/:%@",session.sessionId,element.AXIdentifier,otherElement.AXIdentifier);
         // check that the second element is valid
         int status2 = [session checkElement:otherElement];
         if (status2 != kAfMStatusCodeSuccess) {
@@ -828,7 +855,7 @@
     // get the element
     NSString *elementId = [Utility getElementIDFromPath:path];
     PFUIElement *element = [session.elements objectForKey:elementId];
-    
+    DDLogCInfo(@"Request:GET /session/:%@/element/:%@/displayed",session.sessionId,element.AXIdentifier);
     // check the element is valid
     int status = [session checkElement:element];
     if (status == kAfMStatusCodeSuccess) {
@@ -850,6 +877,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/location",session.sessionId,element.AXIdentifier);
         NSPoint point = [element.AXPosition pointValue];
         NSDictionary *position = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:point.x], @"x", [NSNumber numberWithFloat:point.y], @"y", nil];
         return [AppiumMacHTTPJSONResponse responseWithJson:position status:kAfMStatusCodeSuccess session:session.sessionId];
@@ -866,6 +894,7 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         PFUIElement *element = [commandParams objectForKey:@"elementObject"];
+        DDLogCInfo(@"Request:GET /session/:%@/element/:%@/location_in_view",session.sessionId,element.AXIdentifier);
         NSSize size = [element.AXSize sizeValue];
         NSDictionary *sizeDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:size.width], @"width", [NSNumber numberWithFloat:size.height], @"height", nil];
         return [AppiumMacHTTPJSONResponse responseWithJson:sizeDict status:kAfMStatusCodeSuccess session:session.sessionId];
@@ -899,6 +928,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/moveto",session.sessionId);
         if ([Utility isRunningInSandbox]) {
             return [session moveMouseInsideSandbox:commandParams statusCode:statusCode];
         } else {
@@ -911,8 +941,10 @@
 // Click any mouse button (at the coordinates set by the last moveto command). Note that calling this command after calling buttondown and before calling button up (or any out-of-order interactions sequence) will yield undefined behaviour).
 - (AppiumMacHTTPJSONResponse *)post_click:(NSString*)path data:(NSData *)postData
 {
+    
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/click",session.sessionId);
         if ([Utility isRunningInSandbox]) {
             return [session mouseButtonActionInsideSandbox:@"click" commandParams:commandParams statusCode:statusCode];
         } else {
@@ -925,8 +957,10 @@
 // Click and hold the left mouse button (at the coordinates set by the last moveto command). Note that the next mouse-related command that should follow is buttonup . Any other mouse command (such as click or another call to buttondown) will yield undefined behaviour.
 - (AppiumMacHTTPJSONResponse *)post_buttondown:(NSString*)path data:(NSData *)postData
 {
+    
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/buttondown",session.sessionId);
         if ([Utility isRunningInSandbox]) {
             return [session mouseButtonActionInsideSandbox:@"buttondown" commandParams:commandParams statusCode:statusCode];
         } else {
@@ -941,6 +975,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/buttonup",session.sessionId);
         if ([Utility isRunningInSandbox]) {
             return [session mouseButtonActionInsideSandbox:@"buttonup" commandParams:commandParams statusCode:statusCode];
         } else {
@@ -955,6 +990,7 @@
 {
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:NO commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
+        DDLogCInfo(@"Request:POST /session/:%@/doubleclick",session.sessionId);
         if ([Utility isRunningInSandbox]) {
             return [session mouseButtonActionInsideSandbox:@"doubleclick" commandParams:commandParams statusCode:statusCode];
         } else {

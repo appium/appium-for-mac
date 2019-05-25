@@ -7,12 +7,12 @@
 //
 
 #import "AppiumForMacAppDelegate.h"
-
 #import "AfMHTTPServer.h"
 #import "AfMHTTPConnection.h"
 #import "AXPathUtility.h"
 #import "HTTPServer.h"
 #import "DDLog.h"
+#import "DDFileLogger.h"
 #import "DDTTYLogger.h"
 #import "NotesWindowController.h"
 #import "Utility.h"
@@ -31,6 +31,29 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [documentPaths objectAtIndex:0];
+    BOOL isDir=YES;
+    if(![fileManager fileExistsAtPath:[documentsDir stringByAppendingPathComponent:@"LogFile"] isDirectory:&isDir]){
+        if(![fileManager createDirectoryAtPath:[documentsDir stringByAppendingPathComponent:@"LogFile"] withIntermediateDirectories:YES attributes:nil error:nil])
+            NSLog(@"Error: Create folder failed");
+    }
+    NSString *logFilePath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"LogFile"]];
+    DDLogFileManagerDefault *documentsFileManager = [[DDLogFileManagerDefault alloc]
+                                                    initWithLogsDirectory:logFilePath];
+    NSLog(@"The Log File created here:%@",logFilePath);
+    DDFileLogger *fileLogger = [[DDFileLogger alloc]
+    initWithLogFileManager:documentsFileManager];
+    [fileLogger setMaximumFileSize:(1024*1024*1024)];
+    [fileLogger setRollingFrequency:(3600.0 * 24.0)];  // roll everyday
+    [[fileLogger logFileManager] setMaximumNumberOfLogFiles:1];
+    [fileLogger setLogFormatter:[[DDLogFileFormatterDefault alloc]init]];
+    [DDLog addLogger:fileLogger];
+    
+
+    
     self.afmHTTPServer = [[AfMHTTPServer alloc] init];
     [self.afmHTTPServer setType:@"_http._tcp."];
     [self.afmHTTPServer setPort:4622];

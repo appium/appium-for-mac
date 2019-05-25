@@ -10,7 +10,8 @@
 #import "AppiumMacHTTP303JSONResponse.h"
 #import "AfMStatusCodes.h"
 #import "HTTPLogging.h"
-
+#import "DDLog.h"
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 // Commented out unused variable to avoid compiler warning.
 //static const int httpLogLevel = HTTP_LOG_LEVEL_WARN;
 
@@ -18,6 +19,7 @@
 
 +(AppiumMacHTTPJSONResponse *) responseWithJson:(id)json status:(int)status session:(NSString*)session
 {
+    DDLogCInfo(@"response:%@", json);
     return [self responseWithJson:json status:status session:session statusCode:200];
 }
 
@@ -37,7 +39,7 @@
                                                          error:&error];
     if (!jsonData)
     {
-        NSLog(@"Got an error: %@", error);
+        DDLogCInfo(@"Got an error: %@", error);
         jsonData = [NSJSONSerialization dataWithJSONObject:
                     [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:-1], @"status", session, @"session", [NSString stringWithFormat:@"%@", error], @"value" , nil]
                                                    options:NSJSONWritingPrettyPrinted
@@ -45,6 +47,7 @@
     }
     switch (statusCode)
     {
+        DDLogCInfo(@"response:%@", jsonData);
         case 303:
             return [[AppiumMacHTTP303JSONResponse alloc] initWithData:jsonData];
         default:
@@ -55,6 +58,9 @@
 + (AppiumMacHTTPJSONResponse *)responseWithJsonError:(int)statusCode session:(NSString*)sessionId
 {
     NSDictionary *errorJson = [NSDictionary dictionaryWithObjectsAndKeys:kAfMStatusCodeMessages[statusCode],@"message" , nil];
+    DDLogCInfo(@"response:%@", errorJson);
+    DDLogCInfo(@"status:%d", statusCode);
+    DDLogCInfo(@"session:%@", sessionId);
     return [self responseWithJson:errorJson status:statusCode session:sessionId];
 }
 
