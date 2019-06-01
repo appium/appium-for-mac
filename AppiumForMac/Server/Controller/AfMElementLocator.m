@@ -202,16 +202,19 @@
 		NSError *error;
 		NSArray *matches = [doc nodesForXPath:self.value error:&error];
 		if (error != nil)
-        {
+		{
 			*statusCode = kAfMStatusCodeXPathLookupError;
 			return;
 		}
 		if (matches.count < 1)
-            {
-                //Have to return Success in order to return empty array for when no elements are found
-                *statusCode = kAfMStatusCodeSuccess;
-                return;
-            }
+                {
+                    //*statusCode = kAfMStatusCodeNoSuchElement;
+                    //In order to comply with other drivers and return an empty list when no matches are found
+                    //Cannot return NoSuchElement status
+                    *statusCode = kAfMStatusCodeSuccess;
+                    return;
+                }
+
 		*statusCode = kAfMStatusCodeSuccess;
 		for(GDataXMLElement *match in matches)
 		{
@@ -256,6 +259,7 @@
             [self findAllUsingBaseUIElement:childElement results:results statusCode:statusCode];
         }
     }
+    
 }
 
 @end
