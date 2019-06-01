@@ -207,13 +207,11 @@
 			return;
 		}
 		if (matches.count < 1)
-		{
-            //*statusCode = kAfMStatusCodeNoSuchElement;
-            //In order to comply with other drivers and return an empty list when no matches are found
-            //Cannot return NoSuchElement status
+        {
+            //Have to return Success in order to return empty array for when no elements are found
             *statusCode = kAfMStatusCodeSuccess;
             return;
-		}
+        }
 
 		*statusCode = kAfMStatusCodeSuccess;
 		for(GDataXMLElement *match in matches)
