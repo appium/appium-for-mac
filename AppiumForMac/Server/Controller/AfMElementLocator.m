@@ -184,7 +184,7 @@
     return nil;
 }
 
--(NSArray*)findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int *)statusCode
+-(void)findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int *)statusCode
 {
 	// use different method for xpath
 	if (self.strategy == AppiumMacLocatoryStrategyXPath)
@@ -193,7 +193,7 @@
         NSArray *foundElements = [self.session findAllUsingAbsoluteAXPath:self.value];
         if ([foundElements count] > 0) {
             [results addObjectsFromArray:foundElements];
-            return results;
+            return;
         }
         
         // Absolute path did not match, so use the slower, guaranteed method.
@@ -204,12 +204,15 @@
 		if (error != nil)
 		{
 			*statusCode = kAfMStatusCodeXPathLookupError;
-			return nil;
+			return;
 		}
 		if (matches.count < 1)
 		{
-			*statusCode = kAfMStatusCodeNoSuchElement;
-            return nil;
+			//*statusCode = kAfMStatusCodeNoSuchElement;
+            //In order to comply with other drivers and return an empty list when no matches are found
+            //Cannot return NoSuchElement status
+            *statusCode = kAfMStatusCodeSuccess;
+            return;
 		}
 
 		*statusCode = kAfMStatusCodeSuccess;
@@ -218,7 +221,7 @@
 			PFUIElement *matchedElement = [pathMap objectForKey:[match attributeForName:@"path"].stringValue];
 			[results addObject:matchedElement];
 		}
-        return results;
+        return;
 	}
 
     // check if this the element we are looking for
@@ -242,7 +245,7 @@
         if (self.session.currentWindow == nil)
         {
 			*statusCode = kAfMStatusCodeNoSuchWindow;
-			return nil;
+			return;
         }
 		elementsToSearch = self.session.currentWindow.AXChildren;
     }
@@ -256,7 +259,6 @@
             [self findAllUsingBaseUIElement:childElement results:results statusCode:statusCode];
         }
     }
-    return nil;
 }
 
 @end

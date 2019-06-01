@@ -525,8 +525,8 @@
         
         AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
         
-        // initialize status as though no element were found
-        *statusCode = kAfMStatusCodeNoSuchElement;
+        // initialize status as success even if no elements are found
+        *statusCode = kAfMStatusCodeSuccess;
         
         if (locator != nil)
         {
@@ -543,9 +543,9 @@
                     [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
                 }
                 
-                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:kAfMStatusCodeSuccess session:session.sessionId];
+                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
             }
-            return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeNoSuchElement session:session.sessionId];
+            return [AppiumMacHTTPJSONResponse responseWithJson:matches status:*statusCode session:session.sessionId];
         }
         return [AppiumMacHTTPJSONResponse responseWithJsonError:*statusCode session:session.sessionId];
     }];
@@ -601,7 +601,7 @@
         AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
         
         // initialize status as though no element were found
-        *statusCode = kAfMStatusCodeNoSuchElement;
+        *statusCode = kAfMStatusCodeSuccess;
         
         if (locator != nil)
         {
@@ -617,8 +617,9 @@
                     [session.elements setValue:uiElement forKey:myKey];
                     [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
                 }
-                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:kAfMStatusCodeSuccess session:session.sessionId];
+                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
             }
+            return [AppiumMacHTTPJSONResponse responseWithJson:matches status:*statusCode session:session.sessionId];
         }
         
         return [AppiumMacHTTPJSONResponse responseWithJsonError:*statusCode session:session.sessionId];

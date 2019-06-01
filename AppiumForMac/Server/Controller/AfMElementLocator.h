@@ -36,6 +36,6 @@ typedef enum appiumMacLocatoryStrategy
 
 -(PFUIElement*) findUsingBaseUIElement:(PFUIElement*)baseUIElement statusCode:(int*)statusCode;
 
--(NSArray*) findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int*)statusCode;
+-(void) findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int*)statusCode;
 
 @end
