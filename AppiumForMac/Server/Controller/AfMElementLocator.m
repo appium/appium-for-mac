@@ -202,17 +202,16 @@
 		NSError *error;
 		NSArray *matches = [doc nodesForXPath:self.value error:&error];
 		if (error != nil)
-		{
+        {
 			*statusCode = kAfMStatusCodeXPathLookupError;
 			return;
 		}
 		if (matches.count < 1)
-        {
-            //Have to return Success in order to return empty array for when no elements are found
-            *statusCode = kAfMStatusCodeSuccess;
-            return;
-        }
-
+            {
+                //Have to return Success in order to return empty array for when no elements are found
+                *statusCode = kAfMStatusCodeSuccess;
+                return;
+            }
 		*statusCode = kAfMStatusCodeSuccess;
 		for(GDataXMLElement *match in matches)
 		{
