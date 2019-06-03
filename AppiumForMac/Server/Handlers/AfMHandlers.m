@@ -578,7 +578,6 @@
                 return [AppiumMacHTTPJSONResponse responseWithJson:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"] status:kAfMStatusCodeSuccess session:session.sessionId];
             }
         }
-        
         return [AppiumMacHTTPJSONResponse responseWithJsonError:*statusCode session:session.sessionId];
     }];
 }
