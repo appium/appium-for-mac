@@ -186,6 +186,10 @@
 
 -(void)findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int *)statusCode
 {
+    //Start the method with success unless any logic block changes it
+    //If no element is found still return success to match other driver behaviors 
+    *statusCode = kAfMStatusCodeSuccess;
+
 	// use different method for xpath
 	if (self.strategy == AppiumMacLocatoryStrategyXPath)
 	{
@@ -259,8 +263,6 @@
             [self findAllUsingBaseUIElement:childElement results:results statusCode:statusCode];
         }
     }
-    *statusCode = kAfMStatusCodeSuccess;
-
 }
 
 @end

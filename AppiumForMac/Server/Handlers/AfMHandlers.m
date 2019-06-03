@@ -537,7 +537,7 @@
             for(PFUIElement *element in matches) {
                 session.elementIndex++;
                 NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
-                [session.elements setValue:element forKey:myKey];
+                [session.elements setObject:element forKey:myKey];
                 [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
             }
             return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
@@ -610,7 +610,7 @@
             for(PFUIElement *element in matches) {
                 session.elementIndex++;
                 NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
-                [session.elements setValue:element forKey:myKey];
+                [session.elements setObject:element forKey:myKey];
                 [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
             }
             return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
