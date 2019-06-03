@@ -525,27 +525,22 @@
         
         AfMElementLocator *locator = [AfMElementLocator locatorWithSession:session using:using value:value];
         
-        // initialize status as success even if no elements are found
-        *statusCode = kAfMStatusCodeSuccess;
-        
         if (locator != nil)
         {
             NSMutableArray *matches = [NSMutableArray new];
             [locator findAllUsingBaseUIElement:nil results:matches statusCode:statusCode];
-            if (matches.count > 0)
-            {
-                NSMutableArray *elements = [NSMutableArray new];
-                for(PFUIElement *element in matches)
-                {
-                    session.elementIndex++;
-                    NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
-                    [session.elements setValue:element forKey:myKey];
-                    [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
-                }
-                
-                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
+            if (0 == matches.count) {
+                return [AppiumMacHTTPJSONResponse responseWithJson:@[] status:*statusCode session:session.sessionId];
             }
-            return [AppiumMacHTTPJSONResponse responseWithJson:matches status:*statusCode session:session.sessionId];
+            
+            NSMutableArray *elements = [NSMutableArray new];
+            for(PFUIElement *element in matches) {
+                session.elementIndex++;
+                NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
+                [session.elements setValue:element forKey:myKey];
+                [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
+            }
+            return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
         }
         return [AppiumMacHTTPJSONResponse responseWithJsonError:*statusCode session:session.sessionId];
     }];
@@ -607,19 +602,18 @@
         {
             NSMutableArray *matches = [NSMutableArray new];
             [locator findAllUsingBaseUIElement:rootUIElement results:matches statusCode:statusCode];
-            if (matches.count > 0)
-            {
-                NSMutableArray *elements = [NSMutableArray new];
-                for(PFUIElement *uiElement in matches)
-                {
-                    session.elementIndex++;
-                    NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
-                    [session.elements setValue:uiElement forKey:myKey];
-                    [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
-                }
-                return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
+            if (0 == matches.count) {
+                return [AppiumMacHTTPJSONResponse responseWithJson:@[] status:*statusCode session:session.sessionId];
             }
-            return [AppiumMacHTTPJSONResponse responseWithJson:matches status:*statusCode session:session.sessionId];
+            
+            NSMutableArray *elements = [NSMutableArray new];
+            for(PFUIElement *element in matches) {
+                session.elementIndex++;
+                NSString *myKey = [NSString stringWithFormat:@"%d", session.elementIndex];
+                [session.elements setValue:element forKey:myKey];
+                [elements addObject:[NSDictionary dictionaryWithObject:myKey forKey:@"ELEMENT"]];
+            }
+            return [AppiumMacHTTPJSONResponse responseWithJson:elements status:*statusCode session:session.sessionId];
         }
         
         return [AppiumMacHTTPJSONResponse responseWithJsonError:*statusCode session:session.sessionId];

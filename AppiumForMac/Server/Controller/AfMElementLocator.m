@@ -259,6 +259,8 @@
             [self findAllUsingBaseUIElement:childElement results:results statusCode:statusCode];
         }
     }
+    *statusCode = kAfMStatusCodeSuccess;
+
 }
 
 @end
