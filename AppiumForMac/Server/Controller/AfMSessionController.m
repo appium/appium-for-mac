@@ -6,7 +6,7 @@
 //  Improvements by Stuart Russell at Intuit, Inc.
 //  Copyright (c) 2013-2016 Appium. All rights reserved.
 //
-
+#include <stdio.h>
 #import <Carbon/Carbon.h>
 #import <Quartz/Quartz.h>
 #import <PFAssistive/PFAssistive.h>
@@ -572,6 +572,26 @@ NSInteger const kPredicateRightOperand = 1;
 {
 	// TODO: Implement working close window method
     [self.currentWindow performAction:@"AXCancel"];
+}
+
+-(NSString*)executeShellScript:(NSString*)script
+{
+    FILE *fp;
+    const int BUFFSIZE = 512;
+    char buffer[BUFFSIZE];
+    const char *command = [script UTF8String];
+    NSMutableString *output = [[NSMutableString alloc] initWithString:@""];
+    fp = popen(command, "r");
+    if (!fp){
+        NSLog(@"Open pipe failed\n");
+        return @"";
+    }
+    while (fgets(buffer, BUFFSIZE, fp)!=NULL)
+    {
+        [output appendString:[NSString stringWithCString:buffer encoding:NSUTF8StringEncoding]];
+    }
+    pclose(fp);
+    return output;
 }
 
 -(NSString*) currentApplicationName

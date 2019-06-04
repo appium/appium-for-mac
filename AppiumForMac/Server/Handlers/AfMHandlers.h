@@ -55,6 +55,7 @@
 // POST /session/:sessionId/back
 // POST /session/:sessionId/refresh
 // POST /session/:sessionId/execute
+- (AppiumMacHTTPJSONResponse *)post_execute:(NSString*)path data:(NSData*)postData;
 // POST /session/:sessionId/execute_async
 
 // GET /session/:sessionId/screenshot
