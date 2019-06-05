@@ -213,9 +213,7 @@
 		if (matches.count < 1)
                 {
                         //*statusCode = kAfMStatusCodeNoSuchElement;
-                        //In order to comply with other drivers and return an empty list when no matches are found
-                        //Cannot return NoSuchElement status
-                        *statusCode = kAfMStatusCodeSuccess;
+                        //Empty return because by default the statusCode should be successful
                         return;
                 }
 
