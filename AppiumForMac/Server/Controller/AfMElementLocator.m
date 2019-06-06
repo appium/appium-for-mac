@@ -186,6 +186,10 @@
 
 -(void)findAllUsingBaseUIElement:(PFUIElement*)baseUIElement results:(NSMutableArray*)results statusCode:(int *)statusCode
 {
+    //Start the method with success unless any logic block changes it
+    //If no element is found still return success to match other driver behaviors 
+    *statusCode = kAfMStatusCodeSuccess;
+
 	// use different method for xpath
 	if (self.strategy == AppiumMacLocatoryStrategyXPath)
 	{
@@ -207,10 +211,11 @@
 			return;
 		}
 		if (matches.count < 1)
-		{
-			*statusCode = kAfMStatusCodeNoSuchElement;
-			return;
-		}
+                {
+                        //*statusCode = kAfMStatusCodeNoSuchElement;
+                        //Empty return because by default the statusCode should be successful
+                        return;
+                }
 
 		*statusCode = kAfMStatusCodeSuccess;
 		for(GDataXMLElement *match in matches)
