@@ -574,7 +574,7 @@ NSInteger const kPredicateRightOperand = 1;
     [self.currentWindow performAction:@"AXCancel"];
 }
 
--(NSDictionary*)executeShellScript:(NSString*)script
+-(NSDictionary* _Nullable)executeShellScript:(NSString*)script
 {
     
     NSTask *task = [[NSTask alloc] init];
@@ -595,16 +595,15 @@ NSInteger const kPredicateRightOperand = 1;
     NSError *error;
     if (@available(macOS 10.13, *)) {
         [task launchAndReturnError:&error];
+
     } else {
-        NSString *response = @"Command only compatible with macOS 10.13 or newer";
-        NSDictionary* notSupportedResponse = @{@"response": response};
-        return notSupportedResponse;
+        return NULL;
     }
     NSString *stdoutData = [[NSString alloc] initWithData:[stdoutFile readDataToEndOfFile] encoding:NSUTF8StringEncoding];
     NSString *stderrorData = [[NSString alloc] initWithData:[stderrorFile readDataToEndOfFile] encoding:NSUTF8StringEncoding];
     NSDictionary *outputDict = @{@"stdout" : stdoutData,
                                  @"stderr" : stderrorData,
-                                 @"exitCode": [[NSNumber alloc] initWithInt:[task terminationStatus]]};
+                                 @"exitCode": @(task.terminationStatus)};
     return outputDict;
 }
 
