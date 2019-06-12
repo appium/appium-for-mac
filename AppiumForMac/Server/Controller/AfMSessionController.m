@@ -595,7 +595,6 @@ NSInteger const kPredicateRightOperand = 1;
     NSError *error;
     if (@available(macOS 10.13, *)) {
         [task launchAndReturnError:&error];
-
     } else {
         return NULL;
     }
