@@ -244,7 +244,7 @@
     return [self executeWebDriverCommandWithPath:path data:postData onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
             {
                 NSString *script = (NSString*)[commandParams objectForKey:@"script"];
-                NSString *scriptResult = [session executeShellScript:script];
+                NSDictionary *scriptResult = [session executeShellScript:script];
                 return [AppiumMacHTTPJSONResponse responseWithJson:scriptResult status:kAfMStatusCodeSuccess session:session.sessionId];
             }];
     

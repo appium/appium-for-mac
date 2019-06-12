@@ -574,24 +574,38 @@ NSInteger const kPredicateRightOperand = 1;
     [self.currentWindow performAction:@"AXCancel"];
 }
 
--(NSString*)executeShellScript:(NSString*)script
+-(NSDictionary*)executeShellScript:(NSString*)script
 {
-    FILE *fp;
-    const int BUFFSIZE = 512;
-    char buffer[BUFFSIZE];
-    const char *command = [script UTF8String];
-    NSMutableString *output = [[NSMutableString alloc] initWithString:@""];
-    fp = popen(command, "r");
-    if (!fp){
-        NSLog(@"Open pipe failed\n");
-        return @"";
+    
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/bin/bash"];
+    NSArray *arguments = [NSArray arrayWithObjects:
+                          @"-c" ,
+                          [NSString stringWithFormat:@"%@", script],
+                          nil];
+    
+    NSLog(@"running bash script:'%@'", script);
+    [task setArguments:arguments];
+    NSPipe *stdoutPipe = [NSPipe pipe];
+    NSPipe *stderrorPipe = [NSPipe pipe];
+    [task setStandardOutput:stdoutPipe];
+    [task setStandardError:stderrorPipe];
+    NSFileHandle *stdoutFile = [stdoutPipe fileHandleForReading];
+    NSFileHandle *stderrorFile = [stderrorPipe fileHandleForReading];
+    NSError *error;
+    if (@available(macOS 10.13, *)) {
+        [task launchAndReturnError:&error];
+    } else {
+        NSString *response = @"Command only compatible with macOS 10.13 or newer";
+        NSDictionary* notSupportedResponse = @{@"response": response};
+        return notSupportedResponse;
     }
-    while (fgets(buffer, BUFFSIZE, fp)!=NULL)
-    {
-        [output appendString:[NSString stringWithCString:buffer encoding:NSUTF8StringEncoding]];
-    }
-    pclose(fp);
-    return output;
+    NSString *stdoutData = [[NSString alloc] initWithData:[stdoutFile readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+    NSString *stderrorData = [[NSString alloc] initWithData:[stderrorFile readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+    NSDictionary *outputDict = @{@"stdout" : stdoutData,
+                                 @"stderr" : stderrorData,
+                                 @"exitCode": [[NSNumber alloc] initWithInt:[task terminationStatus]]};
+    return outputDict;
 }
 
 -(NSString*) currentApplicationName

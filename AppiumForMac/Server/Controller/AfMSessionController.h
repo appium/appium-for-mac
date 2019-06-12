@@ -143,7 +143,7 @@ extern NSString * const kCookieDiagnosticsDirectory;
 - (BOOL)isElementDisplayed:(id)element;
 -(BOOL) clickElement:(id)element;
 -(void) closeWindow;
--(NSString *)executeShellScript:(NSString *)script;
+-(NSDictionary *)executeShellScript:(NSString *)script;
 -(NSDictionary*) pageSource;
 -(NSInteger) pidForProcessName:(NSString*)processName;
 -(SystemEventsProcess*) processForName:(NSString*)processName;
