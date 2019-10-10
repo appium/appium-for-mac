@@ -231,6 +231,11 @@
             returnedCode = kVK_ANSI_KeypadDivide;      // 0x4B
             break;
         /* unshifted keycodes for non-alpha keys that require pressing the shift modifier */
+        case 0x007E:
+            // "~"
+            isShifted = YES;
+            returnedCode = kVK_ANSI_Grave;         // 0x32
+            break;
         case 0x0021:
             // "!"
             isShifted = YES;
@@ -241,7 +246,7 @@
             isShifted = YES;
             returnedCode = kVK_ANSI_2;             // 0x13
             break;
-        case 0x0023: 
+        case 0x0023:
             // "#"
             isShifted = YES;
             returnedCode = kVK_ANSI_3;             // 0x14
@@ -291,7 +296,17 @@
             isShifted = YES;
             returnedCode = kVK_ANSI_Equal;         // 0x18
             break;
-        case 0x003F: 
+        case 0x003A:
+            // ":"
+            isShifted = YES;
+            returnedCode = kVK_ANSI_Semicolon;     // 0x29
+            break;
+        case 0x0022:
+            // "\""
+            isShifted = YES;
+            returnedCode = kVK_ANSI_Quote;         // 0x27
+            break;
+        case 0x003F:
             // "?"
             isShifted = YES;
             returnedCode = kVK_ANSI_Slash;         // 0x2C
