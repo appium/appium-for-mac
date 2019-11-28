@@ -250,15 +250,21 @@
     return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
     {
         // Ask the session to put a screen shot into the clipboard.
-        if ([session screenCaptureToClipboard]) {
-            NSArray *objectsToPaste = [[NSPasteboard generalPasteboard] readObjectsForClasses:@[[NSImage class]] options:@{}];
-            NSImage *image = [objectsToPaste objectAtIndex:0];
-            NSString *base64Image = [[image TIFFRepresentation] base64EncodedString];
-            return [AppiumMacHTTPJSONResponse responseWithJson:base64Image status:kAfMStatusCodeSuccess session:session.sessionId];
+        if (![session screenCaptureToClipboard]) {
+            return [AppiumMacHTTPJSONResponse responseWithJson:nil
+                                                        status:kAfMStatusCodeSuccess
+                                                       session:session.sessionId];
         }
-        else {
-            return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId];
-        }
+        NSArray *objectsToPaste = [[NSPasteboard generalPasteboard] readObjectsForClasses:@[[NSImage class]]
+                                                                                  options:@{}];
+        NSImage *image = [objectsToPaste objectAtIndex:0];
+        NSData *tiffData = [image TIFFRepresentation];
+        NSData *pngData = [[NSBitmapImageRep imageRepWithData:tiffData] representationUsingType:NSPNGFileType
+                                                                                     properties:@{}];
+        NSString *base64Image = [pngData base64EncodedString];
+        return [AppiumMacHTTPJSONResponse responseWithJson:base64Image
+                                                    status:kAfMStatusCodeSuccess
+                                                   session:session.sessionId];
     }];
 }
 
