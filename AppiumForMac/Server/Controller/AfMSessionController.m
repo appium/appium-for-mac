@@ -933,9 +933,22 @@ const NSTimeInterval kModifierPause = 0.05;
     }
     
     [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXRole" stringValue:rootUIElement.AXRole]];
-	[rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXTitle" stringValue:rootUIElement.AXTitle]];
-	[rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXDescription" stringValue:rootUIElement.AXDescription]];
-	[rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXRoleDescription" stringValue:rootUIElement.AXRoleDescription]];
+    [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXTitle" stringValue:rootUIElement.AXTitle]];
+    [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXDescription" stringValue:rootUIElement.AXDescription]];
+    [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXRoleDescription" stringValue:rootUIElement.AXRoleDescription]];
+    
+    //Added AXSize and AXPosition attributes to the Page Source so that we know where each element is
+    NSSize elementSize = [rootUIElement.AXSize sizeValue];
+    NSInteger elementWidth = (NSInteger) (floor(elementSize.width));
+    NSInteger elementHeight = (NSInteger) (floor(elementSize.height));
+    
+    NSPoint elementPosition = [rootUIElement.AXPosition pointValue];
+    NSInteger elementX = (NSInteger) (floor(elementPosition.x));
+    NSInteger elementY = (NSInteger) (floor(elementPosition.y));
+    
+    [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXSize" stringValue: [NSString stringWithFormat: @"%ld;%ld", elementWidth, elementHeight]]];
+    [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXPosition" stringValue: [NSString stringWithFormat: @"%ld;%ld", elementX, elementY]]];
+    
     NSString *subrole = rootUIElement.AXSubrole;
     if (subrole) {
         [rootXMLElement addAttribute:[GDataXMLElement attributeWithName:@"AXSubrole" stringValue:rootUIElement.AXSubrole]];
