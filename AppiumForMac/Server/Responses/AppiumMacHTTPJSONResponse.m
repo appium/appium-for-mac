@@ -29,7 +29,7 @@
     {
         [responseJson setValue:session forKey:@"sessionId"];
     }
-    [responseJson setValue:json forKey:@"value"];
+    [responseJson setValue:(json ?: [NSNull null]) forKey:@"value"];
     
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:responseJson
