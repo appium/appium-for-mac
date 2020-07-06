@@ -1838,9 +1838,9 @@ const NSTimeInterval kModifierPause = 0.05;
             dateString = [dateString stringByReplacingOccurrencesOfString:@":" withString:@"_"];
             fileName = [NSString stringWithFormat:@"%@__%@", fileName, dateString];
         }
-        
+
         NSString *filePath = [NSString stringWithFormat:@"%@/%@.png", self.diagnosticsDirectory, fileName];
-        
+
         NSLog(@"Creating screenshot: %@", filePath);
         system([[NSString stringWithFormat:@"/usr/sbin/screencapture -mx %@", filePath] cStringUsingEncoding:NSASCIIStringEncoding]);
     }
@@ -1893,7 +1893,7 @@ const NSTimeInterval kModifierPause = 0.05;
     NSString *sessionPath = [directoryPath stringByAppendingString:sessionDirectoryName];
     
     NSError *error = nil;
-    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:&error];
+    [[NSFileManager defaultManager] createDirectoryAtPath:sessionPath withIntermediateDirectories:YES attributes:nil error:&error];
     if (error) {
         NSLog(@"createDirectoryAtPath:%@ error:%@", sessionPath, error);
     } else {
