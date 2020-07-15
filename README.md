@@ -19,13 +19,19 @@ Mac OS X does not allow an application to use the Accessibility API without perm
 1. Open System Preferences > Accessibility.
 1. Check the "Enable access for assistive devices" checkbox.
 
-### 10.9, 10.10, 10.11, 10.12
+### 10.9 and later
 1. Open System Preferences > Security & Privacy.
 1. Click the Privacy tab.
 1. Click Accessibility in the left hand table.
 1. If needed, click the lock to make changes.
 1. If you do not see AppiumForMac.app in the list of apps, then drag it to the list from Finder.
 1. Check the checkmark next to AppiumForMac.app.
+
+## Build
+
+Newer macOS requires 64 bit binary.
+You can build this repository manually to match for your environment with Xcode.
+Then, please copy `AppiumForMac.app` in  `/Users/<username>/Library/Developer/Xcode/DerivedData/AppiumForMac-xxxxxxxx/Build/Products/Debug/AppiumForMac.app` to `/Applications`.
 
 ## New Features For Scripters (as of April 2017)
 
