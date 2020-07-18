@@ -20,4 +20,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Debug_AppiumForMac
-        path: ${{ github.workspace }}/appium-for-mac/appium-for-mac/Build/Products/Debug
+        path: ${{ github.workspace }}/Build/Products/Debug
