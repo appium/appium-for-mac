@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run xcodebuild
+      run: xcodebuild -scheme AppiumForMac -configuration Debug -derivedDataPath $GITHUB_WORKSPACE build
+    - name: Archive the AppiumForMac.app
+      run: |
+        mv $GITHUB_WORKSPACE/Build/Products/Debug/AppiumForMac.app $GITHUB_WORKSPACE
+        zip -r Debug_AppiumForMac.zip AppiumForMac.app
+    - name: Upload the AppiumForMac.app
+      uses: actions/upload-artifact@v2
+      with:
+        name: Debug_AppiumForMac
+        path: Debug_AppiumForMac.zip
