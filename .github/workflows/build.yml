@@ -11,7 +11,7 @@ jobs:
 
     runs-on: macos-latest
 
-  steps:
+    steps:
     - uses: actions/checkout@v2
     - name: Run xcodebuild
       run: xcodebuild -scheme AppiumForMac -configuration Debug -derivedDataPath $GITHUB_WORKSPACE build
