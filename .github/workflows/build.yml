@@ -15,3 +15,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run xcodebuild
       run: xcodebuild -scheme AppiumForMac -configuration Debug -derivedDataPath $GITHUB_WORKSPACE build
+
+    - name: Upload an AppiumForMac.app
+      uses: actions/upload-artifact@v2
+      with:
+        name: Debug_AppiumForMac
+        path: $GITHUB_WORKSPACE/appium-for-mac/appium-for-mac/Build/Products/Debug/AppiumForMac.app
