@@ -33,7 +33,13 @@ Newer macOS requires 64 bit binary.
 You can build this repository manually to match for your environment with Xcode.
 Then, please copy `AppiumForMac.app` in  `/Users/<username>/Library/Developer/Xcode/DerivedData/AppiumForMac-xxxxxxxx/Build/Products/Debug/AppiumForMac.app` to `/Applications`.
 
-## Download binaries built on CI
+## Release
+
+Please push a tag with `v` prefix like `v0.5.0`.
+Then, a GitHub Actions will push a new `AppiumForMac.app` as the version as a draft on [Release page](https://github.com/appium/appium-for-mac/releases).
+Once you convert the draft to publish, the tag will appear on the release page.
+
+### Download binaries built on CI
 
 [Release page](https://github.com/appium/appium-for-mac/releases) provides `AppiumForMac.app` for each tag.
 You also can get the latest `AppiumForMac.app` on each PR.
