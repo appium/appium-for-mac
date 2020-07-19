@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run xcodebuild
       run: xcodebuild -scheme AppiumForMac -configuration Debug -derivedDataPath $GITHUB_WORKSPACE build
-    - name: Archive the AppiumForMac.app
+    - name: Archive the AppiumForMac.app without extended metadata
       run: |
         mv $GITHUB_WORKSPACE/Build/Products/Debug/AppiumForMac.app $GITHUB_WORKSPACE
         xattr -cr AppiumForMac.app
