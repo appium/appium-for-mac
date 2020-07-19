@@ -18,8 +18,26 @@ jobs:
       run: |
         mv $GITHUB_WORKSPACE/Build/Products/Debug/AppiumForMac.app $GITHUB_WORKSPACE
         zip -r Debug_AppiumForMac.zip AppiumForMac.app
-    - name: Upload the AppiumForMac.app
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Created by Actions automatically
       with:
-        name: Debug_AppiumForMac
-        path: Debug_AppiumForMac.zip
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - Release note
+        draft: true
+        prerelease: false
+    - name: Upload Debug_AppiumForMac
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Debug_AppiumForMac.zip
+        asset_name: AppiumForMac.zip
+        asset_content_type: application/zip
