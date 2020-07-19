@@ -19,11 +19,6 @@ jobs:
         mv $GITHUB_WORKSPACE/Build/Products/Debug/AppiumForMac.app $GITHUB_WORKSPACE
         xattr -cr AppiumForMac.app
         zip -r Debug_AppiumForMac.zip AppiumForMac.app
-    - name: Upload the AppiumForMac.app
-      uses: actions/upload-artifact@v2
-      with:
-        name: Debug_AppiumForMac
-        path: Debug_AppiumForMac.zip
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
