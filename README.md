@@ -6,7 +6,7 @@ The WebDriver server is on port 4622. If you build it yourself, you can change t
 
 ## Requirements
 * Running: Mac OS X 10.7 or later.
-* Building: Xcode 7.2.1 or later. 
+* Building: Xcode 7.2.1 or later.
 
 ## Installation
 Mac OS X does not allow an application to use the Accessibility API without permission, so you have to enable it manually.
@@ -32,6 +32,21 @@ Mac OS X does not allow an application to use the Accessibility API without perm
 Newer macOS requires 64 bit binary.
 You can build this repository manually to match for your environment with Xcode.
 Then, please copy `AppiumForMac.app` in  `/Users/<username>/Library/Developer/Xcode/DerivedData/AppiumForMac-xxxxxxxx/Build/Products/Debug/AppiumForMac.app` to `/Applications`.
+
+## Release
+
+Please push a tag with `v` prefix like `v0.5.0`.
+Then, a GitHub Actions will push a new `AppiumForMac.app` as the version as a draft on [Release page](https://github.com/appium/appium-for-mac/releases).
+Once you convert the draft to publish, the tag will appear on the release page.
+
+### Download binaries built on CI
+
+[Release page](https://github.com/appium/appium-for-mac/releases) provides `AppiumForMac.app` for each tag.
+You also can get the latest `AppiumForMac.app` on each PR.
+
+If you could not start `AppiumForMac.app` by security limitation by macOS,
+please try out `xattr -cr /path/to/AppiumForMac.app` command once to remove extende attributes on macOS.
+Then, you probably open the `AppiumForMac.app` without error.
 
 ## New Features For Scripters (as of April 2017)
 
@@ -116,7 +131,7 @@ Bad examples:
 
 
 ### Automatic AXPath Recording
-Generating an AXPath for an element is easy: while AppiumForMac is running, just use the mouse to point to an element, then press the fn (function) key for a couple of seconds. AppiumForMac will build the AXPath of the element on screen, and copy it to the clipboard. You can then paste it into your script. 
+Generating an AXPath for an element is easy: while AppiumForMac is running, just use the mouse to point to an element, then press the fn (function) key for a couple of seconds. AppiumForMac will build the AXPath of the element on screen, and copy it to the clipboard. You can then paste it into your script.
 
 ### Session Kill Switch
 If your script has gone off the rails, you need to stop it. But if a script is running, it can keep typing and clicking as you try to cancel it. Now, while a session is in progress, you can press the fn (function) key for a couple of seconds. AppiumForMac will cancel any open sessions. Your script will receive a "no such session" error.
@@ -127,19 +142,19 @@ AppiumForMac sessions have several new properties. See below for a description o
 #### Getting and Setting Properties with a Cookie
 Each cookie is a dictionary with at least two keys: 'name' and 'value'. The Selenium commands are: get_cookies, get_cookie(), and addCookie().
 
-1. To get all cookies, use driver.get_cookies(). This will return an array of cookie dictionaries. 
+1. To get all cookies, use driver.get_cookies(). This will return an array of cookie dictionaries.
 1. To get one cookie, use driver.get_cookie('cookieName'). This will return the cookie with the name 'cookieName'.
 1. To set a cookie, use driver.add_cookie({'name': 'cookieName', 'value': 'cookieValue'}).
 
 #### Implicit Timeouts
 AppiumForMac supports standard implicit timeouts when finding an element. The default is 0.0 seconds, that is, there will be only one attempt.
 
-    For example, to set a 20.5 second timeout, use driver.add_cookie({'name': 'implicit_timeout', 'value': 20.5}). 
+    For example, to set a 20.5 second timeout, use driver.add_cookie({'name': 'implicit_timeout', 'value': 20.5}).
 
 #### Loop Delay
 During an implicit timeout to find an element, you can specify how long to wait between attempts. The default is 1.0 seconds. The loop delay occurs _after_ each attempt, so if the element is found on the first attempt, there will be no delay. The total waiting time will not exceed implicit_timeout, regardless of the loop_delay value.
 
-    For example, to set a 1.7 second loop delay, use driver.add_cookie({'name': 'loop_delay', 'value': 1.7}). 
+    For example, to set a 1.7 second loop delay, use driver.add_cookie({'name': 'loop_delay', 'value': 1.7}).
 
 #### Command Delay
 This provides a simple way to slow down a script if needed, e.g. for debugging. It specifies an arbitrary delay _before_ each command. The default is 0.0 seconds so your script runs at full speed!
@@ -176,7 +191,7 @@ The name of each handler is dynamically constructed from the http request. All y
 #### Creating a new command handler
 
 1. Go to AfMHandlers.m.
-1. Find an existing handler method. You might want to find one that is similar to the new command you want to add. 
+1. Find an existing handler method. You might want to find one that is similar to the new command you want to add.
 1. Copy the handler method to the clipboard.
 1. Find the commented out stub for the new handler method and paste at that location.
 1. Rename your new handler, following the naming pattern for the other handlers.
