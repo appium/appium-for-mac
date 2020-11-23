@@ -179,6 +179,9 @@
 // POST /session/:sessionId/doubleclick
 - (AppiumMacHTTPJSONResponse *)post_doubleclick:(NSString*)path data:(NSData *)postData;
 
+// POST /session/:sessionId/element/:id/scrollTo
+- (AppiumMacHTTPJSONResponse *)post_element_scrollTo:(NSString*)path data:(NSData*)postData;
+
 // POST /session/:sessionId/touch/click
 // POST /session/:sessionId/touch/down
 // POST /session/:sessionId/touch/up

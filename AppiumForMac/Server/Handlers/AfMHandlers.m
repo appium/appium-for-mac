@@ -963,6 +963,28 @@
     }];
 }
 
+
+// POST /session/:sessionId/element/:id/scrollTo
+// Scroll to the particular element passed to Appium. Scrolls till the bottom of the screen till the element becomes visible
+// If the element is still not visible returns element not found
+- (AppiumMacHTTPJSONResponse *)post_element_scrollTo:(NSString *)path data:(NSData *)postData
+{
+    return [self executeWebDriverCommandWithPath:path data:nil onMainThread:YES commandBlock:^(AfMSessionController *session, NSDictionary *commandParams, int *statusCode)
+            {
+                id element = [commandParams objectForKey:@"elementObject"];
+
+                if ([session isElementDisplayed:element]) {
+                    return [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId];
+                }
+
+                BOOL result = [session scrollPage:element];
+
+                return result ? [AppiumMacHTTPJSONResponse responseWithJson:nil status:kAfMStatusCodeSuccess session:session.sessionId] :
+                [AppiumMacHTTPJSONResponse responseWithJsonError:kAfMStatusCodeNoSuchElement session:session.sessionId];
+            }];
+}
+
+
 // POST /session/:sessionId/touch/click
 // Single tap on the touch enabled device.
 

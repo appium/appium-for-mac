@@ -154,6 +154,7 @@ extern NSString * const kCookieDiagnosticsDirectory;
 -(GDataXMLDocument*)xmlPageSource;
 -(GDataXMLDocument*)xmlPageSourceFromRootUIElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap xPath:(NSString*)xPath;
 - (NSArray *)findAllUsingAbsoluteAXPath:(NSString *)path;
+-(BOOL) scrollPage : (id)element;
 
 - (AppiumMacHTTPJSONResponse *)executeWebDriverCommandWithPath:(NSString*)path data:(NSData*)postData onMainThread:(BOOL)onMainThread commandBlock:(AppiumMacHTTPJSONResponse *(^)(AfMSessionController *session, NSDictionary *commandParams, int *statusCode))commandBlock;
 
