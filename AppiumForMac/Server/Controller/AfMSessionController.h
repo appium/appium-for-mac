@@ -155,6 +155,8 @@ extern NSString * const kCookieDiagnosticsDirectory;
 -(GDataXMLDocument*)xmlPageSourceFromRootUIElement:(PFUIElement*)rootUIElement pathMap:(NSMutableDictionary*)pathMap xPath:(NSString*)xPath;
 - (NSArray *)findAllUsingAbsoluteAXPath:(NSString *)path;
 
+-(PFUIElement*) findElementRecursively:(PFUIElement *)rootUIElement calls:(int)calls;
+
 - (AppiumMacHTTPJSONResponse *)executeWebDriverCommandWithPath:(NSString*)path data:(NSData*)postData onMainThread:(BOOL)onMainThread commandBlock:(AppiumMacHTTPJSONResponse *(^)(AfMSessionController *session, NSDictionary *commandParams, int *statusCode))commandBlock;
 
 - (void)setDesiredCapabilities:(NSDictionary *)desiredCapabilities;
