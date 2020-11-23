@@ -891,6 +891,55 @@ const NSTimeInterval kModifierPause = 0.05;
 	return [windows objectAtIndex:windowIndex];
 }
 
+-(BOOL) scrollPage:(id)element
+{
+    float increment_by = 0.25;
+    bool scroll_found = false;
+    PFUIElement* scroll;
+    float axValue = 0,adder = 0;
+
+    id parent = [(PFUIElement*)element AXParent];
+    NSArray* siblings = [parent AXChildren];
+
+    while(scroll == nil && parent != nil)
+    {
+        for(id child in siblings)
+        {
+            if([[(PFUIElement*)child AXRole] isEqualToString:@"AXScrollBar"])
+            {
+                scroll = child;
+                scroll_found = true;
+                break;
+            }
+        }
+
+        parent = [(PFUIElement*)parent AXParent];
+        siblings = [parent AXChildren];
+    }
+
+    NSPoint middlePoint = [[element AXPosition] pointValue];
+    if(middlePoint.y < 0)
+    {
+
+    }
+
+    if(scroll_found)
+    {
+        while(adder<=1)
+        {
+            axValue = [scroll.AXValue floatValue];
+            adder = axValue + increment_by;
+            scroll.AXValue = [NSNumber numberWithFloat: adder];
+
+            if([self isElementDisplayed:element])
+            {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 -(GDataXMLDocument*)xmlPageSource
 {
 	return [self xmlPageSourceFromRootUIElement:nil pathMap:nil xPath:nil];
