@@ -1,3 +1,5 @@
+**Please consider moving to [appium-mac2-driver](https://github.com/appium/appium-mac2-driver) for newer macOS versions**
+
 # Appium For Mac
 
 Appium for Mac can control the native user interface of Mac applications using Selenium / WebDriver and the OS X Accessibility API. Check out the example which will control the calculator app.
