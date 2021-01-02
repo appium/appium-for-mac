@@ -1,4 +1,6 @@
-**Please consider moving to [appium-mac2-driver](https://github.com/appium/appium-mac2-driver) for newer macOS versions**
+**Please consider moving to [appium-mac2-driver](https://github.com/appium/appium-mac2-driver) for over macOS 10.15)**
+
+**Appium team will not contribute this driver further**
 
 # Appium For Mac
 
