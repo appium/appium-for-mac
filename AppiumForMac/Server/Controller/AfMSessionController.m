@@ -54,6 +54,10 @@ NSInteger const kPredicateRightOperand = 1;
 @property BOOL isAltKeyDown;
 @property BOOL isCommandKeyDown;
 
+// Properties for partial AXPath fix
+@property NSString* elementRole;
+@property NSMutableDictionary* predicateDict;
+
 // Properties for handling timed events such as mouse moves.
 @property NSMutableArray *timedEvents;
 @property NSUInteger timedEventIndex;
@@ -1114,6 +1118,13 @@ const NSTimeInterval kModifierPause = 0.05;
         }
     }
     
+    // See if there is any partially matching XPath
+    if ([matchedNodes count] == 0)
+    {
+        matchedNodes = [self findAllUsingPartialAXPath:axPathComponents rootUIElement:self.currentApplication];
+    }
+    [self clearCurrentElementCache];
+    
     return matchedNodes;
 }
 
@@ -1188,6 +1199,107 @@ const NSTimeInterval kModifierPause = 0.05;
     }
     // By default there was no match.
     return @[];
+}
+
+-(PFUIElement*) findElementRecursively:(PFUIElement *)rootUIElement calls:(int)calls
+{
+    if ([self checkIfElementFound:rootUIElement])
+    {
+        return rootUIElement;
+    }
+    calls++;
+    
+    NSArray* children = rootUIElement.AXChildren;
+    
+    PFUIElement* result = nil;
+    
+    if (children)
+    {
+        for (PFUIElement* node in children)
+        {
+            result = [self findElementRecursively:node calls:calls];
+            if (result)
+            {
+                return result;
+            }
+        }
+    }
+    
+    calls--;
+    return nil;
+}
+
+-(NSArray*) findAllUsingPartialAXPath:(NSArray *)axPathComponents rootUIElement:(PFUIElement *)rootUIElement
+{
+    NSArray* childUIElements = rootUIElement.AXChildren;
+    
+    if (!childUIElements || [childUIElements count] == 0)
+    {
+        return @[];
+    }
+    
+    [self setRoleAndPredicatesOfElement:[axPathComponents lastObject]];
+    NSMutableArray *matchedChildren = [NSMutableArray array];
+    PFUIElement* foundElement = [self findElementRecursively:rootUIElement calls:0];
+    
+    if ([foundElement isNotEqualTo:nil])
+    {
+        [matchedChildren addObject:foundElement];
+    }
+    
+    return matchedChildren;
+}
+
+-(void) setRoleAndPredicatesOfElement:(NSString*) elementToFind
+{
+    if (self.elementRole && self.predicateDict) {
+        return;
+    }
+    
+    NSDictionary *parseElement = [self parseRoleAndPredicateString:elementToFind];
+    
+    self.elementRole = parseElement[kNodeRole];
+    self.predicateDict = [[NSMutableDictionary alloc] init];
+    
+    NSArray* predicateArray = parseElement[kNodePredicate][kPredicateOperations];
+    
+    for (int i=0; i < [predicateArray count]; i++)
+    {
+        id object = [predicateArray objectAtIndex:i];
+        NSString* attributeName = object[kPredicateAttributeName];
+        NSString* attributeValue = object[kPredicateAttributeValue];
+        if (![attributeName isEqualToString:@"AXIdentifier"])
+        {
+            self.predicateDict[attributeName] = attributeValue;
+        }
+    }
+}
+
+
+-(void) clearCurrentElementCache
+{
+    self.elementRole = nil;
+    self.predicateDict = nil;
+}
+
+-(BOOL) checkIfElementFound:(PFUIElement*) currentElement
+{
+    
+    if ([currentElement.AXRole isNotEqualTo:self.elementRole])
+    {
+        return NO;
+    }
+    
+    for( NSString* key in self.predicateDict )
+    {
+        if ( ![currentElement existsAttribute:key] || [self.predicateDict[key] isNotEqualTo:[currentElement valueForAttribute:key]])
+        {
+            return NO;
+        }
+    }
+
+    return YES;
+   
 }
 
 - (BOOL)element:(PFUIElement *)uiElement doesMatchPredicate:(NSDictionary *)predicate atIndex:(NSUInteger)elementIndex
